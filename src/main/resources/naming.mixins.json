@@ -1,0 +1,15 @@
+{
+  "required": true,
+  "package": "com.minerarcana.naming.mixin",
+  "compatibilityLevel": "JAVA_8",
+  "refmap": "naming.refmap.json",
+  "mixins": [
+    "ServerPlayNetHandlerMixin"
+  ],
+  "client": [
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  },
+  "minVersion": "0.8"
+}

@@ -1,0 +1,29 @@
+{
+  "parent": "minecraft:magic_of_names",
+  "display": {
+    "icon": {
+      "item": "minecraft:written_book"
+    },
+    "title": {
+      "translate": "advancements.naming.the_first_degree.title"
+    },
+    "description": {
+      "translate": "advancements.name.the_first_degree.description"
+    },
+    "frame": "goal",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "first": {
+      "trigger": "naming:signing",
+      "conditions": {}
+    }
+  },
+  "requirements": [
+    [
+      "first"
+    ]
+  ]
+}
