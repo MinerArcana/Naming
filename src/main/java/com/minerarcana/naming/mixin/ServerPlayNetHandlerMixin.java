@@ -3,7 +3,6 @@ package com.minerarcana.naming.mixin;
 import com.minerarcana.naming.content.NamingCriteriaTriggers;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
 import net.minecraft.network.play.ServerPlayNetHandler;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -26,8 +25,6 @@ public class ServerPlayNetHandlerMixin {
     )
     private void namingSignBook(String title, List<String> contents, int slot, CallbackInfo callbackInfo) {
         ItemStack signedItemStack = player.inventory.getItem(slot);
-        if (signedItemStack.getItem() == Items.WRITTEN_BOOK) {
-            NamingCriteriaTriggers.SIGNING.trigger(player, title);
-        }
+        NamingCriteriaTriggers.SIGNING.trigger(player, signedItemStack, title);
     }
 }

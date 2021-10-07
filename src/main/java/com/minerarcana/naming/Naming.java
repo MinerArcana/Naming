@@ -5,6 +5,7 @@ import com.minerarcana.naming.capability.EmptyStorage;
 import com.minerarcana.naming.capability.Namer;
 import com.minerarcana.naming.content.NamingAdvancements;
 import com.minerarcana.naming.content.NamingCriteriaTriggers;
+import com.minerarcana.naming.content.NamingText;
 import com.tterrag.registrate.Registrate;
 import com.tterrag.registrate.providers.ProviderType;
 import net.minecraft.nbt.INBT;
@@ -31,7 +32,7 @@ public class Naming {
 
     public Naming() {
         NamingCriteriaTriggers.setup();
-        REGISTRATE.get();
+        NamingText.setup();
 
         FMLJavaModLoadingContext.get()
                 .getModEventBus()
