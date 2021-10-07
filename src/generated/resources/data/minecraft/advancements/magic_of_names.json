@@ -7,12 +7,13 @@
       "translate": "advancements.naming.magic_of_names.title"
     },
     "description": {
-      "translate": "advancements.name.magic_of_names.description"
+      "translate": "advancements.naming.magic_of_names.description"
     },
-    "frame": "goal",
+    "frame": "task",
     "show_toast": true,
     "announce_to_chat": true,
-    "hidden": false
+    "hidden": false,
+    "background": "minecraft:textures/gui/advancements/backgrounds/adventure.png"
   },
   "criteria": {
     "root": {

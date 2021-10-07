@@ -8,9 +8,9 @@
       "translate": "advancements.naming.the_first_degree.title"
     },
     "description": {
-      "translate": "advancements.name.the_first_degree.description"
+      "translate": "advancements.naming.the_first_degree.description"
     },
-    "frame": "goal",
+    "frame": "task",
     "show_toast": true,
     "announce_to_chat": true,
     "hidden": false
@@ -18,7 +18,11 @@
   "criteria": {
     "first": {
       "trigger": "naming:signing",
-      "conditions": {}
+      "conditions": {
+        "item": {
+          "item": "minecraft:written_book"
+        }
+      }
     }
   },
   "requirements": [
