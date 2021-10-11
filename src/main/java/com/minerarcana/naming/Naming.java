@@ -6,21 +6,15 @@ import com.minerarcana.naming.capability.Namer;
 import com.minerarcana.naming.content.NamingAdvancements;
 import com.minerarcana.naming.content.NamingCriteriaTriggers;
 import com.minerarcana.naming.content.NamingText;
+import com.minerarcana.naming.network.NetworkHandler;
 import com.tterrag.registrate.Registrate;
 import com.tterrag.registrate.providers.ProviderType;
-import net.minecraft.nbt.INBT;
-import net.minecraft.util.Direction;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityManager;
 import net.minecraftforge.common.util.Lazy;
-import net.minecraftforge.fml.ModLoader;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
-import net.minecraftforge.fml.javafmlmod.FMLJavaModLanguageProvider;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
-
-import javax.annotation.Nullable;
 
 @Mod(Naming.ID)
 public class Naming {
@@ -30,6 +24,8 @@ public class Naming {
             .addDataGenerator(ProviderType.ADVANCEMENT, NamingAdvancements::generateAdvancements)
     );
 
+    public static NetworkHandler network;
+
     public Naming() {
         NamingCriteriaTriggers.setup();
         NamingText.setup();
@@ -37,6 +33,8 @@ public class Naming {
         FMLJavaModLoadingContext.get()
                 .getModEventBus()
                 .addListener(this::commonSetup);
+
+        network = new NetworkHandler();
     }
 
     public void commonSetup(FMLCommonSetupEvent event) {

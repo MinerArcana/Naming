@@ -1,7 +1,6 @@
 package com.minerarcana.naming.content;
 
 import com.minerarcana.naming.Naming;
-import com.minerarcana.naming.screen.NamingScreen;
 import net.minecraft.util.text.ITextComponent;
 
 public class NamingText {

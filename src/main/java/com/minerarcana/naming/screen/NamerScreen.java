@@ -1,33 +1,42 @@
 package com.minerarcana.naming.screen;
 
+import com.minerarcana.naming.Naming;
 import com.minerarcana.naming.content.NamingText;
+import com.minerarcana.naming.target.INamingTarget;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.TextFieldWidget;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.TranslationTextComponent;
 
 import javax.annotation.Nonnull;
 import java.util.Objects;
 
-public class NamingScreen extends Screen {
-    private static final ResourceLocation LOCATION = new ResourceLocation("textures/gui/container/anvil.png");
+public class NamerScreen extends Screen {
+    private static final ResourceLocation LOCATION = Naming.rl("textures/screen/namer.png");
 
-    protected int imageWidth = 176;
-    protected int imageHeight = 166;
 
+    private final int imageWidth = 122;
+    private final int imageHeight = 28;
+
+    private final INamingTarget namingTarget;
     private TextFieldWidget name;
 
-    public NamingScreen() {
+    public NamerScreen(INamingTarget namingTarget) {
         super(NamingText.SCREEN_TITLE);
+        this.namingTarget = namingTarget;
     }
 
     @Override
     public void tick() {
         super.tick();
         this.name.tick();
+        PlayerEntity player = getMinecraft().player;
+        if (player != null && !namingTarget.isValid(player)) {
+            player.closeContainer();
+        }
     }
 
     @Override
@@ -46,8 +55,6 @@ public class NamingScreen extends Screen {
         int i = (this.width - this.imageWidth) / 2;
         int j = (this.height - this.imageHeight) / 2;
         this.blit(pMatrixStack, i, j, 0, 0, this.imageWidth, this.imageHeight);
-        this.blit(pMatrixStack, i + 59, j + 20, 0, this.imageHeight, 110, 16);
-        this.blit(pMatrixStack, i + 99, j + 45, this.imageWidth, 0, 28, 21);
     }
 
     @Override
@@ -56,12 +63,16 @@ public class NamingScreen extends Screen {
         this.getMinecraft().keyboardHandler.setSendRepeatsToGui(true);
         int i = (this.width - this.imageWidth) / 2;
         int j = (this.height - this.imageHeight) / 2;
-        this.name = new TextFieldWidget(this.font, i + 62, j + 24, 103, 12, new TranslationTextComponent("container.repair"));
+        this.name = new TextFieldWidget(this.font, i + 10, j + 10, 103, 12, NamingText.SCREEN_TITLE);
         this.name.setCanLoseFocus(false);
         this.name.setTextColor(-1);
         this.name.setTextColorUneditable(-1);
         this.name.setBordered(false);
         this.name.setMaxLength(35);
+        String nameValue = this.namingTarget.getName();
+        if (nameValue != null) {
+            this.name.setValue(nameValue);
+        }
         this.name.setResponder(this::onNameChanged);
         this.children.add(this.name);
         this.setInitialFocus(this.name);
@@ -92,8 +103,8 @@ public class NamingScreen extends Screen {
     }
 
     private void onNameChanged(String text) {
-        if (!text.isEmpty()) {
-            System.out.println(text);
+        if (namingTarget.isValid(this.getMinecraft().player)) {
+            Naming.network.name(text, namingTarget);
         }
     }
 
