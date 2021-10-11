@@ -2,5 +2,9 @@
   "advancements.naming.magic_of_names.description": "\u0287\u0279\u2C6F s,\u0279\u01DD\u026F\u0250N \u01DD\u0265\u27D8 :s\u01DD\u026F\u0250N \u025Fo \u0254\u0131b\u0250W \u01DD\u0265\u27D8",
   "advancements.naming.magic_of_names.title": "s\u01DD\u026F\u0250N \u025Fo \u0254\u0131b\u0250W",
   "advancements.naming.the_first_degree.description": "\u029Eoo\u15FA u\u01DD\u0287\u0287\u0131\u0279M \u0250 ub\u0131S",
-  "advancements.naming.the_first_degree.title": "\u01DD\u01DD\u0279b\u01DD\u15E1 \u0287s\u0279\u0131\u2132 \u01DD\u0265\u27D8"
+  "advancements.naming.the_first_degree.title": "\u01DD\u01DD\u0279b\u01DD\u15E1 \u0287s\u0279\u0131\u2132 \u01DD\u0265\u27D8",
+  "block.naming.poster_board": "p\u0279\u0250o\u15FA \u0279\u01DD\u0287so\u0500",
+  "key.category.name": "bu\u0131\u026F\u0250N",
+  "key.naming.name": "\u01DD\u026F\u0250N",
+  "screen.naming.title": "bu\u0131\u026F\u0250N"
 }

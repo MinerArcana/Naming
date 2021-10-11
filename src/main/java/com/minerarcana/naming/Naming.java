@@ -4,6 +4,7 @@ import com.minerarcana.naming.api.capability.INamer;
 import com.minerarcana.naming.capability.EmptyStorage;
 import com.minerarcana.naming.capability.Namer;
 import com.minerarcana.naming.content.NamingAdvancements;
+import com.minerarcana.naming.content.NamingBlocks;
 import com.minerarcana.naming.content.NamingCriteriaTriggers;
 import com.minerarcana.naming.content.NamingText;
 import com.minerarcana.naming.network.NetworkHandler;
@@ -29,6 +30,7 @@ public class Naming {
     public Naming() {
         NamingCriteriaTriggers.setup();
         NamingText.setup();
+        NamingBlocks.setup();
 
         FMLJavaModLoadingContext.get()
                 .getModEventBus()

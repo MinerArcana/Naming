@@ -2,5 +2,9 @@
   "advancements.naming.magic_of_names.description": "The Magic of Names: The Namer's Art",
   "advancements.naming.magic_of_names.title": "Magic of Names",
   "advancements.naming.the_first_degree.description": "Sign a Written Book",
-  "advancements.naming.the_first_degree.title": "The First Degree"
+  "advancements.naming.the_first_degree.title": "The First Degree",
+  "block.naming.poster_board": "Poster Board",
+  "key.category.name": "Naming",
+  "key.naming.name": "Name",
+  "screen.naming.title": "Naming"
 }

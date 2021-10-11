@@ -1,4 +1,8 @@
-29fb7d93f51f2208fd7d5f9e64887c8aea1d3254 assets/naming/lang/en_ud.json
-125a3ec9e4569b1eb913ad82f51ec26975dc8882 assets/naming/lang/en_us.json
+abaa3c90dd65f68918c243657f56904376c7e62a assets/naming/blockstates/poster_board.json
+e18797af373f599d42769f10fc19d507fb7f3a6e assets/naming/lang/en_ud.json
+ea539ba14477a4c4eb029490fb8c8693befb55ec assets/naming/lang/en_us.json
+84464c6d990f36bf9bf4d7bf8fa3fb5aa7545eab assets/naming/models/block/poster_board.json
+3abcaf24b915a056f5564bc0d4e9410a4f5579ac assets/naming/models/item/poster_board.json
 f763ee97a5c855320706b893ce5b94750283479d data/minecraft/advancements/first_initiation.json
 8ec36efc2d1b04983f41e1abae062d9a0b47ac46 data/minecraft/advancements/magic_of_names.json
+56c962f4cb13af6b9691e81ce92c713ea0d5a84e data/naming/loot_tables/blocks/poster_board.json
