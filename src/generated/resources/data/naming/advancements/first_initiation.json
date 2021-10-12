@@ -1,5 +1,5 @@
 {
-  "parent": "minecraft:magic_of_names",
+  "parent": "naming:magic_of_names",
   "display": {
     "icon": {
       "item": "minecraft:written_book"
@@ -14,6 +14,9 @@
     "show_toast": true,
     "announce_to_chat": true,
     "hidden": false
+  },
+  "rewards": {
+    "function": "naming:naming"
   },
   "criteria": {
     "first": {

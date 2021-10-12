@@ -58,6 +58,11 @@ public class EntityNamingTarget implements INamingTarget {
         return NamingTargets.ENTITY;
     }
 
+    @Override
+    public Object getTarget() {
+        return weakEntity.get();
+    }
+
     public void toPacketBuffer(PacketBuffer buffer) {
         buffer.writeInt(id);
     }

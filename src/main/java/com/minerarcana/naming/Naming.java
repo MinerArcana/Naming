@@ -3,6 +3,7 @@ package com.minerarcana.naming;
 import com.minerarcana.naming.api.capability.INamer;
 import com.minerarcana.naming.capability.EmptyStorage;
 import com.minerarcana.naming.capability.Namer;
+import com.minerarcana.naming.command.NamingCommand;
 import com.minerarcana.naming.content.NamingAdvancements;
 import com.minerarcana.naming.content.NamingBlocks;
 import com.minerarcana.naming.content.NamingCriteriaTriggers;
@@ -11,8 +12,11 @@ import com.minerarcana.naming.network.NetworkHandler;
 import com.tterrag.registrate.Registrate;
 import com.tterrag.registrate.providers.ProviderType;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.capabilities.CapabilityManager;
 import net.minecraftforge.common.util.Lazy;
+import net.minecraftforge.event.RegisterCommandsEvent;
+import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
@@ -32,9 +36,10 @@ public class Naming {
         NamingText.setup();
         NamingBlocks.setup();
 
-        FMLJavaModLoadingContext.get()
-                .getModEventBus()
-                .addListener(this::commonSetup);
+        IEventBus modBus = FMLJavaModLoadingContext.get()
+                .getModEventBus();
+
+        modBus.addListener(this::commonSetup);
 
         network = new NetworkHandler();
     }

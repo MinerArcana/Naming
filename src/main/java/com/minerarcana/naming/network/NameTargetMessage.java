@@ -1,5 +1,6 @@
 package com.minerarcana.naming.network;
 
+import com.minerarcana.naming.content.NamingCriteriaTriggers;
 import com.minerarcana.naming.target.INamingTarget;
 import com.minerarcana.naming.target.NamingTargets;
 import net.minecraft.entity.player.ServerPlayerEntity;
@@ -32,6 +33,7 @@ public class NameTargetMessage {
                     namingTarget.hydrate(level);
                     if (namingTarget.isValid(player)) {
                         namingTarget.name(name);
+                        NamingCriteriaTriggers.NAMING.trigger(player, namingTarget.getTarget());
                     }
                 }
             });

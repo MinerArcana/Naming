@@ -32,8 +32,8 @@ public class PosterBoardBlockRenderer extends TileEntityRenderer<PosterBoardBloc
         int l = (int) ((double) NativeImage.getB(i) * 0.4D);
         int i1 = NativeImage.combine(0, l, k, j);
         pMatrixStack.translate(28, 10, 28);
-        for (Direction direction: Direction.values()) {
-            if (direction.getAxis() != Direction.Axis.Y) {
+        for (Direction direction : Direction.values()) {
+            if (renderDirection(pBlockEntity, direction)) {
                 pMatrixStack.pushPose();
 
                 pMatrixStack.mulPose(Vector3f.YP.rotationDegrees(direction.toYRot()));
@@ -52,8 +52,10 @@ public class PosterBoardBlockRenderer extends TileEntityRenderer<PosterBoardBloc
             }
         }
 
-
-
         pMatrixStack.popPose();
+    }
+
+    protected boolean renderDirection(PosterBoardBlockEntity posterBoardBlockEntity, Direction direction) {
+        return direction.getAxis() != Direction.Axis.Y;
     }
 }

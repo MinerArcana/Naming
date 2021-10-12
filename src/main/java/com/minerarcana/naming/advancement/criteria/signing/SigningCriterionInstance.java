@@ -1,4 +1,4 @@
-package com.minerarcana.naming.advancement.criteria;
+package com.minerarcana.naming.advancement.criteria.signing;
 
 import com.google.gson.JsonObject;
 import net.minecraft.advancements.criterion.CriterionInstance;

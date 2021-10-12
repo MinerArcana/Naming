@@ -1,0 +1,1 @@
+naming grant @p listening_stone

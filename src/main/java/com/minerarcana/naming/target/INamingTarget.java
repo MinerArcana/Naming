@@ -20,4 +20,6 @@ public interface INamingTarget {
     void hydrate(ServerWorld serverWorld);
 
     NamingTargetType getType();
+
+    Object getTarget();
 }
