@@ -1,5 +1,6 @@
 package com.minerarcana.naming.target;
 
+import com.minerarcana.naming.capability.Namer;
 import com.minerarcana.naming.content.NamingRecipes;
 import com.minerarcana.naming.recipe.NamingInventory;
 import com.minerarcana.naming.recipe.NamingRecipe;
@@ -39,7 +40,11 @@ public class ItemStackNamingTarget implements INamingTarget {
     public void name(@Nonnull String name, Entity namer) {
         if (namer instanceof LivingEntity && namer.level != null) {
             LivingEntity livingNamer = (LivingEntity) namer;
-            NamingInventory namingInventory = new NamingInventory(name, livingNamer.getItemInHand(hand));
+            NamingInventory namingInventory = new NamingInventory(
+                    name,
+                    livingNamer.getItemInHand(hand),
+                    livingNamer.getCapability(Namer.CAP)
+            );
             Optional<NamingRecipe> recipeOptional = livingNamer.level.getRecipeManager()
                     .getRecipeFor(
                             NamingRecipes.NAMING_RECIPE_TYPE,

@@ -11,6 +11,7 @@ public class NamingRecipes {
     public static final IRecipeType<NamingRecipe> NAMING_RECIPE_TYPE = IRecipeType.register("naming:naming");
 
     public static final RegistryEntry<NamingRecipeSerializer> NAMING_RECIPE_SERIALIZER = Naming.getRegistrate()
+            .object("naming")
             .simple(IRecipeSerializer.class, NamingRecipeSerializer::new);
 
     public static void setup() {

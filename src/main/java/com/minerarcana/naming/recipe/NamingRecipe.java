@@ -18,19 +18,22 @@ public class NamingRecipe implements IRecipe<NamingInventory> {
     private final Ingredient ingredient;
     private final Pattern pattern;
     private final ItemStack result;
+    private final String ability;
 
-    public NamingRecipe(ResourceLocation id, Ingredient ingredient, Pattern pattern, ItemStack result) {
+    public NamingRecipe(ResourceLocation id, Ingredient ingredient, Pattern pattern, ItemStack result, String ability) {
         this.id = id;
         this.ingredient = ingredient;
         this.pattern = pattern;
         this.result = result;
+        this.ability = ability;
     }
 
     @Override
     @ParametersAreNonnullByDefault
     public boolean matches(NamingInventory namingInventory, World level) {
         return this.ingredient.test(namingInventory.getItem(0)) &&
-                this.pattern.matcher(namingInventory.getName()).matches();
+                this.pattern.matcher(namingInventory.getName()).matches() &&
+                (this.ability.isEmpty() || namingInventory.hasAbility(this.ability));
     }
 
     @Override
@@ -75,5 +78,9 @@ public class NamingRecipe implements IRecipe<NamingInventory> {
 
     public Pattern getPattern() {
         return pattern;
+    }
+
+    public String getAbility() {
+        return ability;
     }
 }

@@ -23,8 +23,8 @@ public class NamingRecipeSerializer extends ForgeRegistryEntry<IRecipeSerializer
                 id,
                 Ingredient.fromJson(jsonObject.get("ingredient")),
                 Pattern.compile(JSONUtils.getAsString(jsonObject, "pattern")),
-                CraftingHelper.getItemStack(jsonObject.getAsJsonObject("result"), true)
-        );
+                CraftingHelper.getItemStack(jsonObject.getAsJsonObject("result"), true),
+                JSONUtils.getAsString(jsonObject, "ability", ""));
     }
 
     @Nullable
@@ -35,7 +35,8 @@ public class NamingRecipeSerializer extends ForgeRegistryEntry<IRecipeSerializer
                 id,
                 Ingredient.fromNetwork(packetBuffer),
                 Pattern.compile(packetBuffer.readUtf()),
-                packetBuffer.readItem()
+                packetBuffer.readItem(),
+                packetBuffer.readUtf()
         );
     }
 
@@ -45,5 +46,6 @@ public class NamingRecipeSerializer extends ForgeRegistryEntry<IRecipeSerializer
         namingRecipe.getIngredient().toNetwork(packetBuffer);
         packetBuffer.writeUtf(namingRecipe.getPattern().pattern());
         packetBuffer.writeItemStack(namingRecipe.getResultItem(), false);
+        packetBuffer.writeUtf(namingRecipe.getAbility());
     }
 }

@@ -1,0 +1,11 @@
+{
+  "type": "naming:naming",
+  "ingredient": {
+    "item": "naming:poster_board"
+  },
+  "pattern": "listen.*",
+  "result": {
+    "item": "naming:listening_stone"
+  },
+  "ability": "listening_stone"
+}
