@@ -4,7 +4,8 @@
   "compatibilityLevel": "JAVA_8",
   "refmap": "naming.refmap.json",
   "mixins": [
-    "ServerPlayNetHandlerMixin"
+    "ServerPlayNetHandlerMixin",
+    "SignTileEntityMixin"
   ],
   "client": [
   ],

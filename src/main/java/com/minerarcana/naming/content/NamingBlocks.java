@@ -1,8 +1,9 @@
 package com.minerarcana.naming.content;
 
 import com.minerarcana.naming.Naming;
-import com.minerarcana.naming.block.ListeningStone;
+import com.minerarcana.naming.block.ListeningStoneBlock;
 import com.minerarcana.naming.block.PosterBoardBlock;
+import com.minerarcana.naming.blockentity.ListeningStoneBlockEntity;
 import com.minerarcana.naming.blockentity.PosterBoardBlockEntity;
 import com.minerarcana.naming.item.PosterBoardBlockItem;
 import com.minerarcana.naming.recipe.NamingRecipeBuilder;
@@ -36,9 +37,9 @@ public class NamingBlocks {
             .build()
             .register();
 
-    public static final BlockEntry<ListeningStone> LISTENING_STONE = Naming.getRegistrate()
+    public static final BlockEntry<ListeningStoneBlock> LISTENING_STONE = Naming.getRegistrate()
             .object("listening_stone")
-            .block(ListeningStone::new)
+            .block(ListeningStoneBlock::new)
             .blockstate((context, provider) -> {
                 ModelFile on = provider.models().cube(
                         "listening_stone_on",
@@ -58,9 +59,9 @@ public class NamingBlocks {
                         Naming.rl("block/poster_board"),
                         Naming.rl("block/poster_board")
                 );
-                provider.horizontalBlock(context.get(), blockState -> blockState.getValue(ListeningStone.LIT) ? on : off);
+                provider.horizontalBlock(context.get(), blockState -> blockState.getValue(ListeningStoneBlock.LIT) ? on : off);
             })
-            .item()
+            .item(PosterBoardBlockItem::new)
             .recipe((context, provider) -> NamingRecipeBuilder.of(context.get())
                     .withIngredient(Ingredient.of(POSTER_BOARD.get()))
                     .withPattern("listen.*")
@@ -69,6 +70,9 @@ public class NamingBlocks {
             )
             .group(() -> ItemGroup.TAB_MISC)
             .model((context, provider) -> provider.blockItem(context, "_off"))
+            .build()
+            .tileEntity(ListeningStoneBlockEntity::new)
+            .renderer(() -> PosterBoardBlockRenderer::new)
             .build()
             .register();
 
