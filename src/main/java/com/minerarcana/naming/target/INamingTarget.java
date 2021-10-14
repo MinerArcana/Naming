@@ -10,7 +10,7 @@ import javax.annotation.Nullable;
 public interface INamingTarget {
     boolean isValid(@Nullable Entity namer);
 
-    void name(@Nonnull String name);
+    void name(@Nonnull String name, @Nullable Entity namer);
 
     @Nullable
     String getName();
@@ -19,6 +19,7 @@ public interface INamingTarget {
 
     void hydrate(ServerWorld serverWorld);
 
+    @Nonnull
     NamingTargetType getType();
 
     Object getTarget();

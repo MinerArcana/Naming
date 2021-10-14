@@ -17,6 +17,11 @@ public class NamingTargets {
             EntityNamingTarget::fromPacketBuffer
     );
 
+    public static final NamingTargetType ITEMSTACK = INSTANCE.register(
+            "itemstack",
+            ItemStackNamingTarget::fromPacketBuffer
+    );
+
     private final Map<String, NamingTargetType> targetTypes;
 
     public NamingTargets() {

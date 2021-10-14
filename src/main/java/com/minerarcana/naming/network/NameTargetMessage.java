@@ -32,7 +32,7 @@ public class NameTargetMessage {
                     ServerWorld level = player.getLevel();
                     namingTarget.hydrate(level);
                     if (namingTarget.isValid(player)) {
-                        namingTarget.name(name);
+                        namingTarget.name(name, player);
                         NamingCriteriaTriggers.NAMING.trigger(player, namingTarget.getTarget());
                     }
                 }

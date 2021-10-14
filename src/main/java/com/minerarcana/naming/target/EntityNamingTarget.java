@@ -30,7 +30,7 @@ public class EntityNamingTarget implements INamingTarget {
     }
 
     @Override
-    public void name(@Nonnull String name) {
+    public void name(@Nonnull String name, Entity namer) {
         Entity entity = weakEntity.get();
         if (entity != null) {
             entity.setCustomName(new StringTextComponent(name));
@@ -54,6 +54,7 @@ public class EntityNamingTarget implements INamingTarget {
     }
 
     @Override
+    @Nonnull
     public NamingTargetType getType() {
         return NamingTargets.ENTITY;
     }
