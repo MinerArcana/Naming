@@ -3,9 +3,9 @@
   "ingredient": {
     "item": "naming:poster_board"
   },
-  "pattern": "[lL]isten.*",
+  "pattern": "[rR]epeat.*",
   "result": {
-    "item": "naming:listening_stone"
+    "item": "naming:speaking_stone"
   },
-  "ability": "listening_stone"
+  "ability": "speaking_stone"
 }

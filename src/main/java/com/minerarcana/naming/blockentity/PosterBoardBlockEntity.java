@@ -1,6 +1,8 @@
 package com.minerarcana.naming.blockentity;
 
 import com.minerarcana.naming.content.NamingBlocks;
+import net.minecraft.block.BlockState;
+import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.tileentity.SignTileEntity;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
@@ -20,7 +22,16 @@ public class PosterBoardBlockEntity extends SignTileEntity {
                 .orElseThrow(() -> new IllegalStateException("No Poster Board Block Entity Type Found"));
     }
 
-    public boolean renderSide(Direction direction){
-        return direction.getAxis() != Direction.Axis.Y;
+    public boolean renderSide(Direction direction) {
+        if (direction.getAxis() != Direction.Axis.Y) {
+            BlockState blockState = this.getBlockState();
+            if (blockState.hasProperty(BlockStateProperties.HORIZONTAL_FACING)) {
+                return direction != blockState.getValue(BlockStateProperties.HORIZONTAL_FACING).getOpposite();
+            } else {
+                return true;
+            }
+        } else {
+            return false;
+        }
     }
 }

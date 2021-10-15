@@ -3,7 +3,9 @@ package com.minerarcana.naming.block;
 import com.minerarcana.naming.blockentity.ListeningStoneBlockEntity;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.BlockItemUseContext;
+import net.minecraft.item.ItemStack;
 import net.minecraft.state.BooleanProperty;
 import net.minecraft.state.EnumProperty;
 import net.minecraft.state.StateContainer;
@@ -12,6 +14,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockReader;
+import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
 
 import javax.annotation.Nullable;
@@ -35,10 +38,24 @@ public class ListeningStoneBlock extends PosterBoardBlock {
         pBuilder.add(FACING, LIT);
     }
 
+    @Override
+    public boolean canConnectRedstone(BlockState state, IBlockReader world, BlockPos pos, @Nullable Direction side) {
+        return state.getValue(FACING) == side;
+    }
+
     @Nullable
     @Override
     public BlockState getStateForPlacement(BlockItemUseContext pContext) {
         return this.defaultBlockState().setValue(FACING, pContext.getHorizontalDirection().getOpposite());
+    }
+
+    @Override
+    @ParametersAreNonnullByDefault
+    public void setPlacedBy(World pLevel, BlockPos pPos, BlockState pState, @Nullable LivingEntity pPlacer, ItemStack pStack) {
+        if (!pLevel.isClientSide()) {
+            pLevel.getBlockTicks()
+                    .scheduleTick(pPos, this, 20);
+        }
     }
 
     @Override
@@ -49,12 +66,14 @@ public class ListeningStoneBlock extends PosterBoardBlock {
         if (blockEntity instanceof ListeningStoneBlockEntity) {
             ListeningStoneBlockEntity listeningStoneBlockEntity = (ListeningStoneBlockEntity) blockEntity;
             if (listeningStoneBlockEntity.checkMessages()) {
-                listeningStoneBlockEntity.setTicksToUpdate(30);
-                pLevel.getBlockTicks()
-                        .scheduleTick(pPos, this, 20);
+                pLevel.setBlockAndUpdate(pPos, pState.setValue(LIT, true));
             } else {
-                pLevel.setBlockAndUpdate(pPos, pState.setValue(LIT, false));
+                if (pState.getValue(LIT)) {
+                    pLevel.setBlockAndUpdate(pPos, pState.setValue(LIT, false));
+                }
             }
+            pLevel.getBlockTicks()
+                    .scheduleTick(pPos, this, 20);
         }
     }
 

@@ -2,11 +2,14 @@ package com.minerarcana.naming.event;
 
 
 import com.minerarcana.naming.Naming;
+import com.minerarcana.naming.capability.Namer;
 import com.minerarcana.naming.capability.NamingCapabilityProvider;
 import com.minerarcana.naming.command.NamingCommand;
 import com.minerarcana.naming.worlddata.ListeningWorldData;
+import com.minerarcana.naming.worlddata.SpokenData;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.event.RegisterCommandsEvent;
@@ -35,14 +38,16 @@ public class ForgeCommonEventHandler {
 
     @SubscribeEvent
     public static void serverChat(ServerChatEvent serverChatEvent) {
-        serverChatEvent.getPlayer()
-                .getLevel()
+        ServerPlayerEntity player = serverChatEvent.getPlayer();
+        player.getLevel()
                 .getDataStorage()
                 .computeIfAbsent(ListeningWorldData::new, "spoken")
-                .addSpoken(
-                        serverChatEvent.getPlayer().getLevel(),
-                        serverChatEvent.getMessage()
-                );
+                .addSpoken(new SpokenData(
+                        player.getCapability(Namer.CAP),
+                        serverChatEvent.getMessage(),
+                        player.getLevel().dayTime() + 20,
+                        player.getUUID()
+                ));
     }
 
     @SubscribeEvent

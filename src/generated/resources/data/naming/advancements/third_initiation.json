@@ -1,0 +1,34 @@
+{
+  "parent": "naming:second_initiation",
+  "display": {
+    "icon": {
+      "item": "naming:listening_stone"
+    },
+    "title": {
+      "translate": "advancements.naming.the_third_degree.title"
+    },
+    "description": {
+      "translate": "advancements.naming.the_third_degree.description"
+    },
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "rewards": {
+    "function": "naming:speaking_stone"
+  },
+  "criteria": {
+    "listening": {
+      "trigger": "naming:heard",
+      "conditions": {
+        "phrases": 7
+      }
+    }
+  },
+  "requirements": [
+    [
+      "listening"
+    ]
+  ]
+}

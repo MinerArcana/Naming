@@ -8,4 +8,8 @@ public interface INamer {
     boolean grantAbility(String name);
 
     boolean hasAbility(String name);
+
+    boolean addHeardMessage(String spoken);
+
+    Collection<String> getHeardMessages();
 }

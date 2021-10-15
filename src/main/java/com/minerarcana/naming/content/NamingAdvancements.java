@@ -2,8 +2,6 @@ package com.minerarcana.naming.content;
 
 import com.minerarcana.naming.Naming;
 import com.minerarcana.naming.advancement.criteria.naming.EntityChecker;
-import com.minerarcana.naming.advancement.criteria.naming.NamingCriterionInstance;
-import com.minerarcana.naming.advancement.criteria.naming.NamingCriterionTrigger;
 import com.mojang.datafixers.util.Function3;
 import com.tterrag.registrate.providers.RegistrateAdvancementProvider;
 import net.minecraft.advancements.Advancement;
@@ -68,6 +66,18 @@ public class NamingAdvancements {
                 .rewards(rewardAbility("listening_stone"))
                 .build(Naming.rl("second_initiation"));
         provider.accept(secondInitiation);
+
+        Advancement thirdInitiation = Advancement.Builder.advancement()
+                .display(displayInfo.apply(
+                        NamingBlocks.LISTENING_STONE.get(),
+                        "The Third Degree",
+                        "Have that which listens, hear 7 times"
+                ))
+                .addCriterion("listening", NamingCriteriaTriggers.HEARD.phrases(7))
+                .parent(secondInitiation)
+                .rewards(rewardAbility("speaking_stone"))
+                .build(Naming.rl("third_initiation"));
+        provider.accept(thirdInitiation);
 
     }
 

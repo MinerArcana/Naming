@@ -18,14 +18,16 @@ public class Namer implements INamer, INBTSerializable<CompoundNBT> {
     public static Capability<INamer> CAP = null;
 
     private final Set<String> abilities;
+    private final Set<String> heard;
 
     public Namer() {
-        this(Sets.newHashSet());
+        this(Sets.newHashSet(), Sets.newHashSet());
     }
 
 
-    public Namer(Set<String> abilities) {
+    public Namer(Set<String> abilities, Set<String> heard) {
         this.abilities = abilities;
+        this.heard = heard;
     }
 
     @Override
@@ -41,6 +43,16 @@ public class Namer implements INamer, INBTSerializable<CompoundNBT> {
     @Override
     public boolean hasAbility(String name) {
         return abilities.contains(name);
+    }
+
+    @Override
+    public boolean addHeardMessage(String spoken) {
+        return heard.add(spoken);
+    }
+
+    @Override
+    public Collection<String> getHeardMessages() {
+        return heard;
     }
 
     @Override

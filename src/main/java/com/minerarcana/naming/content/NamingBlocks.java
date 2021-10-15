@@ -3,6 +3,7 @@ package com.minerarcana.naming.content;
 import com.minerarcana.naming.Naming;
 import com.minerarcana.naming.block.ListeningStoneBlock;
 import com.minerarcana.naming.block.PosterBoardBlock;
+import com.minerarcana.naming.block.SpeakingStoneBlock;
 import com.minerarcana.naming.blockentity.ListeningStoneBlockEntity;
 import com.minerarcana.naming.blockentity.PosterBoardBlockEntity;
 import com.minerarcana.naming.item.PosterBoardBlockItem;
@@ -49,7 +50,7 @@ public class NamingBlocks {
                         Naming.rl("block/poster_board"),
                         Naming.rl("block/poster_board"),
                         Naming.rl("block/poster_board")
-                );
+                ).texture("particle", Naming.rl("block/poster_board"));
                 ModelFile off = provider.models().cube(
                         "listening_stone_off",
                         Naming.rl("block/poster_board"),
@@ -58,13 +59,13 @@ public class NamingBlocks {
                         Naming.rl("block/poster_board"),
                         Naming.rl("block/poster_board"),
                         Naming.rl("block/poster_board")
-                );
+                ).texture("particle", Naming.rl("block/poster_board"));
                 provider.horizontalBlock(context.get(), blockState -> blockState.getValue(ListeningStoneBlock.LIT) ? on : off);
             })
             .item(PosterBoardBlockItem::new)
             .recipe((context, provider) -> NamingRecipeBuilder.of(context.get())
                     .withIngredient(Ingredient.of(POSTER_BOARD.get()))
-                    .withPattern("listen.*")
+                    .withPattern("[lL]isten.*")
                     .withAbility("listening_stone")
                     .build(provider)
             )
@@ -72,6 +73,32 @@ public class NamingBlocks {
             .model((context, provider) -> provider.blockItem(context, "_off"))
             .build()
             .tileEntity(ListeningStoneBlockEntity::new)
+            .renderer(() -> PosterBoardBlockRenderer::new)
+            .build()
+            .register();
+
+    public static final BlockEntry<SpeakingStoneBlock> SPEAKING_STONE = Naming.getRegistrate()
+            .object("speaking_stone")
+            .block(SpeakingStoneBlock::new)
+            .blockstate((context, provider) -> provider.simpleBlock(context.get(), provider.models().cube(
+                    "speaking_stone",
+                    Naming.rl("block/poster_board"),
+                    Naming.rl("block/poster_board"),
+                    Naming.rl("block/speaking_stone"),
+                    Naming.rl("block/poster_board"),
+                    Naming.rl("block/poster_board"),
+                    Naming.rl("block/poster_board")
+            ).texture("particle", Naming.rl("block/poster_board"))))
+            .item(PosterBoardBlockItem::new)
+            .recipe((context, provider) -> NamingRecipeBuilder.of(context.get())
+                    .withIngredient(Ingredient.of(POSTER_BOARD.get()))
+                    .withPattern("[rR]epeat.*")
+                    .withAbility("speaking_stone")
+                    .build(provider)
+            )
+            .group(() -> ItemGroup.TAB_MISC)
+            .build()
+            .tileEntity(PosterBoardBlockEntity::new)
             .renderer(() -> PosterBoardBlockRenderer::new)
             .build()
             .register();
