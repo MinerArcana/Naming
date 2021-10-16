@@ -26,7 +26,7 @@ public class PosterBoardBlockEntity extends SignTileEntity {
         if (direction.getAxis() != Direction.Axis.Y) {
             BlockState blockState = this.getBlockState();
             if (blockState.hasProperty(BlockStateProperties.HORIZONTAL_FACING)) {
-                return direction != blockState.getValue(BlockStateProperties.HORIZONTAL_FACING).getOpposite();
+                return direction != blockState.getValue(BlockStateProperties.HORIZONTAL_FACING);
             } else {
                 return true;
             }

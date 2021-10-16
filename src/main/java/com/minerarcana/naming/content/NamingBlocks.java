@@ -42,22 +42,16 @@ public class NamingBlocks {
             .object("listening_stone")
             .block(ListeningStoneBlock::new)
             .blockstate((context, provider) -> {
-                ModelFile on = provider.models().cube(
+                ModelFile on = provider.models().orientable(
                         "listening_stone_on",
                         Naming.rl("block/poster_board"),
-                        Naming.rl("block/poster_board"),
                         Naming.rl("block/listening_stone_on"),
-                        Naming.rl("block/poster_board"),
-                        Naming.rl("block/poster_board"),
                         Naming.rl("block/poster_board")
                 ).texture("particle", Naming.rl("block/poster_board"));
-                ModelFile off = provider.models().cube(
+                ModelFile off = provider.models().orientable(
                         "listening_stone_off",
                         Naming.rl("block/poster_board"),
-                        Naming.rl("block/poster_board"),
                         Naming.rl("block/listening_stone_off"),
-                        Naming.rl("block/poster_board"),
-                        Naming.rl("block/poster_board"),
                         Naming.rl("block/poster_board")
                 ).texture("particle", Naming.rl("block/poster_board"));
                 provider.horizontalBlock(context.get(), blockState -> blockState.getValue(ListeningStoneBlock.LIT) ? on : off);

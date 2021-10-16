@@ -40,7 +40,7 @@ public class ListeningStoneBlock extends PosterBoardBlock {
 
     @Override
     public boolean canConnectRedstone(BlockState state, IBlockReader world, BlockPos pos, @Nullable Direction side) {
-        return state.getValue(FACING) == side;
+        return state.getValue(FACING).getOpposite() == side;
     }
 
     @Nullable

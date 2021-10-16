@@ -37,6 +37,9 @@ public class PosterBoardBlockRenderer extends TileEntityRenderer<PosterBoardBloc
                 pMatrixStack.pushPose();
 
                 pMatrixStack.mulPose(Vector3f.YP.rotationDegrees(direction.toYRot()));
+                if (direction.getAxis() == Direction.Axis.X) {
+                    pMatrixStack.mulPose(Vector3f.YP.rotationDegrees(180));
+                }
                 pMatrixStack.translate(0, -36.5, 28.25);
                 for (int k1 = 0; k1 < 4; ++k1) {
                     IReorderingProcessor reorderingProcessor = pBlockEntity.getRenderMessage(k1, (textComponent) -> {
