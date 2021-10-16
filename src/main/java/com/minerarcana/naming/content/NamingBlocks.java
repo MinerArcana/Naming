@@ -74,13 +74,10 @@ public class NamingBlocks {
     public static final BlockEntry<SpeakingStoneBlock> SPEAKING_STONE = Naming.getRegistrate()
             .object("speaking_stone")
             .block(SpeakingStoneBlock::new)
-            .blockstate((context, provider) -> provider.simpleBlock(context.get(), provider.models().cube(
-                    "speaking_stone",
-                    Naming.rl("block/poster_board"),
+            .blockstate((context, provider) -> provider.simpleBlock(context.get(), provider.models().orientable(
+                    "listening_stone_off",
                     Naming.rl("block/poster_board"),
                     Naming.rl("block/speaking_stone"),
-                    Naming.rl("block/poster_board"),
-                    Naming.rl("block/poster_board"),
                     Naming.rl("block/poster_board")
             ).texture("particle", Naming.rl("block/poster_board"))))
             .item(PosterBoardBlockItem::new)
