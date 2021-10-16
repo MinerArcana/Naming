@@ -12,6 +12,7 @@ import net.minecraftforge.common.util.Constants;
 
 import javax.annotation.Nonnull;
 import java.util.Collection;
+import java.util.Iterator;
 import java.util.Queue;
 import java.util.UUID;
 
@@ -28,10 +29,14 @@ public class ListeningWorldData extends WorldSavedData {
     }
 
     public void tick(IWorld world) {
-        for (SpokenData checking = spokenQueue.peek(); checking != null && checking.getExpiration() <= world.dayTime();
-             checking = spokenQueue.peek()) {
-            spokenQueue.remove();
-            this.setDirty();
+        Iterator<SpokenData> spokenDataIterator = spokenQueue.iterator();
+        boolean done = false;
+        while (spokenDataIterator.hasNext() && !done) {
+            if (spokenDataIterator.next().getExpiration() < world.getLevelData().getGameTime()) {
+                spokenDataIterator.remove();
+            } else {
+                done = true;
+            }
         }
     }
 

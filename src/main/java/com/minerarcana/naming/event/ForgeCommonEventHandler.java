@@ -45,7 +45,7 @@ public class ForgeCommonEventHandler {
                 .addSpoken(new SpokenData(
                         player.getCapability(Namer.CAP),
                         serverChatEvent.getMessage(),
-                        player.getLevel().dayTime() + 20,
+                        player.getLevel().getGameTime() + 20,
                         player.getUUID()
                 ));
     }

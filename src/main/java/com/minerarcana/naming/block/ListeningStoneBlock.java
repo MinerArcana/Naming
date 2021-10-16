@@ -81,7 +81,7 @@ public class ListeningStoneBlock extends PosterBoardBlock {
     @SuppressWarnings("deprecation")
     @ParametersAreNonnullByDefault
     public int getDirectSignal(BlockState pBlockState, IBlockReader pBlockAccess, BlockPos pPos, Direction pSide) {
-        if (pBlockState.getValue(LIT) && pBlockState.getValue(FACING).getOpposite() == pSide) {
+        if (pBlockState.getValue(LIT) && pBlockState.getValue(FACING) == pSide) {
             return 15;
         } else {
             return 0;
