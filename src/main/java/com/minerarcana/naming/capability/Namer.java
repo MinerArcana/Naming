@@ -61,6 +61,9 @@ public class Namer implements INamer, INBTSerializable<CompoundNBT> {
         ListNBT abilitiesNBT = new ListNBT();
         abilities.forEach(ability -> abilitiesNBT.add(StringNBT.valueOf(ability)));
         nbt.put("abilities", abilitiesNBT);
+        ListNBT heardNBT = new ListNBT();
+        heard.forEach(value -> heardNBT.add(StringNBT.valueOf(value)));
+        nbt.put("heard", heardNBT);
         return nbt;
     }
 
@@ -70,6 +73,11 @@ public class Namer implements INamer, INBTSerializable<CompoundNBT> {
         abilities.clear();
         for (int i = 0; i < abilitiesNBT.size(); i++) {
             abilities.add(abilitiesNBT.getString(i));
+        }
+        ListNBT heardNBT = nbt.getList("heard", Constants.NBT.TAG_STRING);
+        heard.clear();
+        for (int i = 0; i < heardNBT.size(); i++) {
+            heard.add(heardNBT.getString(i));
         }
     }
 }
