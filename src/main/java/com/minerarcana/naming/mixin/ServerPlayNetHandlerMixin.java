@@ -12,7 +12,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.util.List;
 
-@Mixin(value = ServerPlayNetHandler.class, remap = false)
+@Mixin(value = ServerPlayNetHandler.class)
 public class ServerPlayNetHandlerMixin {
     @Shadow
     public ServerPlayerEntity player;

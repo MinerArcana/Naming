@@ -1,27 +1,33 @@
 package com.minerarcana.naming.block;
 
 import com.minerarcana.naming.blockentity.ListeningStoneBlockEntity;
+import com.minerarcana.naming.content.NamingBlocks;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
-import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.BlockItemUseContext;
-import net.minecraft.item.ItemStack;
 import net.minecraft.state.BooleanProperty;
 import net.minecraft.state.EnumProperty;
 import net.minecraft.state.StateContainer;
 import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.tileentity.TileEntityType;
+import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Direction;
+import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
-import net.minecraft.world.server.ServerWorld;
+import net.minecraftforge.fml.network.NetworkHooks;
+import net.minecraftforge.registries.ForgeRegistries;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
-import java.util.Random;
 
-public class ListeningStoneBlock extends PosterBoardBlock {
+public class ListeningStoneBlock extends Block {
     public static BooleanProperty LIT = BlockStateProperties.LIT;
     public static EnumProperty<Direction> FACING = BlockStateProperties.HORIZONTAL_FACING;
 
@@ -31,6 +37,21 @@ public class ListeningStoneBlock extends PosterBoardBlock {
                 .setValue(LIT, false)
                 .setValue(FACING, Direction.NORTH)
         );
+    }
+
+    @Override
+    @Nonnull
+    @SuppressWarnings("deprecation")
+    @ParametersAreNonnullByDefault
+    public ActionResultType use(BlockState pState, World pLevel, BlockPos pPos, PlayerEntity pPlayer, Hand pHand, BlockRayTraceResult pHit) {
+        TileEntity blockEntity = pLevel.getBlockEntity(pPos);
+        if (blockEntity instanceof ListeningStoneBlockEntity) {
+            if (pPlayer instanceof ServerPlayerEntity) {
+                NetworkHooks.openGui((ServerPlayerEntity) pPlayer, (ListeningStoneBlockEntity) blockEntity);
+            }
+            return ActionResultType.sidedSuccess(pLevel.isClientSide());
+        }
+        return super.use(pState, pLevel, pPos, pPlayer, pHand, pHit);
     }
 
     @Override
@@ -47,34 +68,6 @@ public class ListeningStoneBlock extends PosterBoardBlock {
     @Override
     public BlockState getStateForPlacement(BlockItemUseContext pContext) {
         return this.defaultBlockState().setValue(FACING, pContext.getHorizontalDirection().getOpposite());
-    }
-
-    @Override
-    @ParametersAreNonnullByDefault
-    public void setPlacedBy(World pLevel, BlockPos pPos, BlockState pState, @Nullable LivingEntity pPlacer, ItemStack pStack) {
-        if (!pLevel.isClientSide()) {
-            pLevel.getBlockTicks()
-                    .scheduleTick(pPos, this, 20);
-        }
-    }
-
-    @Override
-    @SuppressWarnings("deprecation")
-    @ParametersAreNonnullByDefault
-    public void tick(BlockState pState, ServerWorld pLevel, BlockPos pPos, Random pRand) {
-        TileEntity blockEntity = pLevel.getBlockEntity(pPos);
-        if (blockEntity instanceof ListeningStoneBlockEntity) {
-            ListeningStoneBlockEntity listeningStoneBlockEntity = (ListeningStoneBlockEntity) blockEntity;
-            if (listeningStoneBlockEntity.checkMessages()) {
-                pLevel.setBlockAndUpdate(pPos, pState.setValue(LIT, true));
-            } else {
-                if (pState.getValue(LIT)) {
-                    pLevel.setBlockAndUpdate(pPos, pState.setValue(LIT, false));
-                }
-            }
-            pLevel.getBlockTicks()
-                    .scheduleTick(pPos, this, 20);
-        }
     }
 
     @Override
@@ -102,6 +95,13 @@ public class ListeningStoneBlock extends PosterBoardBlock {
     @Nullable
     @Override
     public TileEntity createTileEntity(BlockState state, IBlockReader world) {
-        return new ListeningStoneBlockEntity(null);
+        return NamingBlocks.LISTENING_STONE.getSibling(ForgeRegistries.TILE_ENTITIES)
+                .map(TileEntityType::create)
+                .orElseThrow(() -> new IllegalStateException("Failed to Find Block Entity Type"));
+    }
+
+    @Override
+    public boolean hasTileEntity(BlockState state) {
+        return true;
     }
 }

@@ -8,7 +8,7 @@ import com.minerarcana.naming.blockentity.ListeningStoneBlockEntity;
 import com.minerarcana.naming.blockentity.PosterBoardBlockEntity;
 import com.minerarcana.naming.item.PosterBoardBlockItem;
 import com.minerarcana.naming.recipe.NamingRecipeBuilder;
-import com.minerarcana.naming.renderer.PosterBoardBlockRenderer;
+import com.minerarcana.naming.renderer.SideTextBlockRenderer;
 import com.tterrag.registrate.providers.RegistrateRecipeProvider;
 import com.tterrag.registrate.util.entry.BlockEntry;
 import net.minecraft.data.ShapelessRecipeBuilder;
@@ -25,7 +25,7 @@ public class NamingBlocks {
             .object("poster_board")
             .block(PosterBoardBlock::new)
             .tileEntity(PosterBoardBlockEntity::new)
-            .renderer(() -> PosterBoardBlockRenderer::new)
+            .renderer(() -> SideTextBlockRenderer::new)
             .build()
             .item(PosterBoardBlockItem::new)
             .group(() -> ItemGroup.TAB_MISC)
@@ -67,7 +67,7 @@ public class NamingBlocks {
             .model((context, provider) -> provider.blockItem(context, "_off"))
             .build()
             .tileEntity(ListeningStoneBlockEntity::new)
-            .renderer(() -> PosterBoardBlockRenderer::new)
+            .renderer(() -> SideTextBlockRenderer::new)
             .build()
             .register();
 
@@ -90,7 +90,7 @@ public class NamingBlocks {
             .group(() -> ItemGroup.TAB_MISC)
             .build()
             .tileEntity(PosterBoardBlockEntity::new)
-            .renderer(() -> PosterBoardBlockRenderer::new)
+            .renderer(() -> SideTextBlockRenderer::new)
             .build()
             .register();
 

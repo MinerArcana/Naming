@@ -62,7 +62,10 @@ minecraft {
             workingDirectory project.file('run')
 
             property 'forge.logging.console.level', 'debug'
-            arg "-mixin.config=${mod_id}.mixins.json"
+            property 'mixin.env.remapRefMap', 'true'
+            property 'mixin.env.refMapRemappingFile', "${projectDir}/build/createSrgToMcp/output.srg"
+
+            args "-mixin.config=${mod_id}.mixins.json"
 
             if (project.hasProperty('mc_uuid')) {
                 args '--uuid', project.getProperty('mc_uuid')
@@ -85,7 +88,10 @@ minecraft {
             workingDirectory project.file('run')
 
             property 'forge.logging.console.level', 'debug'
-            arg "-mixin.config=${mod_id}.mixins.json"
+            property 'mixin.env.remapRefMap', 'true'
+            property 'mixin.env.refMapRemappingFile', "${projectDir}/build/createSrgToMcp/output.srg"
+            args "-mixin.config=${mod_id}.mixins.json"
+
             mods {
                 "${mod_id}" {
                     source sourceSets.main
@@ -97,7 +103,10 @@ minecraft {
             workingDirectory project.file('run')
 
             property 'forge.logging.console.level', 'debug'
-            arg "-mixin.config=${mod_id}.mixins.json"
+            property 'mixin.env.remapRefMap', 'true'
+            property 'mixin.env.refMapRemappingFile', "${projectDir}/build/createSrgToMcp/output.srg"
+
+            args "-mixin.config=${mod_id}.mixins.json"
             args '--mod', mod_id, '--all', '--output', file('src/generated/resources/'), '--existing', file('src/main/resources/')
 
             mods {
@@ -130,7 +139,7 @@ dependencies {
     implementation fg.deobf(registrate)
     shade registrate
 
-    annotationProcessor 'org.spongepowered:mixin:0.8.2:processor'
+    annotationProcessor 'org.spongepowered:mixin:0.8.4:processor'
 }
 
 mixin {

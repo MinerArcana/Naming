@@ -1,84 +1,68 @@
 package com.minerarcana.naming.worlddata;
 
-import com.google.common.collect.Queues;
-import com.minerarcana.naming.content.NamingCriteriaTriggers;
-import net.minecraft.entity.player.ServerPlayerEntity;
+import com.google.common.collect.HashBasedTable;
+import com.google.common.collect.Table;
+import com.minerarcana.naming.blockentity.ListeningType;
 import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.nbt.ListNBT;
-import net.minecraft.world.IWorld;
-import net.minecraft.world.server.ServerWorld;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.storage.WorldSavedData;
-import net.minecraftforge.common.util.Constants;
 
 import javax.annotation.Nonnull;
-import java.util.Collection;
 import java.util.Iterator;
-import java.util.Queue;
-import java.util.UUID;
+import java.util.Map;
+import java.util.function.Function;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class ListeningWorldData extends WorldSavedData {
-    private final Queue<SpokenData> spokenQueue;
+    private static final Pattern NAME_CHECK = Pattern.compile("^(?<name>\\w+)\\s+.*");
+
+    private final Table<String, BlockPos, WeakFunction<String, ListeningType>> listeners;
 
     public ListeningWorldData() {
         super("spoken");
-        this.spokenQueue = Queues.newArrayDeque();
+        this.listeners = HashBasedTable.create();
     }
 
-    public void addSpoken(SpokenData spoken) {
-        spokenQueue.add(spoken);
+    public void clean() {
+        listeners.cellSet().removeIf(cell -> cell.getValue() == null || !cell.getValue().isValid());
     }
 
-    public void tick(IWorld world) {
-        Iterator<SpokenData> spokenDataIterator = spokenQueue.iterator();
-        boolean done = false;
-        while (spokenDataIterator.hasNext() && !done) {
-            if (spokenDataIterator.next().getExpiration() < world.getLevelData().getGameTime()) {
-                spokenDataIterator.remove();
-            } else {
-                done = true;
+    public ListeningType hear(String spoken) {
+        Matcher spokenMatch = NAME_CHECK.matcher(spoken);
+        if (spokenMatch.find()) {
+            String name = spokenMatch.group("name");
+            Map<BlockPos, WeakFunction<String, ListeningType>> positionalListeners = listeners.row(name);
+            if (!positionalListeners.isEmpty()) {
+                String removedName = spokenMatch.replaceAll("").trim();
+                return positionalListeners.values()
+                        .stream()
+                        .map(listener -> listener.apply(removedName))
+                        .reduce((listeningType, listeningType2) ->
+                                listeningType.ordinal() > listeningType2.ordinal() ? listeningType : listeningType2
+                        )
+                        .orElse(ListeningType.NONE);
             }
         }
+        return ListeningType.NONE;
+    }
+
+    public void removeListener(String name, BlockPos worldPosition) {
+        listeners.remove(name, worldPosition);
+    }
+
+    public void addListener(String name, BlockPos worldPosition, Function<String, ListeningType> listener) {
+        listeners.put(name, worldPosition.immutable(), new WeakFunction<>(listener, ListeningType.NONE));
     }
 
     @Override
     public void load(@Nonnull CompoundNBT nbt) {
-        ListNBT spokenQueueNBT = nbt.getList("spokenQueue", Constants.NBT.TAG_COMPOUND);
-        for (int i = 0; i < spokenQueueNBT.size(); i++) {
-            spokenQueue.add(SpokenData.fromNBT(spokenQueueNBT.getCompound(i)));
-        }
+
     }
 
     @Override
     @Nonnull
     public CompoundNBT save(@Nonnull CompoundNBT nbt) {
-        ListNBT spokenQueueNBT = new ListNBT();
-        for (SpokenData current = spokenQueue.poll(); current != null; current = spokenQueue.poll()) {
-            spokenQueueNBT.add(current.toNBT());
-        }
-        nbt.put("spokenQueue", spokenQueueNBT);
         return nbt;
-    }
-
-    public boolean checkSpoken(Collection<String> messages, ServerWorld serverLevel) {
-        return spokenQueue.stream()
-                .filter(spokenData -> messages.contains(spokenData.getSpoken()))
-                .peek(spokenData -> {
-                    UUID playerUUID = spokenData.getPlayerUUID();
-                    if (playerUUID != null) {
-                        boolean newHeard = spokenData.getNamer()
-                                .map(namer -> namer.addHeardMessage(spokenData.getSpoken()))
-                                .orElse(false);
-                        if (newHeard) {
-                            ServerPlayerEntity player = serverLevel.getServer()
-                                    .getPlayerList()
-                                    .getPlayer(playerUUID);
-                            if (player != null) {
-                                NamingCriteriaTriggers.HEARD.trigger(player, spokenData.getSpoken());
-                            }
-                        }
-                    }
-                })
-                .findFirst()
-                .isPresent();
     }
 }

@@ -2,11 +2,12 @@ package com.minerarcana.naming.event;
 
 
 import com.minerarcana.naming.Naming;
+import com.minerarcana.naming.blockentity.ListeningType;
 import com.minerarcana.naming.capability.Namer;
 import com.minerarcana.naming.capability.NamingCapabilityProvider;
 import com.minerarcana.naming.command.NamingCommand;
+import com.minerarcana.naming.content.NamingCriteriaTriggers;
 import com.minerarcana.naming.worlddata.ListeningWorldData;
-import com.minerarcana.naming.worlddata.SpokenData;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
@@ -39,23 +40,28 @@ public class ForgeCommonEventHandler {
     @SubscribeEvent
     public static void serverChat(ServerChatEvent serverChatEvent) {
         ServerPlayerEntity player = serverChatEvent.getPlayer();
-        player.getLevel()
+        ListeningType listeningType = player.getLevel()
                 .getDataStorage()
                 .computeIfAbsent(ListeningWorldData::new, "spoken")
-                .addSpoken(new SpokenData(
-                        player.getCapability(Namer.CAP),
-                        serverChatEvent.getMessage(),
-                        player.getLevel().getGameTime() + 20,
-                        player.getUUID()
-                ));
+                .hear(serverChatEvent.getMessage());
+
+        if (listeningType.isListening()) {
+            player.getCapability(Namer.CAP)
+                    .ifPresent(namer -> namer.addHeardMessage(serverChatEvent.getMessage()));
+            NamingCriteriaTriggers.HEARD.trigger(player, serverChatEvent.getMessage());
+        }
+        if (listeningType.isConsuming()) {
+            serverChatEvent.setCanceled(true);
+        }
     }
 
     @SubscribeEvent
     public static void worldTick(TickEvent.WorldTickEvent worldTickEvent) {
-        if (worldTickEvent.phase == TickEvent.Phase.END && worldTickEvent.world instanceof ServerWorld) {
+        if (worldTickEvent.phase == TickEvent.Phase.END && worldTickEvent.world instanceof ServerWorld &&
+                worldTickEvent.world.random.nextInt(100) == 0) {
             ((ServerWorld) worldTickEvent.world).getDataStorage()
                     .computeIfAbsent(ListeningWorldData::new, "spoken")
-                    .tick(worldTickEvent.world);
+                    .clean();
         }
     }
 }
