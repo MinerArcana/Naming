@@ -10,6 +10,12 @@
   "block.naming.listening_stone": "\u01DDuo\u0287S bu\u0131u\u01DD\u0287s\u0131\uA780",
   "block.naming.poster_board": "p\u0279\u0250o\u15FA \u0279\u01DD\u0287so\u0500",
   "block.naming.speaking_stone": "\u01DDuo\u0287S bu\u0131\u029E\u0250\u01DDdS",
+  "button.naming.listening_type.consuming": "bu\u0131\u026Fnsuo\u0186",
+  "button.naming.listening_type.listening": "bu\u0131u\u01DD\u0287s\u0131\uA780",
+  "button.naming.listening_type.none": "\u01DDuoN",
+  "button.naming.speaking_target.listeners": "s\u0279\u01DDu\u01DD\u0287s\u0131\uA780",
+  "button.naming.speaking_target.nearby": "\u028Eq\u0279\u0250\u01DDN",
+  "button.naming.speaking_target.owner": "\u0279\u01DDu\u028DO",
   "key.category.name": "bu\u0131\u026F\u0250N",
   "key.naming.name": "\u01DD\u026F\u0250N",
   "screen.naming.title": "bu\u0131\u026F\u0250N"

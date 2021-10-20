@@ -4,6 +4,7 @@
   "compatibilityLevel": "JAVA_8",
   "refmap": "naming.refmap.json",
   "mixins": [
+    "ContainerAccessor",
     "ServerPlayNetHandlerMixin",
     "SignTileEntityAccessor"
   ],

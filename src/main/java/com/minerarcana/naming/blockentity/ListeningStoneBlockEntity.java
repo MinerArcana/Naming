@@ -1,52 +1,113 @@
 package com.minerarcana.naming.blockentity;
 
+import com.minerarcana.naming.block.ListeningStoneBlock;
+import com.minerarcana.naming.container.ListeningContainer;
 import com.minerarcana.naming.content.NamingBlocks;
-import com.minerarcana.naming.mixin.SignTileEntityAccessor;
 import com.minerarcana.naming.worlddata.ListeningWorldData;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.inventory.container.Container;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.nbt.ListNBT;
+import net.minecraft.nbt.StringNBT;
 import net.minecraft.tileentity.TileEntityType;
-import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.Direction;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
-import net.minecraftforge.registries.ForgeRegistries;
+import net.minecraftforge.common.util.Constants;
 
 import javax.annotation.Nonnull;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.stream.Collectors;
+import javax.annotation.Nullable;
+import javax.annotation.ParametersAreNonnullByDefault;
+import java.util.function.Function;
 
-public class ListeningStoneBlockEntity extends PosterBoardBlockEntity {
-    private Collection<String> listeningFor;
+public class ListeningStoneBlockEntity extends MessageBlockEntity implements Function<String, ListeningType> {
+    private final ListeningType[] listeningTypes = {
+            ListeningType.NONE,
+            ListeningType.NONE,
+            ListeningType.NONE,
+            ListeningType.NONE
+    };
 
-    public ListeningStoneBlockEntity(TileEntityType<PosterBoardBlockEntity> blockEntityTileEntityType) {
-        super(blockEntityTileEntityType);
+    public ListeningStoneBlockEntity(TileEntityType<ListeningStoneBlockEntity> blockEntityType) {
+        super(blockEntityType);
+    }
+
+    @Override
+    public void setName(String name) {
+        if (this.getLevel() instanceof ServerWorld) {
+            ListeningWorldData listeningWorldData = ((ServerWorld) this.getLevel()).getDataStorage()
+                    .computeIfAbsent(ListeningWorldData::new, "spoken");
+            listeningWorldData.removeListener(this.getName(), this.getBlockPos());
+            listeningWorldData.addListener(name, this.getBlockPos(), this);
+        }
+        super.setName(name);
+    }
+
+    public ListeningType apply(String spoken) {
+        ListeningType listeningType = ListeningType.NONE;
+        for (int i = 0; i < 4; i++) {
+            if (spoken.equalsIgnoreCase(this.getMessage(i).getContents())) {
+                listeningType = listeningType.ordinal() > listeningTypes[i].ordinal() ? listeningType : listeningTypes[i];
+            }
+        }
+        if (listeningType.isListening() && this.getLevel() != null) {
+            this.getLevel().setBlockAndUpdate(this.getBlockPos(), this.getBlockState()
+                    .setValue(ListeningStoneBlock.LIT, true)
+            );
+            this.getLevel().getBlockTicks()
+                    .scheduleTick(this.getBlockPos(), NamingBlocks.LISTENING_STONE.get(), 20);
+        }
+        return listeningType;
+    }
+
+    @Override
+    @ParametersAreNonnullByDefault
+    public void setLevelAndPosition(World level, BlockPos position) {
+        super.setLevelAndPosition(level, position);
+        if (this.getLevel() instanceof ServerWorld) {
+            ListeningWorldData listeningWorldData = ((ServerWorld) this.getLevel()).getDataStorage()
+                    .computeIfAbsent(ListeningWorldData::new, "spoken");
+            listeningWorldData.addListener(this.getName(), this.worldPosition, this);
+        }
+    }
+
+    public ListeningType getListeningType(int index) {
+        return listeningTypes[index];
+    }
+
+    public void setListeningType(int index, ListeningType listeningType) {
+        listeningTypes[index] = listeningType;
+    }
+
+    @Nullable
+    @Override
+    @ParametersAreNonnullByDefault
+    public Container createMenu(int containerId, PlayerInventory inventory, PlayerEntity playerEntity) {
+        return new ListeningContainer(
+                containerId,
+                this
+        );
+    }
+
+    @Override
+    protected void loadMessages(CompoundNBT nbt) {
+        super.loadMessages(nbt);
+        ListNBT listeningTypesNBT = nbt.getList("listeningTypes", Constants.NBT.TAG_STRING);
+        for (int i = 0; i < listeningTypesNBT.size(); i++) {
+            this.listeningTypes[i] = ListeningType.valueOf(listeningTypesNBT.getString(i));
+        }
     }
 
     @Nonnull
-    @Override
-    public TileEntityType<?> getType() {
-        return NamingBlocks.LISTENING_STONE.getSibling(ForgeRegistries.TILE_ENTITIES)
-                .orElseThrow(() -> new IllegalStateException("Failed to find Listening Stone Type"));
-    }
-
-    public Collection<String> getListeningFor() {
-        if (listeningFor == null) {
-            listeningFor = Arrays.stream(((SignTileEntityAccessor) this).getMessages())
-                    .map(ITextComponent::getContents)
-                    .filter(string -> !string.isEmpty())
-                    .collect(Collectors.toSet());
+    protected CompoundNBT saveMessages(@Nonnull CompoundNBT nbt) {
+        nbt = super.saveMessages(nbt);
+        ListNBT listeningTypeNBT = new ListNBT();
+        for (ListeningType listeningType : listeningTypes) {
+            listeningTypeNBT.add(StringNBT.valueOf(listeningType.name()));
         }
-        return listeningFor;
-    }
-
-    public boolean checkMessages() {
-        if (this.getLevel() instanceof ServerWorld) {
-            ServerWorld serverLevel = (ServerWorld) this.getLevel();
-            Collection<String> messages = this.getListeningFor();
-            if (!messages.isEmpty()) {
-                return serverLevel.getDataStorage()
-                        .computeIfAbsent(ListeningWorldData::new, "spoken")
-                        .checkSpoken(messages, serverLevel);
-            }
-        }
-        return false;
+        nbt.put("listeningTypes", listeningTypeNBT);
+        return nbt;
     }
 }
