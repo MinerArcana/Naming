@@ -13,6 +13,8 @@ import net.minecraft.item.DyeColor;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.ListNBT;
 import net.minecraft.nbt.StringNBT;
+import net.minecraft.network.NetworkManager;
+import net.minecraft.network.play.server.SUpdateTileEntityPacket;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
@@ -123,6 +125,17 @@ public class ListeningStoneBlockEntity extends TileEntity implements ISideText, 
 
     public void setMessage(int index, ITextComponent message) {
         messages[index] = message;
+        renderedMessages[index] = null;
+        if (this.getLevel() != null) {
+            this.getLevel().markAndNotifyBlock(
+                    this.getBlockPos(),
+                    this.getLevel().getChunkAt(this.getBlockPos()),
+                    this.getBlockState(),
+                    this.getBlockState(),
+                    Constants.BlockFlags.DEFAULT,
+                    512
+            );
+        }
     }
 
     @Override
@@ -145,10 +158,15 @@ public class ListeningStoneBlockEntity extends TileEntity implements ISideText, 
     @ParametersAreNonnullByDefault
     public void load(BlockState state, CompoundNBT nbt) {
         super.load(state, nbt);
+        loadMessages(nbt);
+    }
+
+    private void loadMessages(CompoundNBT nbt) {
         this.name = nbt.getString("name");
         ListNBT messagesNBT = nbt.getList("messages", Constants.NBT.TAG_STRING);
         for (int i = 0; i < messagesNBT.size(); i++) {
             this.messages[i] = ITextComponent.Serializer.fromJson(messagesNBT.getString(i));
+            this.renderedMessages[i] = null;
         }
         ListNBT listeningTypesNBT = nbt.getList("listeningTypes", Constants.NBT.TAG_STRING);
         for (int i = 0; i < listeningTypesNBT.size(); i++) {
@@ -159,7 +177,11 @@ public class ListeningStoneBlockEntity extends TileEntity implements ISideText, 
     @Override
     @Nonnull
     public CompoundNBT save(@Nonnull CompoundNBT compoundNBT) {
-        CompoundNBT nbt = super.save(compoundNBT);
+        return saveMessages(super.save(compoundNBT));
+    }
+
+    @Nonnull
+    private CompoundNBT saveMessages(@Nonnull CompoundNBT nbt) {
         nbt.putString("name", name);
         ListNBT messagesNBT = new ListNBT();
         for (ITextComponent message : messages) {
@@ -172,5 +194,27 @@ public class ListeningStoneBlockEntity extends TileEntity implements ISideText, 
         }
         nbt.put("listeningTypes", listeningTypeNBT);
         return nbt;
+    }
+
+    @Override
+    public void onDataPacket(NetworkManager net, SUpdateTileEntityPacket pkt) {
+        this.loadMessages(pkt.getTag());
+    }
+
+    @Nullable
+    @Override
+    public SUpdateTileEntityPacket getUpdatePacket() {
+        return new SUpdateTileEntityPacket(this.getBlockPos(), -1, saveMessages(new CompoundNBT()));
+    }
+
+    @Override
+    public void handleUpdateTag(BlockState state, CompoundNBT tag) {
+        this.loadMessages(tag);
+    }
+
+    @Override
+    @Nonnull
+    public CompoundNBT getUpdateTag() {
+        return save(new CompoundNBT());
     }
 }
