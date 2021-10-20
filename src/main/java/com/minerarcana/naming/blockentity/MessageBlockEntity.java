@@ -1,6 +1,8 @@
 package com.minerarcana.naming.blockentity;
 
+import com.minerarcana.naming.block.ListeningStoneBlock;
 import net.minecraft.block.BlockState;
+import net.minecraft.inventory.container.INamedContainerProvider;
 import net.minecraft.item.DyeColor;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.ListNBT;
@@ -9,6 +11,7 @@ import net.minecraft.network.NetworkManager;
 import net.minecraft.network.play.server.SUpdateTileEntityPacket;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityType;
+import net.minecraft.util.Direction;
 import net.minecraft.util.IReorderingProcessor;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
@@ -19,7 +22,7 @@ import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.function.Function;
 
-public abstract class MessageBlockEntity extends TileEntity implements ISideText {
+public abstract class MessageBlockEntity extends TileEntity implements ISideText, INamedContainerProvider {
     private final ITextComponent[] messages = new ITextComponent[]{
             StringTextComponent.EMPTY,
             StringTextComponent.EMPTY,
@@ -54,6 +57,7 @@ public abstract class MessageBlockEntity extends TileEntity implements ISideText
     public void setMessage(int index, ITextComponent message) {
         messages[index] = message;
         renderedMessages[index] = null;
+        this.setChanged();
         if (this.getLevel() != null) {
             this.getLevel().markAndNotifyBlock(
                     this.getBlockPos(),
@@ -128,5 +132,20 @@ public abstract class MessageBlockEntity extends TileEntity implements ISideText
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    @Override
+    @Nonnull
+    public ITextComponent getDisplayName() {
+        return new StringTextComponent(this.getName());
+    }
+
+    public ITextComponent[] getMessages() {
+        return messages;
+    }
+
+    @Override
+    public boolean renderSide(Direction side) {
+        return side.getAxis() != Direction.Axis.Y && this.getBlockState().getValue(ListeningStoneBlock.FACING) != side;
     }
 }

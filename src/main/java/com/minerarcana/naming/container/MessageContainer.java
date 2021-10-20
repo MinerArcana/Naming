@@ -2,10 +2,10 @@ package com.minerarcana.naming.container;
 
 import com.google.common.collect.Lists;
 import com.minerarcana.naming.Naming;
-import com.minerarcana.naming.blockentity.ListeningStoneBlockEntity;
+import com.minerarcana.naming.blockentity.IButtoned;
 import com.minerarcana.naming.blockentity.ListeningType;
+import com.minerarcana.naming.blockentity.MessageBlockEntity;
 import com.minerarcana.naming.content.NamingBlocks;
-import com.minerarcana.naming.content.NamingContainers;
 import com.minerarcana.naming.mixin.ContainerAccessor;
 import com.minerarcana.naming.network.property.IPropertyManaged;
 import com.minerarcana.naming.network.property.Property;
@@ -25,16 +25,20 @@ import javax.annotation.Nullable;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
+import java.util.function.BiConsumer;
+import java.util.function.Function;
 
-public class ListeningStoneContainer extends Container implements IPropertyManaged {
+public abstract class MessageContainer<T extends Enum<T> & IButtoned<T>> extends Container implements IPropertyManaged {
     private final IWorldPosCallable callable;
     private final PropertyManager propertyManager;
 
     private final Property<String> name;
     private final List<Pair<Property<Integer>, Property<String>>> listeners;
 
-    public ListeningStoneContainer(int containerId, ListeningStoneBlockEntity blockEntity) {
-        super(NamingContainers.LISTENING_STONE.get(), containerId);
+    public MessageContainer(ContainerType<? extends MessageContainer> type, int containerId,
+                            MessageBlockEntity blockEntity, Function<Integer, T> getter,
+                            BiConsumer<Integer, T> setting) {
+        super(type, containerId);
         this.callable = IWorldPosCallable.create(
                 Objects.requireNonNull(blockEntity.getLevel()),
                 blockEntity.getBlockPos()
@@ -49,8 +53,8 @@ public class ListeningStoneContainer extends Container implements IPropertyManag
             int finalI = i;
             listeners.add(Pair.of(
                     this.propertyManager.addTrackedProperty(PropertyTypes.INTEGER.create(
-                            () -> blockEntity.getListeningType(finalI).ordinal(),
-                            listenType -> blockEntity.setListeningType(finalI, ListeningType.values()[listenType]))
+                            () -> getter.apply(finalI).ordinal(),
+                            ordinal -> setting.accept(finalI, this.getEnum().getEnumConstants()[ordinal]))
                     ),
                     this.propertyManager.addTrackedProperty(PropertyTypes.STRING.create(
                             () -> blockEntity.getMessage(finalI).getContents(),
@@ -61,7 +65,7 @@ public class ListeningStoneContainer extends Container implements IPropertyManag
     }
 
     @SuppressWarnings("unused")
-    public ListeningStoneContainer(@Nullable ContainerType<?> type, int containerId, PlayerInventory playerInventory) {
+    public MessageContainer(@Nullable ContainerType<?> type, int containerId, PlayerInventory playerInventory) {
         super(type, containerId);
         this.callable = IWorldPosCallable.NULL;
         this.propertyManager = Naming.properties.createManager(containerId);
@@ -77,7 +81,8 @@ public class ListeningStoneContainer extends Container implements IPropertyManag
 
     @Override
     public boolean stillValid(@Nonnull PlayerEntity pPlayer) {
-        return Container.stillValid(callable, pPlayer, NamingBlocks.LISTENING_STONE.get());
+        return Container.stillValid(callable, pPlayer, NamingBlocks.LISTENING_STONE.get()) ||
+                Container.stillValid(callable, pPlayer, NamingBlocks.SPEAKING_STONE.get());
     }
 
     @Override
@@ -104,4 +109,6 @@ public class ListeningStoneContainer extends Container implements IPropertyManag
     public Property<String> getName() {
         return name;
     }
+
+    public abstract Class<T> getEnum();
 }

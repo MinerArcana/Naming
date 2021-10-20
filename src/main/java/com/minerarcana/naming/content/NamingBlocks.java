@@ -6,6 +6,7 @@ import com.minerarcana.naming.block.PosterBoardBlock;
 import com.minerarcana.naming.block.SpeakingStoneBlock;
 import com.minerarcana.naming.blockentity.ListeningStoneBlockEntity;
 import com.minerarcana.naming.blockentity.PosterBoardBlockEntity;
+import com.minerarcana.naming.blockentity.SpeakingStoneBlockEntity;
 import com.minerarcana.naming.item.PosterBoardBlockItem;
 import com.minerarcana.naming.recipe.NamingRecipeBuilder;
 import com.minerarcana.naming.renderer.SideTextBlockRenderer;
@@ -74,7 +75,7 @@ public class NamingBlocks {
     public static final BlockEntry<SpeakingStoneBlock> SPEAKING_STONE = Naming.getRegistrate()
             .object("speaking_stone")
             .block(SpeakingStoneBlock::new)
-            .blockstate((context, provider) -> provider.simpleBlock(context.get(), provider.models().orientable(
+            .blockstate((context, provider) -> provider.horizontalBlock(context.get(), provider.models().orientable(
                     "speaking_stone",
                     Naming.rl("block/poster_board"),
                     Naming.rl("block/speaking_stone"),
@@ -89,7 +90,7 @@ public class NamingBlocks {
             )
             .group(() -> ItemGroup.TAB_MISC)
             .build()
-            .tileEntity(PosterBoardBlockEntity::new)
+            .tileEntity(SpeakingStoneBlockEntity::new)
             .renderer(() -> SideTextBlockRenderer::new)
             .build()
             .register();

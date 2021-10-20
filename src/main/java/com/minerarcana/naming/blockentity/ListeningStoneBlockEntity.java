@@ -1,21 +1,18 @@
 package com.minerarcana.naming.blockentity;
 
 import com.minerarcana.naming.block.ListeningStoneBlock;
-import com.minerarcana.naming.container.ListeningStoneContainer;
+import com.minerarcana.naming.container.ListeningContainer;
 import com.minerarcana.naming.content.NamingBlocks;
 import com.minerarcana.naming.worlddata.ListeningWorldData;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.container.Container;
-import net.minecraft.inventory.container.INamedContainerProvider;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.ListNBT;
 import net.minecraft.nbt.StringNBT;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.common.util.Constants;
@@ -25,8 +22,8 @@ import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.function.Function;
 
-public class ListeningStoneBlockEntity extends MessageBlockEntity implements INamedContainerProvider, Function<String, ListeningType> {
-    private final ListeningType[] listeningTypes = new ListeningType[]{
+public class ListeningStoneBlockEntity extends MessageBlockEntity implements Function<String, ListeningType> {
+    private final ListeningType[] listeningTypes = {
             ListeningType.NONE,
             ListeningType.NONE,
             ListeningType.NONE,
@@ -35,11 +32,6 @@ public class ListeningStoneBlockEntity extends MessageBlockEntity implements INa
 
     public ListeningStoneBlockEntity(TileEntityType<ListeningStoneBlockEntity> blockEntityType) {
         super(blockEntityType);
-    }
-
-    @Override
-    public boolean renderSide(Direction side) {
-        return side.getAxis() != Direction.Axis.Y && this.getBlockState().getValue(ListeningStoneBlock.FACING) != side;
     }
 
     @Override
@@ -89,17 +81,11 @@ public class ListeningStoneBlockEntity extends MessageBlockEntity implements INa
         listeningTypes[index] = listeningType;
     }
 
-    @Override
-    @Nonnull
-    public ITextComponent getDisplayName() {
-        return new StringTextComponent(this.getName());
-    }
-
     @Nullable
     @Override
     @ParametersAreNonnullByDefault
     public Container createMenu(int containerId, PlayerInventory inventory, PlayerEntity playerEntity) {
-        return new ListeningStoneContainer(
+        return new ListeningContainer(
                 containerId,
                 this
         );

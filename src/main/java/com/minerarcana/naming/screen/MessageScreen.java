@@ -2,7 +2,8 @@ package com.minerarcana.naming.screen;
 
 import com.google.common.collect.Lists;
 import com.minerarcana.naming.Naming;
-import com.minerarcana.naming.container.ListeningStoneContainer;
+import com.minerarcana.naming.blockentity.IButtoned;
+import com.minerarcana.naming.container.MessageContainer;
 import com.minerarcana.naming.network.property.Property;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
@@ -19,13 +20,13 @@ import javax.annotation.Nonnull;
 import java.util.List;
 import java.util.Objects;
 
-public class ListeningStoneScreen extends ContainerScreen<ListeningStoneContainer> {
+public class MessageScreen<T extends MessageContainer<U>, U extends Enum<U> & IButtoned<U>> extends ContainerScreen<T> {
     public static final ResourceLocation LOCATION = Naming.rl("textures/screen/listening_stone.png");
 
     private TextFieldWidget nameField;
     private List<TextFieldWidget> listenerFields;
 
-    public ListeningStoneScreen(ListeningStoneContainer pMenu, PlayerInventory pPlayerInventory, ITextComponent pTitle) {
+    public MessageScreen(T pMenu, PlayerInventory pPlayerInventory, ITextComponent pTitle) {
         super(pMenu, pPlayerInventory, pTitle);
         this.imageHeight = 97;
         this.imageWidth = 179;
@@ -95,9 +96,10 @@ public class ListeningStoneScreen extends ContainerScreen<ListeningStoneContaine
         this.listenerFields = Lists.newArrayList();
         for (int x = 0; x < this.menu.getListeners().size(); x++) {
             Pair<Property<Integer>, Property<String>> properties = this.menu.getListeners().get(x);
-            this.addButton(new ListeningTypeButton(
+            this.addButton(new MessageTypeButton<>(
                     i + 4,
                     x * 18 + j + 22,
+                    menu.getEnum(),
                     properties.getLeft(),
                     getMenu().getPropertyManager()
             ));

@@ -1,7 +1,6 @@
 package com.minerarcana.naming.screen;
 
-import com.minerarcana.naming.Naming;
-import com.minerarcana.naming.blockentity.ListeningType;
+import com.minerarcana.naming.blockentity.IButtoned;
 import com.minerarcana.naming.network.property.Property;
 import com.minerarcana.naming.network.property.PropertyManager;
 import com.mojang.blaze3d.matrix.MatrixStack;
@@ -15,26 +14,28 @@ import net.minecraft.util.text.StringTextComponent;
 
 import javax.annotation.Nonnull;
 
-public class ListeningTypeButton extends Button {
+public class MessageTypeButton<T extends Enum<T> & IButtoned<T>> extends Button {
     private final Property<Integer> property;
     private final PropertyManager propertyManager;
+    private final Class<T> tClass;
 
-    public ListeningTypeButton(int pX, int pY, Property<Integer> property, PropertyManager propertyManager) {
+    public MessageTypeButton(int pX, int pY, Class<T> aClass, Property<Integer> property, PropertyManager propertyManager) {
         super(pX, pY, 59, 16, StringTextComponent.EMPTY, button -> {
         });
         this.property = property;
         this.propertyManager = propertyManager;
+        this.tClass = aClass;
     }
 
     @Override
     @Nonnull
     public ITextComponent getMessage() {
-        return ListeningType.values()[property.getOrElse(0)].getMessage();
+        return tClass.getEnumConstants()[property.getOrElse(0)].getMessage();
     }
 
     @Override
     public void onPress() {
-        propertyManager.updateServer(property, ListeningType.values()[property.getOrElse(0)].cycle().ordinal());
+        propertyManager.updateServer(property, tClass.getEnumConstants()[property.getOrElse(0)].cycle().ordinal());
     }
 
     @Override
@@ -42,7 +43,7 @@ public class ListeningTypeButton extends Button {
     public void renderButton(@Nonnull MatrixStack pMatrixStack, int pMouseX, int pMouseY, float pPartialTicks) {
         Minecraft minecraft = Minecraft.getInstance();
         FontRenderer fontrenderer = minecraft.font;
-        minecraft.getTextureManager().bind(ListeningStoneScreen.LOCATION);
+        minecraft.getTextureManager().bind(MessageScreen.LOCATION);
         RenderSystem.color4f(1.0F, 1.0F, 1.0F, this.alpha);
         int i = this.isHovered() ? 1 : 0;
         RenderSystem.enableBlend();

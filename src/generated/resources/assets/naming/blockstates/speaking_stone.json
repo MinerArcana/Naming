@@ -1,7 +1,34 @@
 {
   "variants": {
-    "": {
+    "facing=north,triggered=false": {
       "model": "naming:block/speaking_stone"
+    },
+    "facing=south,triggered=false": {
+      "model": "naming:block/speaking_stone",
+      "y": 180
+    },
+    "facing=west,triggered=false": {
+      "model": "naming:block/speaking_stone",
+      "y": 270
+    },
+    "facing=east,triggered=false": {
+      "model": "naming:block/speaking_stone",
+      "y": 90
+    },
+    "facing=north,triggered=true": {
+      "model": "naming:block/speaking_stone"
+    },
+    "facing=south,triggered=true": {
+      "model": "naming:block/speaking_stone",
+      "y": 180
+    },
+    "facing=west,triggered=true": {
+      "model": "naming:block/speaking_stone",
+      "y": 270
+    },
+    "facing=east,triggered=true": {
+      "model": "naming:block/speaking_stone",
+      "y": 90
     }
   }
 }
