@@ -20,7 +20,7 @@ import java.util.List;
 import java.util.Objects;
 
 public class ListeningStoneScreen extends ContainerScreen<ListeningStoneContainer> {
-    private static final ResourceLocation LOCATION = Naming.rl("textures/screen/listening_stone.png");
+    public static final ResourceLocation LOCATION = Naming.rl("textures/screen/listening_stone.png");
 
     private TextFieldWidget nameField;
     private List<TextFieldWidget> listenerFields;
@@ -94,7 +94,14 @@ public class ListeningStoneScreen extends ContainerScreen<ListeningStoneContaine
         this.nameField.setFocus(true);
         this.listenerFields = Lists.newArrayList();
         for (int x = 0; x < this.menu.getListeners().size(); x++) {
-            this.listenerFields.add(createTextField(i + 64, x * 18 + j + 26, this.menu.getListeners().get(x).getRight()));
+            Pair<Property<Integer>, Property<String>> properties = this.menu.getListeners().get(x);
+            this.addButton(new ListeningTypeButton(
+                    i + 4,
+                    x * 18 + j + 22,
+                    properties.getLeft(),
+                    getMenu().getPropertyManager()
+            ));
+            this.listenerFields.add(createTextField(i + 64, x * 18 + j + 26, properties.getRight()));
         }
     }
 

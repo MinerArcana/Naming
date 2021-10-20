@@ -13,6 +13,15 @@ public class NamingText {
     public static ITextComponent SCREEN_TITLE = Naming.getRegistrate()
             .addRawLang("screen.naming.title", "Naming");
 
+    public static ITextComponent NONE = Naming.getRegistrate()
+            .addRawLang("button.naming.listening_type.none", "None");
+
+    public static ITextComponent LISTENING = Naming.getRegistrate()
+            .addRawLang("button.naming.listening_type.listening", "Listening");
+
+    public static ITextComponent CONSUMING = Naming.getRegistrate()
+            .addRawLang("button.naming.listening_type.consuming", "Consuming");
+
     public static void setup() {
 
     }

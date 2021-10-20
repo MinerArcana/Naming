@@ -50,7 +50,7 @@ public class ListeningStoneContainer extends Container implements IPropertyManag
             listeners.add(Pair.of(
                     this.propertyManager.addTrackedProperty(PropertyTypes.INTEGER.create(
                             () -> blockEntity.getListeningType(finalI).ordinal(),
-                            listenType -> blockEntity.setListeningType(finalI, ListeningType.values()[finalI]))
+                            listenType -> blockEntity.setListeningType(finalI, ListeningType.values()[listenType]))
                     ),
                     this.propertyManager.addTrackedProperty(PropertyTypes.STRING.create(
                             () -> blockEntity.getMessage(finalI).getContents(),

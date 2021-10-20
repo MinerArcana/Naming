@@ -1,7 +1,7 @@
 {
   "variants": {
     "": {
-      "model": "naming:block/listening_stone_off"
+      "model": "naming:block/speaking_stone"
     }
   }
 }

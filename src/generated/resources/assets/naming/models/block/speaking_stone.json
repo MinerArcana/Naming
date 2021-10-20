@@ -1,0 +1,9 @@
+{
+  "parent": "minecraft:block/orientable",
+  "textures": {
+    "side": "naming:block/poster_board",
+    "front": "naming:block/speaking_stone",
+    "top": "naming:block/poster_board",
+    "particle": "naming:block/poster_board"
+  }
+}

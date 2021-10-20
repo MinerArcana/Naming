@@ -2,6 +2,7 @@ package com.minerarcana.naming.blockentity;
 
 import com.minerarcana.naming.block.ListeningStoneBlock;
 import com.minerarcana.naming.container.ListeningStoneContainer;
+import com.minerarcana.naming.content.NamingBlocks;
 import com.minerarcana.naming.worlddata.ListeningWorldData;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
@@ -86,6 +87,13 @@ public class ListeningStoneBlockEntity extends TileEntity implements ISideText, 
             if (spoken.equalsIgnoreCase(messages[i].getContents())) {
                 listeningType = listeningType.ordinal() > listeningTypes[i].ordinal() ? listeningType : listeningTypes[i];
             }
+        }
+        if (listeningType.isListening() && this.getLevel() != null) {
+            this.getLevel().setBlockAndUpdate(this.getBlockPos(), this.getBlockState()
+                    .setValue(ListeningStoneBlock.LIT, true)
+            );
+            this.getLevel().getBlockTicks()
+                    .scheduleTick(this.getBlockPos(), NamingBlocks.LISTENING_STONE.get(), 20);
         }
         return listeningType;
     }

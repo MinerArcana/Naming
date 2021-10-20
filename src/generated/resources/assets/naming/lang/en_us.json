@@ -10,6 +10,9 @@
   "block.naming.listening_stone": "Listening Stone",
   "block.naming.poster_board": "Poster Board",
   "block.naming.speaking_stone": "Speaking Stone",
+  "button.naming.listening_type.consuming": "Consuming",
+  "button.naming.listening_type.listening": "Listening",
+  "button.naming.listening_type.none": "None",
   "key.category.name": "Naming",
   "key.naming.name": "Name",
   "screen.naming.title": "Naming"

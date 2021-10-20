@@ -75,7 +75,7 @@ public class NamingBlocks {
             .object("speaking_stone")
             .block(SpeakingStoneBlock::new)
             .blockstate((context, provider) -> provider.simpleBlock(context.get(), provider.models().orientable(
-                    "listening_stone_off",
+                    "speaking_stone",
                     Naming.rl("block/poster_board"),
                     Naming.rl("block/speaking_stone"),
                     Naming.rl("block/poster_board")

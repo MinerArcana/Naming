@@ -20,12 +20,14 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
+import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.fml.network.NetworkHooks;
 import net.minecraftforge.registries.ForgeRegistries;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
+import java.util.Random;
 
 public class ListeningStoneBlock extends Block {
     public static BooleanProperty LIT = BlockStateProperties.LIT;
@@ -103,5 +105,12 @@ public class ListeningStoneBlock extends Block {
     @Override
     public boolean hasTileEntity(BlockState state) {
         return true;
+    }
+
+    @Override
+    @SuppressWarnings("deprecation")
+    @ParametersAreNonnullByDefault
+    public void tick(BlockState pState, ServerWorld pLevel, BlockPos pPos, Random pRand) {
+        pLevel.setBlockAndUpdate(pPos, pState.setValue(LIT, false));
     }
 }
