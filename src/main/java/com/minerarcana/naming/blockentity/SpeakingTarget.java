@@ -7,13 +7,13 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraft.world.server.ServerWorld;
 
 public enum SpeakingTarget implements IButtoned<SpeakingTarget> {
-    NONE(NamingText.NONE) {
+    NONE(NamingText.NONE, false) {
         @Override
         public boolean speak(ITextComponent spoken, SpeakingStoneBlockEntity blockEntity) {
             return false;
         }
     },
-    OWNER(NamingText.OWNER) {
+    OWNER(NamingText.OWNER, false) {
         @Override
         public boolean speak(ITextComponent spoken, SpeakingStoneBlockEntity blockEntity) {
             PlayerEntity owner = blockEntity.getOwner();
@@ -24,13 +24,13 @@ public enum SpeakingTarget implements IButtoned<SpeakingTarget> {
             return false;
         }
     },
-    NEARBY(NamingText.NEARBY) {
+    NEARBY(NamingText.NEARBY, false) {
         @Override
         public boolean speak(ITextComponent spoken, SpeakingStoneBlockEntity blockEntity) {
             return false;
         }
     },
-    LISTENERS(NamingText.LISTENERS) {
+    LISTENERS(NamingText.LISTENERS, true) {
         @Override
         public boolean speak(ITextComponent spoken, SpeakingStoneBlockEntity blockEntity) {
             if (blockEntity.getLevel() instanceof ServerWorld) {
@@ -45,14 +45,20 @@ public enum SpeakingTarget implements IButtoned<SpeakingTarget> {
     };
 
     private final ITextComponent title;
+    private final boolean needsTargetName;
 
-    SpeakingTarget(ITextComponent title) {
+    SpeakingTarget(ITextComponent title, boolean needsTargetName) {
         this.title = title;
+        this.needsTargetName = needsTargetName;
     }
 
     @Override
     public ITextComponent getMessage() {
         return title;
+    }
+
+    public boolean isNeedsTargetName() {
+        return needsTargetName;
     }
 
     @Override

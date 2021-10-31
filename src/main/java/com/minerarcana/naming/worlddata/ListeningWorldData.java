@@ -28,21 +28,26 @@ public class ListeningWorldData extends WorldSavedData {
         listeners.cellSet().removeIf(cell -> cell.getValue() == null || !cell.getValue().isValid());
     }
 
-    public ListeningType hear(String spoken) {
-        Matcher spokenMatch = NAME_CHECK.matcher(spoken);
+    public ListeningType hear(String text) {
+        Matcher spokenMatch = NAME_CHECK.matcher(text);
         if (spokenMatch.find()) {
             String name = spokenMatch.group("name");
-            Map<BlockPos, WeakFunction<String, ListeningType>> positionalListeners = listeners.row(name.toLowerCase(Locale.ROOT));
-            if (!positionalListeners.isEmpty()) {
-                String speech = spokenMatch.group("speech");
-                return positionalListeners.values()
-                        .stream()
-                        .map(listener -> listener.apply(speech))
-                        .reduce((listeningType, listeningType2) ->
-                                listeningType.ordinal() > listeningType2.ordinal() ? listeningType : listeningType2
-                        )
-                        .orElse(ListeningType.NONE);
-            }
+            String speech = spokenMatch.group("speech");
+            return hear(name, speech);
+        }
+        return ListeningType.NONE;
+    }
+
+    public ListeningType hear(String speaker, String spoken) {
+        Map<BlockPos, WeakFunction<String, ListeningType>> positionalListeners = listeners.row(speaker.toLowerCase(Locale.ROOT));
+        if (!positionalListeners.isEmpty()) {
+            return positionalListeners.values()
+                    .stream()
+                    .map(listener -> listener.apply(spoken))
+                    .reduce((listeningType, listeningType2) ->
+                            listeningType.ordinal() > listeningType2.ordinal() ? listeningType : listeningType2
+                    )
+                    .orElse(ListeningType.NONE);
         }
         return ListeningType.NONE;
     }

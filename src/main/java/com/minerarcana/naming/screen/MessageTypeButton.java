@@ -8,6 +8,7 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.widget.button.Button;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
@@ -18,13 +19,16 @@ public class MessageTypeButton<T extends Enum<T> & IButtoned<T>> extends Button 
     private final Property<Integer> property;
     private final PropertyManager propertyManager;
     private final Class<T> tClass;
+    private final ResourceLocation location;
 
-    public MessageTypeButton(int pX, int pY, Class<T> aClass, Property<Integer> property, PropertyManager propertyManager) {
+    public MessageTypeButton(int pX, int pY, Class<T> aClass, Property<Integer> property, PropertyManager propertyManager,
+                             ResourceLocation location) {
         super(pX, pY, 59, 16, StringTextComponent.EMPTY, button -> {
         });
         this.property = property;
         this.propertyManager = propertyManager;
         this.tClass = aClass;
+        this.location = location;
     }
 
     @Override
@@ -43,7 +47,7 @@ public class MessageTypeButton<T extends Enum<T> & IButtoned<T>> extends Button 
     public void renderButton(@Nonnull MatrixStack pMatrixStack, int pMouseX, int pMouseY, float pPartialTicks) {
         Minecraft minecraft = Minecraft.getInstance();
         FontRenderer fontrenderer = minecraft.font;
-        minecraft.getTextureManager().bind(MessageScreen.LOCATION);
+        minecraft.getTextureManager().bind(location);
         RenderSystem.color4f(1.0F, 1.0F, 1.0F, this.alpha);
         int i = this.isHovered() ? 1 : 0;
         RenderSystem.enableBlend();

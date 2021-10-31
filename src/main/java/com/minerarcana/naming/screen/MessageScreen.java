@@ -21,15 +21,23 @@ import java.util.List;
 import java.util.Objects;
 
 public class MessageScreen<T extends MessageContainer<U>, U extends Enum<U> & IButtoned<U>> extends ContainerScreen<T> {
-    public static final ResourceLocation LOCATION = Naming.rl("textures/screen/listening_stone.png");
-
+    private final ResourceLocation location;
     private TextFieldWidget nameField;
     private List<TextFieldWidget> listenerFields;
 
     public MessageScreen(T pMenu, PlayerInventory pPlayerInventory, ITextComponent pTitle) {
         super(pMenu, pPlayerInventory, pTitle);
         this.imageHeight = 97;
-        this.imageWidth = 179;
+        this.imageWidth = 176;
+        this.location = Naming.rl("textures/screen/listening_stone.png");
+    }
+
+    protected MessageScreen(T pMenu, PlayerInventory pPlayerInventory, ITextComponent pTitle, int imageWidth,
+                            ResourceLocation location) {
+        super(pMenu, pPlayerInventory, pTitle);
+        this.imageHeight = 97;
+        this.imageWidth = imageWidth;
+        this.location = location;
     }
 
     @Override
@@ -67,14 +75,14 @@ public class MessageScreen<T extends MessageContainer<U>, U extends Enum<U> & IB
     @SuppressWarnings("deprecation")
     protected void renderBg(@Nonnull MatrixStack pMatrixStack, float pPartialTicks, int pX, int pY) {
         RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
-        this.getMinecraft().getTextureManager().bind(LOCATION);
+        this.getMinecraft().getTextureManager().bind(location);
         int i = (this.width - this.imageWidth) / 2;
         int j = (this.height - this.imageHeight) / 2;
         this.blit(pMatrixStack, i, j, 0, 0, this.imageWidth, this.imageHeight);
 
         this.blit(pMatrixStack, i + 4, j + 4, 0, this.imageHeight, 110, 16);
         for (int x = 0; x < this.listenerFields.size(); x++) {
-            this.blit(pMatrixStack, i + 61, x * 18 + j + 22, 0, this.imageHeight, 110, 16);
+            this.blit(pMatrixStack, i + this.imageWidth - 115, x * 18 + j + 22, 0, this.imageHeight, 110, 16);
         }
     }
 
@@ -101,13 +109,14 @@ public class MessageScreen<T extends MessageContainer<U>, U extends Enum<U> & IB
                     x * 18 + j + 22,
                     menu.getEnum(),
                     properties.getLeft(),
-                    getMenu().getPropertyManager()
+                    getMenu().getPropertyManager(),
+                    location
             ));
-            this.listenerFields.add(createTextField(i + 64, x * 18 + j + 26, properties.getRight()));
+            this.listenerFields.add(createTextField(i + this.imageWidth - 111, x * 18 + j + 26, properties.getRight()));
         }
     }
 
-    private TextFieldWidget createTextField(int x, int y, Property<String> property) {
+    protected TextFieldWidget createTextField(int x, int y, Property<String> property) {
         TextFieldWidget textFieldWidget = new TextFieldWidget(this.font, x, y, 103, 12, StringTextComponent.EMPTY);
         textFieldWidget.setCanLoseFocus(true);
         textFieldWidget.setEditable(true);
@@ -140,29 +149,6 @@ public class MessageScreen<T extends MessageContainer<U>, U extends Enum<U> & IB
     public boolean keyPressed(int pKeyCode, int pScanCode, int pModifiers) {
         if (pKeyCode == 256) {
             Objects.requireNonNull(this.getMinecraft().player).closeContainer();
-        }
-
-        if (pKeyCode == 258) {
-            if (this.nameField.isFocused()) {
-                this.nameField.setFocus(false);
-                this.listenerFields.get(0).setFocus(true);
-                this.setFocused(this.listenerFields.get(0));
-            } else {
-                for (int x = 0; x < this.listenerFields.size(); x++) {
-                    TextFieldWidget current = this.listenerFields.get(x);
-                    if (current.isFocused()) {
-                        current.setFocus(false);
-                        if (x + 1 == this.listenerFields.size()) {
-                            this.nameField.setFocus(true);
-                            this.setFocused(this.nameField);
-                        } else {
-                            this.listenerFields.get(x + 1).setFocus(true);
-                            this.setFocused(this.listenerFields.get(x + 1));
-                            break;
-                        }
-                    }
-                }
-            }
         }
 
         return this.nameField.keyPressed(pKeyCode, pScanCode, pModifiers) ||

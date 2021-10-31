@@ -6,6 +6,7 @@ import com.minerarcana.naming.blockentity.SpeakingTarget;
 import com.minerarcana.naming.container.ListeningContainer;
 import com.minerarcana.naming.container.SpeakingContainer;
 import com.minerarcana.naming.screen.MessageScreen;
+import com.minerarcana.naming.screen.SpeakingStoneScreen;
 import com.tterrag.registrate.util.entry.RegistryEntry;
 import net.minecraft.inventory.container.ContainerType;
 
@@ -23,7 +24,7 @@ public class NamingContainers {
             .object("speaking_stone")
             .<SpeakingContainer, MessageScreen<SpeakingContainer, SpeakingTarget>>container(
                     SpeakingContainer::new,
-                    () -> MessageScreen::new
+                    () -> SpeakingStoneScreen::new
             )
             .register();
 

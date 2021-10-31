@@ -3,15 +3,12 @@ package com.minerarcana.naming.container;
 import com.google.common.collect.Lists;
 import com.minerarcana.naming.Naming;
 import com.minerarcana.naming.blockentity.IButtoned;
-import com.minerarcana.naming.blockentity.ListeningType;
 import com.minerarcana.naming.blockentity.MessageBlockEntity;
-import com.minerarcana.naming.content.NamingBlocks;
 import com.minerarcana.naming.mixin.ContainerAccessor;
 import com.minerarcana.naming.network.property.IPropertyManaged;
 import com.minerarcana.naming.network.property.Property;
 import com.minerarcana.naming.network.property.PropertyManager;
 import com.minerarcana.naming.network.property.PropertyTypes;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.inventory.container.ContainerType;
@@ -79,10 +76,8 @@ public abstract class MessageContainer<T extends Enum<T> & IButtoned<T>> extends
         }
     }
 
-    @Override
-    public boolean stillValid(@Nonnull PlayerEntity pPlayer) {
-        return Container.stillValid(callable, pPlayer, NamingBlocks.LISTENING_STONE.get()) ||
-                Container.stillValid(callable, pPlayer, NamingBlocks.SPEAKING_STONE.get());
+    public IWorldPosCallable getCallable() {
+        return callable;
     }
 
     @Override
@@ -111,4 +106,8 @@ public abstract class MessageContainer<T extends Enum<T> & IButtoned<T>> extends
     }
 
     public abstract Class<T> getEnum();
+
+    public T getEnumFor(int index) {
+        return this.getEnum().getEnumConstants()[this.getListeners().get(index).getLeft().getOrElse(0)];
+    }
 }
