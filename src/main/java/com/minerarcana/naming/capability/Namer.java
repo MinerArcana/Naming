@@ -12,22 +12,25 @@ import net.minecraftforge.common.util.INBTSerializable;
 
 import java.util.Collection;
 import java.util.Set;
+import java.util.function.Consumer;
 
 public class Namer implements INamer, INBTSerializable<CompoundNBT> {
     @CapabilityInject(INamer.class)
     public static Capability<INamer> CAP = null;
 
     private final Set<String> abilities;
-    private final Set<String> heard;
+    private final Set<String> heardHistory;
+    private final Set<String> spokenHistory;
 
     public Namer() {
-        this(Sets.newHashSet(), Sets.newHashSet());
+        this(Sets.newHashSet(), Sets.newHashSet(), Sets.newHashSet());
     }
 
 
-    public Namer(Set<String> abilities, Set<String> heard) {
+    public Namer(Set<String> abilities, Set<String> heard, Set<String> spoken) {
         this.abilities = abilities;
-        this.heard = heard;
+        this.heardHistory = heard;
+        this.spokenHistory = spoken;
     }
 
     @Override
@@ -46,38 +49,56 @@ public class Namer implements INamer, INBTSerializable<CompoundNBT> {
     }
 
     @Override
-    public boolean addHeardMessage(String spoken) {
-        return heard.add(spoken);
+    public void speakTo(String phrase) {
+        heardHistory.add(phrase);
     }
 
     @Override
-    public Collection<String> getHeardMessages() {
-        return heard;
+    public Collection<String> getHeardHistory() {
+        return heardHistory;
+    }
+
+    @Override
+    public void heardBy(String phrase) {
+        spokenHistory.add(phrase);
+    }
+
+    @Override
+    public Collection<String> getSpokenHistory() {
+        return spokenHistory;
     }
 
     @Override
     public CompoundNBT serializeNBT() {
         CompoundNBT nbt = new CompoundNBT();
-        ListNBT abilitiesNBT = new ListNBT();
-        abilities.forEach(ability -> abilitiesNBT.add(StringNBT.valueOf(ability)));
-        nbt.put("abilities", abilitiesNBT);
-        ListNBT heardNBT = new ListNBT();
-        heard.forEach(value -> heardNBT.add(StringNBT.valueOf(value)));
-        nbt.put("heard", heardNBT);
+        nbt.put("abilities", create(abilities));
+        nbt.put("heard", create(heardHistory));
+        nbt.put("spoken", create(spokenHistory));
         return nbt;
+    }
+
+    private ListNBT create(Collection<String> list) {
+        ListNBT listNBT = new ListNBT();
+        list.stream()
+                .map(StringNBT::valueOf)
+                .forEach(listNBT::add);
+        return listNBT;
     }
 
     @Override
     public void deserializeNBT(CompoundNBT nbt) {
-        ListNBT abilitiesNBT = nbt.getList("abilities", Constants.NBT.TAG_STRING);
         abilities.clear();
-        for (int i = 0; i < abilitiesNBT.size(); i++) {
-            abilities.add(abilitiesNBT.getString(i));
-        }
-        ListNBT heardNBT = nbt.getList("heard", Constants.NBT.TAG_STRING);
-        heard.clear();
-        for (int i = 0; i < heardNBT.size(); i++) {
-            heard.add(heardNBT.getString(i));
+        addTo(nbt, "abilities", abilities::add);
+        heardHistory.clear();
+        addTo(nbt, "heard", heardHistory::add);
+        spokenHistory.clear();
+        addTo(nbt, "spoken", spokenHistory::add);
+    }
+
+    private void addTo(CompoundNBT nbt, String field, Consumer<String> consumer) {
+        ListNBT nbtList = nbt.getList(field, Constants.NBT.TAG_STRING);
+        for (int i = 0; i < nbtList.size(); i++) {
+            consumer.accept(nbtList.getString(i));
         }
     }
 }

@@ -16,11 +16,12 @@ import java.util.regex.Pattern;
 
 public class ListeningWorldData extends WorldSavedData {
     private static final Pattern NAME_CHECK = Pattern.compile("^(?<name>\\w+)(\\s+)(?<speech>.*)");
+    public static final String NAME = "listening";
 
     private final Table<String, BlockPos, WeakFunction<String, ListeningType>> listeners;
 
     public ListeningWorldData() {
-        super("spoken");
+        super(NAME);
         this.listeners = HashBasedTable.create();
     }
 
@@ -28,17 +29,17 @@ public class ListeningWorldData extends WorldSavedData {
         listeners.cellSet().removeIf(cell -> cell.getValue() == null || !cell.getValue().isValid());
     }
 
-    public ListeningType hear(String text) {
+    public ListeningType speakTo(String text) {
         Matcher spokenMatch = NAME_CHECK.matcher(text);
         if (spokenMatch.find()) {
             String name = spokenMatch.group("name");
             String speech = spokenMatch.group("speech");
-            return hear(name, speech);
+            return speakTo(name, speech);
         }
         return ListeningType.NONE;
     }
 
-    public ListeningType hear(String speaker, String spoken) {
+    public ListeningType speakTo(String speaker, String spoken) {
         Map<BlockPos, WeakFunction<String, ListeningType>> positionalListeners = listeners.row(speaker.toLowerCase(Locale.ROOT));
         if (!positionalListeners.isEmpty()) {
             return positionalListeners.values()

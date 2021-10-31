@@ -1,6 +1,7 @@
 package com.minerarcana.naming.content;
 
 import com.minerarcana.naming.Naming;
+import com.minerarcana.naming.advancement.criteria.heard.MessageTarget;
 import com.minerarcana.naming.advancement.criteria.naming.EntityChecker;
 import com.mojang.datafixers.util.Function3;
 import com.tterrag.registrate.providers.RegistrateAdvancementProvider;
@@ -73,11 +74,23 @@ public class NamingAdvancements {
                         "The Third Degree",
                         "Have that which listens, hear 7 times"
                 ))
-                .addCriterion("listening", NamingCriteriaTriggers.HEARD.phrases(7))
+                .addCriterion("heard_by", NamingCriteriaTriggers.MESSAGED.phrases(7, MessageTarget.HEARD_BY))
                 .parent(secondInitiation)
                 .rewards(rewardAbility("speaking_stone"))
                 .build(Naming.rl("third_initiation"));
         provider.accept(thirdInitiation);
+
+        Advancement fourthInitiation = Advancement.Builder.advancement()
+                .display(displayInfo.apply(
+                        NamingBlocks.SPEAKING_STONE.get(),
+                        "The Fourth Degree",
+                        "Have that which speaks, speak to you 7 times"
+                ))
+                .addCriterion("speak_to", NamingCriteriaTriggers.MESSAGED.phrases(7, MessageTarget.SPEAK_TO))
+                .parent(thirdInitiation)
+                .rewards(rewardAbility("calling"))
+                .build(Naming.rl("fourth_initiation"));
+        provider.accept(fourthInitiation);
 
     }
 

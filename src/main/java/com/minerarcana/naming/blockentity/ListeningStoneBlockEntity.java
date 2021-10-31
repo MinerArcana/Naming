@@ -11,7 +11,6 @@ import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.ListNBT;
 import net.minecraft.nbt.StringNBT;
 import net.minecraft.tileentity.TileEntityType;
-import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
@@ -38,7 +37,7 @@ public class ListeningStoneBlockEntity extends MessageBlockEntity implements Fun
     public void setName(String name) {
         if (this.getLevel() instanceof ServerWorld) {
             ListeningWorldData listeningWorldData = ((ServerWorld) this.getLevel()).getDataStorage()
-                    .computeIfAbsent(ListeningWorldData::new, "spoken");
+                    .computeIfAbsent(ListeningWorldData::new, ListeningWorldData.NAME);
             listeningWorldData.removeListener(this.getName(), this.getBlockPos());
             listeningWorldData.addListener(name, this.getBlockPos(), this);
         }
@@ -67,9 +66,9 @@ public class ListeningStoneBlockEntity extends MessageBlockEntity implements Fun
     public void setLevelAndPosition(World level, BlockPos position) {
         super.setLevelAndPosition(level, position);
         if (this.getLevel() instanceof ServerWorld) {
-            ListeningWorldData listeningWorldData = ((ServerWorld) this.getLevel()).getDataStorage()
-                    .computeIfAbsent(ListeningWorldData::new, "spoken");
-            listeningWorldData.addListener(this.getName(), this.worldPosition, this);
+            ((ServerWorld) this.getLevel()).getDataStorage()
+                    .computeIfAbsent(ListeningWorldData::new, ListeningWorldData.NAME)
+                    .addListener(this.getName(), this.worldPosition, this);
         }
     }
 

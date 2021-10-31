@@ -1,14 +1,14 @@
 {
-  "parent": "naming:second_initiation",
+  "parent": "naming:third_initiation",
   "display": {
     "icon": {
-      "item": "naming:listening_stone"
+      "item": "naming:speaking_stone"
     },
     "title": {
-      "translate": "advancements.naming.the_third_degree.title"
+      "translate": "advancements.naming.the_fourth_degree.title"
     },
     "description": {
-      "translate": "advancements.naming.the_third_degree.description"
+      "translate": "advancements.naming.the_fourth_degree.description"
     },
     "frame": "task",
     "show_toast": true,
@@ -16,20 +16,20 @@
     "hidden": false
   },
   "rewards": {
-    "function": "naming:speaking_stone"
+    "function": "naming:calling"
   },
   "criteria": {
-    "heard_by": {
+    "speak_to": {
       "trigger": "naming:messaged",
       "conditions": {
-        "target": "heard_by",
+        "target": "speak_to",
         "phrases": 7
       }
     }
   },
   "requirements": [
     [
-      "heard_by"
+      "speak_to"
     ]
   ]
 }

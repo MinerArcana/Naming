@@ -2,6 +2,7 @@ package com.minerarcana.naming.event;
 
 
 import com.minerarcana.naming.Naming;
+import com.minerarcana.naming.advancement.criteria.heard.MessageTarget;
 import com.minerarcana.naming.blockentity.ListeningType;
 import com.minerarcana.naming.capability.Namer;
 import com.minerarcana.naming.capability.NamingCapabilityProvider;
@@ -42,13 +43,13 @@ public class ForgeCommonEventHandler {
         ServerPlayerEntity player = serverChatEvent.getPlayer();
         ListeningType listeningType = player.getLevel()
                 .getDataStorage()
-                .computeIfAbsent(ListeningWorldData::new, "spoken")
-                .hear(serverChatEvent.getMessage());
+                .computeIfAbsent(ListeningWorldData::new, ListeningWorldData.NAME)
+                .speakTo(serverChatEvent.getMessage());
 
         if (listeningType.isListening()) {
             player.getCapability(Namer.CAP)
-                    .ifPresent(namer -> namer.addHeardMessage(serverChatEvent.getMessage()));
-            NamingCriteriaTriggers.HEARD.trigger(player, serverChatEvent.getMessage());
+                    .ifPresent(namer -> namer.heardBy(serverChatEvent.getMessage()));
+            NamingCriteriaTriggers.MESSAGED.trigger(player, serverChatEvent.getMessage(), MessageTarget.HEARD_BY);
         }
         if (listeningType.isConsuming()) {
             serverChatEvent.setCanceled(true);
@@ -60,7 +61,7 @@ public class ForgeCommonEventHandler {
         if (worldTickEvent.phase == TickEvent.Phase.END && worldTickEvent.world instanceof ServerWorld &&
                 worldTickEvent.world.random.nextInt(100) == 0) {
             ((ServerWorld) worldTickEvent.world).getDataStorage()
-                    .computeIfAbsent(ListeningWorldData::new, "spoken")
+                    .computeIfAbsent(ListeningWorldData::new, ListeningWorldData.NAME)
                     .clean();
         }
     }
