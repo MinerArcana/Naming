@@ -33,10 +33,8 @@ public class CallingSpell extends Spell {
                     brain.setMemory(MemoryModuleType.LOOK_TARGET, new EntityPosWrapper(caster, false));
                     brain.setMemory(MemoryModuleType.WALK_TARGET, new WalkTarget(new EntityPosWrapper(caster, false), 0.5F, 2));
                 }
-                if (entity instanceof MobEntity && caster instanceof LivingEntity) {
-                    if (!(entity instanceof TameableEntity) || !((TameableEntity) entity).isTame() ||
-                            ((TameableEntity) entity).getOwner() != caster)
-                        ((MobEntity) entity).setTarget((LivingEntity) caster);
+                if (entity instanceof MobEntity && caster instanceof LivingEntity && !entity.isAlliedTo(caster)) {
+                    ((MobEntity) entity).setTarget((LivingEntity) caster);
                 }
             }
         });
