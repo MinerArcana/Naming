@@ -20,5 +20,7 @@
   "button.naming.speaking_target.owner": "\u0279\u01DDu\u028DO",
   "key.category.name": "bu\u0131\u026F\u0250N",
   "key.naming.name": "\u01DD\u026F\u0250N",
-  "screen.naming.title": "bu\u0131\u026F\u0250N"
+  "screen.naming.title": "bu\u0131\u026F\u0250N",
+  "spell.naming.calling": "\u05DF\u05DF\u0250\u0186",
+  "spell.naming.halting": "\u0287\u05DF\u0250H"
 }

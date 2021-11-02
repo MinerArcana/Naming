@@ -31,6 +31,12 @@ public class NamingText {
     public static ITextComponent LISTENERS = Naming.getRegistrate()
             .addRawLang("button.naming.speaking_target.listeners", "Listeners");
 
+    public static ITextComponent CALLING_SPELL = Naming.getRegistrate()
+            .addLang("spell", Naming.rl("calling"), "Call");
+
+    public static ITextComponent HALTING_SPELL = Naming.getRegistrate()
+            .addLang("spell", Naming.rl("halting"), "Halt");
+
     public static void setup() {
 
     }

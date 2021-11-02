@@ -43,6 +43,9 @@ public class NameTargetMessage {
     }
 
     public static NameTargetMessage decode(PacketBuffer packetBuffer) {
-        return new NameTargetMessage(NamingTargets.INSTANCE.fromPacketBuffer(packetBuffer), packetBuffer.readUtf(3276));
+        return new NameTargetMessage(
+                NamingTargets.INSTANCE.fromPacketBuffer(packetBuffer),
+                packetBuffer.readUtf(3276)
+        );
     }
 }

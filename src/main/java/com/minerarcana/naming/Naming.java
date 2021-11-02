@@ -31,11 +31,14 @@ public class Naming {
     public static NetworkHandler network;
 
     public Naming() {
+        NamingRegistries.setup();
         NamingCriteriaTriggers.setup();
         NamingText.setup();
         NamingBlocks.setup();
         NamingRecipes.setup();
         NamingContainers.setup();
+        NamingEffects.setup();
+        NamingSpells.setup();
 
         IEventBus modBus = FMLJavaModLoadingContext.get()
                 .getModEventBus();

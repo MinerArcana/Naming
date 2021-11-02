@@ -1,6 +1,7 @@
 package com.minerarcana.naming.network;
 
 import com.minerarcana.naming.Naming;
+import com.minerarcana.naming.spell.Spell;
 import com.minerarcana.naming.target.INamingTarget;
 import net.minecraftforge.fml.network.NetworkRegistry;
 import net.minecraftforge.fml.network.NetworkRegistry.ChannelBuilder;
@@ -26,9 +27,18 @@ public class NetworkHandler {
                 .encoder(NameTargetMessage::encode)
                 .consumer(NameTargetMessage::consume)
                 .add();
+        this.channel.messageBuilder(SpellMessage.class, 1)
+                .decoder(SpellMessage::decode)
+                .encoder(SpellMessage::encode)
+                .consumer(SpellMessage::consume)
+                .add();
     }
 
     public void name(String name, INamingTarget target) {
         this.channel.send(PacketDistributor.SERVER.noArg(), new NameTargetMessage(target, name));
+    }
+
+    public void spell(Spell spell, String spoken) {
+        this.channel.send(PacketDistributor.SERVER.noArg(), new SpellMessage(spell, spoken));
     }
 }

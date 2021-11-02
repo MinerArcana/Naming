@@ -1,18 +1,21 @@
 package com.minerarcana.naming.screen;
 
 import com.minerarcana.naming.Naming;
+import com.minerarcana.naming.content.NamingRegistries;
 import com.minerarcana.naming.content.NamingText;
+import com.minerarcana.naming.spell.Spell;
 import com.minerarcana.naming.target.INamingTarget;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.TextFieldWidget;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.ResourceLocation;
+import org.apache.commons.lang3.tuple.Pair;
 
 import javax.annotation.Nonnull;
 import java.util.Objects;
+import java.util.Optional;
 
 public class NamerScreen extends Screen {
     private static final ResourceLocation LOCATION = Naming.rl("textures/screen/namer.png");
@@ -33,10 +36,6 @@ public class NamerScreen extends Screen {
     public void tick() {
         super.tick();
         this.name.tick();
-        PlayerEntity player = getMinecraft().player;
-        if (player != null && !namingTarget.isValid(player)) {
-            player.closeContainer();
-        }
     }
 
     @Override
@@ -73,7 +72,6 @@ public class NamerScreen extends Screen {
         if (nameValue != null) {
             this.name.setValue(nameValue);
         }
-        this.name.setResponder(this::onNameChanged);
         this.children.add(this.name);
         this.setInitialFocus(this.name);
     }
@@ -93,7 +91,8 @@ public class NamerScreen extends Screen {
 
     @Override
     public boolean keyPressed(int pKeyCode, int pScanCode, int pModifiers) {
-        if (pKeyCode == 256) {
+        if (pKeyCode == 256 || pKeyCode == 257) {
+            this.onClose();
             Objects.requireNonNull(this.getMinecraft().player).closeContainer();
         }
 
@@ -102,10 +101,17 @@ public class NamerScreen extends Screen {
                 super.keyPressed(pKeyCode, pScanCode, pModifiers);
     }
 
-    private void onNameChanged(String text) {
-        if (namingTarget.isValid(this.getMinecraft().player)) {
-            Naming.network.name(text, namingTarget);
+    @Override
+    public void onClose() {
+        if (this.name != null) {
+            Optional<Pair<Spell, String>> spell = NamingRegistries.findSpell(this.name.getValue());
+            if (spell.isPresent()) {
+                spell.ifPresent(foundSpell -> Naming.network.spell(foundSpell.getLeft(), foundSpell.getRight()));
+            } else {
+                Naming.network.name(this.name.getValue(), namingTarget);
+            }
         }
+        super.onClose();
     }
 
     public void renderFg(MatrixStack pPoseStack, int pMouseX, int pMouseY, float pPartialTicks) {

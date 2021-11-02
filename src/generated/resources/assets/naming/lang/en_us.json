@@ -20,5 +20,7 @@
   "button.naming.speaking_target.owner": "Owner",
   "key.category.name": "Naming",
   "key.naming.name": "Name",
-  "screen.naming.title": "Naming"
+  "screen.naming.title": "Naming",
+  "spell.naming.calling": "Call",
+  "spell.naming.halting": "Halt"
 }
