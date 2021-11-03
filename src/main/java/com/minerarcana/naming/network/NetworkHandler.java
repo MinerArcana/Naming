@@ -38,7 +38,7 @@ public class NetworkHandler {
         this.channel.send(PacketDistributor.SERVER.noArg(), new NameTargetMessage(target, name));
     }
 
-    public void spell(Spell spell, String spoken) {
-        this.channel.send(PacketDistributor.SERVER.noArg(), new SpellMessage(spell, spoken));
+    public void spell(Spell spell, String spoken, int[] targeted) {
+        this.channel.send(PacketDistributor.SERVER.noArg(), new SpellMessage(spell, spoken, targeted));
     }
 }

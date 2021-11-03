@@ -10,6 +10,7 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.TextFieldWidget;
+import net.minecraft.entity.Entity;
 import net.minecraft.util.ResourceLocation;
 import org.apache.commons.lang3.tuple.Pair;
 
@@ -106,7 +107,26 @@ public class NamerScreen extends Screen {
         if (this.name != null) {
             Optional<Pair<Spell, String>> spell = NamingRegistries.findSpell(this.name.getValue());
             if (spell.isPresent()) {
-                spell.ifPresent(foundSpell -> Naming.network.spell(foundSpell.getLeft(), foundSpell.getRight()));
+                spell.ifPresent(foundSpell -> Naming.network.spell(
+                        foundSpell.getLeft(),
+                        foundSpell.getRight(),
+                        foundSpell.getLeft()
+                                .getTargeting()
+                                .getTargeted(
+                                        Minecraft.getInstance().player,
+                                        entity -> {
+                                            if (entity.getCustomName() != null) {
+                                                return entity.getCustomName()
+                                                        .getContents()
+                                                        .equalsIgnoreCase(foundSpell.getRight());
+                                            }
+                                            return false;
+                                        }
+                                )
+                                .stream()
+                                .mapToInt(Entity::getId)
+                                .toArray()
+                ));
             } else {
                 Naming.network.name(this.name.getValue(), namingTarget);
             }

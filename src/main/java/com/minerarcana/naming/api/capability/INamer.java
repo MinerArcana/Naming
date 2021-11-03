@@ -4,6 +4,7 @@ import com.minerarcana.naming.spell.Spell;
 import net.minecraft.entity.Entity;
 
 import java.util.Collection;
+import java.util.function.Supplier;
 
 public interface INamer {
     Collection<String> getAbilities();
@@ -34,7 +35,7 @@ public interface INamer {
      */
     Collection<String> getSpokenHistory();
 
-    boolean castSpell(Entity caster, Spell spell, String input);
+    void castSpell(Entity caster, Spell spell, String input, Supplier<Collection<Entity>> targeted);
 
     int getTimesCast(Spell spell);
 

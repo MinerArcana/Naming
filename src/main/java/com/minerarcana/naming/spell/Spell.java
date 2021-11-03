@@ -9,6 +9,7 @@ import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.registries.ForgeRegistryEntry;
 
 import javax.annotation.Nonnull;
+import java.util.Collection;
 import java.util.Objects;
 
 public abstract class Spell extends ForgeRegistryEntry<Spell> {
@@ -29,7 +30,7 @@ public abstract class Spell extends ForgeRegistryEntry<Spell> {
         return namer.hasAbility(Objects.requireNonNull(this.getRegistryName()).toString());
     }
 
-    public abstract boolean cast(@Nonnull Entity caster, INamer namer, String spoken);
+    public abstract boolean cast(@Nonnull Entity caster, INamer namer, String spoken, Collection<Entity> targeted);
 
     public int getHoarseTicks() {
         return 100;
@@ -38,5 +39,9 @@ public abstract class Spell extends ForgeRegistryEntry<Spell> {
     public boolean matches(String spell, String spoken) {
         String contents = LanguageMap.getInstance().getOrDefault(this.getDescriptionId());
         return contents.equalsIgnoreCase(spell);
+    }
+
+    public ISpellTargeting getTargeting() {
+        return SpellTargeting.AABB_32;
     }
 }

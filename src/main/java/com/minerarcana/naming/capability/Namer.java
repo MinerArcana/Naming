@@ -24,6 +24,7 @@ import java.util.Collection;
 import java.util.Map;
 import java.util.Set;
 import java.util.function.Consumer;
+import java.util.function.Supplier;
 
 public class Namer implements INamer, INBTSerializable<CompoundNBT> {
     @CapabilityInject(INamer.class)
@@ -88,8 +89,8 @@ public class Namer implements INamer, INBTSerializable<CompoundNBT> {
     }
 
     @Override
-    public boolean castSpell(Entity caster, Spell spell, String input) {
-        boolean cast = this.hasAbility("spells") && spell.canCast(caster, this) && spell.cast(caster, this, input);
+    public void castSpell(Entity caster, Spell spell, String input, Supplier<Collection<Entity>> targeted) {
+        boolean cast = this.hasAbility("spells") && spell.canCast(caster, this) && spell.cast(caster, this, input, targeted.get());
         if (cast) {
             this.castings.computeIfAbsent(spell, value -> new MutableInt()).increment();
             if (caster instanceof ServerPlayerEntity) {
@@ -99,7 +100,6 @@ public class Namer implements INamer, INBTSerializable<CompoundNBT> {
         if (caster instanceof LivingEntity && spell.getHoarseTicks() > 0) {
             ((LivingEntity) caster).addEffect(new EffectInstance(NamingEffects.HOARSE.get(), spell.getHoarseTicks()));
         }
-        return cast;
     }
 
     @Override

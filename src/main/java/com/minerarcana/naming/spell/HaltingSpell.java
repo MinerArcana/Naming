@@ -8,22 +8,12 @@ import net.minecraft.potion.Effects;
 import net.minecraft.util.math.vector.Vector3d;
 
 import javax.annotation.Nonnull;
-import java.util.List;
-import java.util.Locale;
+import java.util.Collection;
 
 public class HaltingSpell extends Spell {
     @Override
-    public boolean cast(@Nonnull Entity caster, INamer namer, String spoken) {
-        List<Entity> entityList = caster.level.getEntities(
-                (Entity) null,
-                caster.getBoundingBox().inflate(32),
-                entity -> entity.getName()
-                        .getContents()
-                        .toLowerCase(Locale.ROOT)
-                        .contains(spoken.toLowerCase(Locale.ROOT))
-        );
-
-        entityList.forEach(entity -> {
+    public boolean cast(@Nonnull Entity caster, INamer namer, String spoken, Collection<Entity> targeted) {
+        targeted.forEach(entity -> {
             entity.setDeltaMovement(Vector3d.ZERO);
             if (entity instanceof LivingEntity) {
                 ((LivingEntity) entity).addEffect(new EffectInstance(Effects.MOVEMENT_SLOWDOWN, 100, 4));
@@ -31,6 +21,6 @@ public class HaltingSpell extends Spell {
             }
         });
 
-        return !entityList.isEmpty();
+        return !targeted.isEmpty();
     }
 }
