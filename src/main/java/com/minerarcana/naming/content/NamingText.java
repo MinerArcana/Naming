@@ -37,6 +37,12 @@ public class NamingText {
     public static ITextComponent HALTING_SPELL = Naming.getRegistrate()
             .addLang("spell", Naming.rl("halting"), "Halt");
 
+    public static ITextComponent TAMING_SPELL = Naming.getRegistrate()
+            .addLang("spell", Naming.rl("taming"), "Tame");
+
+    public static ITextComponent TAMING_SPELL_ALT = Naming.getRegistrate()
+            .addLang("spell", Naming.rl("taming_alt"), "Befriend");
+
     public static void setup() {
 
     }

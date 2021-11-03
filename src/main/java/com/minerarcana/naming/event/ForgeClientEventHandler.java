@@ -51,7 +51,7 @@ public class ForgeClientEventHandler {
                     if (screen != null) {
                         minecraft.setScreen(screen);
                     }
-                }
+                } 
             }
         }
     }
