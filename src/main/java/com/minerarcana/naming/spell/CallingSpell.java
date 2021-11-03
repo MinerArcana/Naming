@@ -1,5 +1,6 @@
 package com.minerarcana.naming.spell;
 
+import com.minerarcana.naming.api.capability.INamer;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.MobEntity;
@@ -7,7 +8,6 @@ import net.minecraft.entity.ai.brain.Brain;
 import net.minecraft.entity.ai.brain.memory.MemoryModuleStatus;
 import net.minecraft.entity.ai.brain.memory.MemoryModuleType;
 import net.minecraft.entity.ai.brain.memory.WalkTarget;
-import net.minecraft.entity.passive.TameableEntity;
 import net.minecraft.util.math.EntityPosWrapper;
 
 import javax.annotation.Nonnull;
@@ -16,7 +16,7 @@ import java.util.Locale;
 
 public class CallingSpell extends Spell {
     @Override
-    public boolean cast(@Nonnull Entity caster, String spoken) {
+    public boolean cast(@Nonnull Entity caster, INamer namer, String spoken) {
         List<Entity> entityList = caster.level.getEntities(
                 (Entity) null,
                 caster.getBoundingBox().inflate(32),

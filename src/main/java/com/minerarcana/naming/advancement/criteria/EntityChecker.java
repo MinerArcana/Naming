@@ -1,4 +1,4 @@
-package com.minerarcana.naming.advancement.criteria.naming;
+package com.minerarcana.naming.advancement.criteria;
 
 import com.mojang.datafixers.util.Either;
 import net.minecraft.entity.Entity;

@@ -1,5 +1,8 @@
 package com.minerarcana.naming.api.capability;
 
+import com.minerarcana.naming.spell.Spell;
+import net.minecraft.entity.Entity;
+
 import java.util.Collection;
 
 public interface INamer {
@@ -30,4 +33,10 @@ public interface INamer {
      * @return The list of things that were spoken and heard by Listening Stones (Default Implementation is Uniques Only)
      */
     Collection<String> getSpokenHistory();
+
+    boolean castSpell(Entity caster, Spell spell, String input);
+
+    int getTimesCast(Spell spell);
+
+    int getTotalCastings();
 }

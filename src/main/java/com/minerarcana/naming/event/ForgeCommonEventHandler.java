@@ -2,7 +2,7 @@ package com.minerarcana.naming.event;
 
 
 import com.minerarcana.naming.Naming;
-import com.minerarcana.naming.advancement.criteria.heard.MessageTarget;
+import com.minerarcana.naming.advancement.criteria.messaged.MessageTarget;
 import com.minerarcana.naming.blockentity.ListeningType;
 import com.minerarcana.naming.capability.Namer;
 import com.minerarcana.naming.capability.NamingCapabilityProvider;

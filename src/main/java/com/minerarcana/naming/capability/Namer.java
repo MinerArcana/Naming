@@ -1,16 +1,27 @@
 package com.minerarcana.naming.capability;
 
+import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import com.minerarcana.naming.api.capability.INamer;
+import com.minerarcana.naming.content.NamingCriteriaTriggers;
+import com.minerarcana.naming.content.NamingEffects;
+import com.minerarcana.naming.spell.Spell;
+import com.minerarcana.naming.util.CachedValue;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.ListNBT;
 import net.minecraft.nbt.StringNBT;
+import net.minecraft.potion.EffectInstance;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityInject;
 import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.common.util.INBTSerializable;
+import org.apache.commons.lang3.mutable.MutableInt;
 
 import java.util.Collection;
+import java.util.Map;
 import java.util.Set;
 import java.util.function.Consumer;
 
@@ -21,16 +32,24 @@ public class Namer implements INamer, INBTSerializable<CompoundNBT> {
     private final Set<String> abilities;
     private final Set<String> heardHistory;
     private final Set<String> spokenHistory;
+    private final Map<Spell, MutableInt> castings;
+
+    private final CachedValue<Integer> totalCastings;
 
     public Namer() {
-        this(Sets.newHashSet(), Sets.newHashSet(), Sets.newHashSet());
+        this(Sets.newHashSet(), Sets.newHashSet(), Sets.newHashSet(), Maps.newHashMap());
     }
 
-
-    public Namer(Set<String> abilities, Set<String> heard, Set<String> spoken) {
+    public Namer(Set<String> abilities, Set<String> heard, Set<String> spoken, Map<Spell, MutableInt> castings) {
         this.abilities = abilities;
         this.heardHistory = heard;
         this.spokenHistory = spoken;
+        this.castings = castings;
+        this.totalCastings = new CachedValue<>(() -> this.castings.values()
+                .stream()
+                .map(MutableInt::intValue)
+                .reduce(0, Integer::sum)
+        );
     }
 
     @Override
@@ -66,6 +85,32 @@ public class Namer implements INamer, INBTSerializable<CompoundNBT> {
     @Override
     public Collection<String> getSpokenHistory() {
         return spokenHistory;
+    }
+
+    @Override
+    public boolean castSpell(Entity caster, Spell spell, String input) {
+        boolean cast = this.hasAbility("spells") && spell.canCast(caster, this) && spell.cast(caster, this, input);
+        if (cast) {
+            this.castings.computeIfAbsent(spell, value -> new MutableInt()).increment();
+            if (caster instanceof ServerPlayerEntity) {
+                NamingCriteriaTriggers.SPELL.trigger((ServerPlayerEntity) caster);
+            }
+        }
+        if (caster instanceof LivingEntity && spell.getHoarseTicks() > 0) {
+            ((LivingEntity) caster).addEffect(new EffectInstance(NamingEffects.HOARSE.get(), spell.getHoarseTicks()));
+        }
+        return cast;
+    }
+
+    @Override
+    public int getTimesCast(Spell spell) {
+        MutableInt spellCastings = castings.get(spell);
+        return spellCastings != null ? spellCastings.intValue() : 0;
+    }
+
+    @Override
+    public int getTotalCastings() {
+        return this.totalCastings.get();
     }
 
     @Override

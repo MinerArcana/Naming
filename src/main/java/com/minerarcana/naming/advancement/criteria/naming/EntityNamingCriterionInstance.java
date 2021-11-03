@@ -1,6 +1,7 @@
 package com.minerarcana.naming.advancement.criteria.naming;
 
 import com.google.gson.JsonObject;
+import com.minerarcana.naming.advancement.criteria.EntityChecker;
 import net.minecraft.advancements.criterion.EntityPredicate;
 import net.minecraft.entity.Entity;
 import net.minecraft.loot.ConditionArraySerializer;

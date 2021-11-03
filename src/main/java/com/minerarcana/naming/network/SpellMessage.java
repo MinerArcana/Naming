@@ -1,7 +1,7 @@
 package com.minerarcana.naming.network;
 
-import com.minerarcana.naming.Naming;
 import com.minerarcana.naming.capability.Namer;
+import com.minerarcana.naming.content.NamingEffects;
 import com.minerarcana.naming.spell.Spell;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.network.PacketBuffer;
@@ -27,8 +27,9 @@ public class SpellMessage {
         contextSupplier.get().enqueueWork(() -> {
             ServerPlayerEntity entity = contextSupplier.get().getSender();
             if (entity != null) {
-                if (entity.getCapability(Namer.CAP).map(cap -> cap.hasAbility("spells")).orElse(false)) {
-                    spell.cast(entity, input);
+                if (!entity.hasEffect(NamingEffects.HOARSE.get())) {
+                    entity.getCapability(Namer.CAP)
+                            .ifPresent(namer -> namer.castSpell(entity, spell, input));
                 }
             }
         });

@@ -16,7 +16,7 @@
     "hidden": false
   },
   "rewards": {
-    "function": "naming:calling"
+    "function": "naming:spells"
   },
   "criteria": {
     "speak_to": {

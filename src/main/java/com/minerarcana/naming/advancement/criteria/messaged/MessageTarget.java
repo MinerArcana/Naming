@@ -1,4 +1,4 @@
-package com.minerarcana.naming.advancement.criteria.heard;
+package com.minerarcana.naming.advancement.criteria.messaged;
 
 import com.minerarcana.naming.api.capability.INamer;
 

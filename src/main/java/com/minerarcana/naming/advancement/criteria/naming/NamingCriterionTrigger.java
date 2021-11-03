@@ -3,6 +3,7 @@ package com.minerarcana.naming.advancement.criteria.naming;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import com.minerarcana.naming.Naming;
+import com.minerarcana.naming.advancement.criteria.EntityChecker;
 import net.minecraft.advancements.criterion.AbstractCriterionTrigger;
 import net.minecraft.advancements.criterion.EntityPredicate;
 import net.minecraft.entity.player.ServerPlayerEntity;

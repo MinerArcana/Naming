@@ -1,6 +1,6 @@
 package com.minerarcana.naming.blockentity;
 
-import com.minerarcana.naming.advancement.criteria.heard.MessageTarget;
+import com.minerarcana.naming.advancement.criteria.messaged.MessageTarget;
 import com.minerarcana.naming.capability.Namer;
 import com.minerarcana.naming.content.NamingCriteriaTriggers;
 import com.minerarcana.naming.content.NamingText;

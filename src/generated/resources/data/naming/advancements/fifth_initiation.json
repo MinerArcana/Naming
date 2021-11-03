@@ -1,0 +1,71 @@
+{
+  "parent": "naming:fourth_initiation",
+  "display": {
+    "icon": {
+      "item": "minecraft:paper"
+    },
+    "title": {
+      "translate": "advancements.naming.the_fifth_degree.title"
+    },
+    "description": {
+      "translate": "advancements.naming.the_fifth_degree.description"
+    },
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "rewards": {
+    "function": "naming:more_spells"
+  },
+  "criteria": {
+    "halt": {
+      "trigger": "naming:targeted_spell",
+      "conditions": {
+        "spell": "naming:halting",
+        "checker": "hostile"
+      }
+    },
+    "call_wolf": {
+      "trigger": "naming:targeted_spell",
+      "conditions": {
+        "spell": "naming:calling",
+        "predicate": {
+          "type": "minecraft:wolf"
+        }
+      }
+    },
+    "call_horse": {
+      "trigger": "naming:targeted_spell",
+      "conditions": {
+        "spell": "naming:calling",
+        "predicate": {
+          "type": "minecraft:horse"
+        }
+      }
+    },
+    "call_cat": {
+      "trigger": "naming:targeted_spell",
+      "conditions": {
+        "spell": "naming:calling",
+        "predicate": {
+          "type": "minecraft:cat"
+        }
+      }
+    }
+  },
+  "requirements": [
+    [
+      "halt"
+    ],
+    [
+      "call_wolf"
+    ],
+    [
+      "call_horse"
+    ],
+    [
+      "call_cat"
+    ]
+  ]
+}

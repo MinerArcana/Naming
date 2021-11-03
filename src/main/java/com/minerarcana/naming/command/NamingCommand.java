@@ -12,7 +12,7 @@ public class NamingCommand {
         return Commands.literal("naming")
                 .then(Commands.literal("grant")
                         .then(Commands.argument("target", EntityArgument.entities())
-                                .then(Commands.argument("ability", StringArgumentType.word())
+                                .then(Commands.argument("ability", StringArgumentType.greedyString())
                                         .executes(context -> {
                                             String ability = StringArgumentType.getString(context, "ability");
                                             return EntityArgument.getEntities(context, "target")
