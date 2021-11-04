@@ -2,6 +2,7 @@ package com.minerarcana.naming.spell;
 
 import net.minecraft.entity.Entity;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.function.Predicate;
 
@@ -14,6 +15,22 @@ public enum SpellTargeting implements ISpellTargeting {
                     caster.getBoundingBox().inflate(32),
                     matcher
             );
+        }
+
+        @Override
+        public boolean needsClient() {
+            return true;
+        }
+    },
+    NONE {
+        @Override
+        public List<Entity> getTargeted(Entity caster, Predicate<Entity> matcher) {
+            return Collections.emptyList();
+        }
+
+        @Override
+        public boolean needsClient() {
+            return true;
         }
     }
 }

@@ -7,4 +7,6 @@ import java.util.function.Predicate;
 
 public interface ISpellTargeting {
     List<Entity> getTargeted(Entity caster, Predicate<Entity> matcher);
+
+    boolean needsClient();
 }

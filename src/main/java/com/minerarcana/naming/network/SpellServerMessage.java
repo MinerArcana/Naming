@@ -11,12 +11,12 @@ import net.minecraftforge.fml.network.NetworkEvent;
 
 import java.util.function.Supplier;
 
-public class SpellMessage {
+public class SpellServerMessage {
     private final Spell spell;
     private final String input;
     private final int[] targeted;
 
-    public SpellMessage(Spell spell, String input, int[] targeted) {
+    public SpellServerMessage(Spell spell, String input, int[] targeted) {
         this.spell = spell;
         this.input = input;
         this.targeted = targeted;
@@ -45,8 +45,8 @@ public class SpellMessage {
         return true;
     }
 
-    public static SpellMessage decode(PacketBuffer packetBuffer) {
-        return new SpellMessage(
+    public static SpellServerMessage decode(PacketBuffer packetBuffer) {
+        return new SpellServerMessage(
                 packetBuffer.readRegistryId(),
                 packetBuffer.readUtf(),
                 packetBuffer.readVarIntArray()

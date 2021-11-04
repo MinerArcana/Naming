@@ -107,7 +107,7 @@ public class NamerScreen extends Screen {
         if (this.name != null) {
             Optional<Pair<Spell, String>> spell = NamingRegistries.findSpell(this.name.getValue());
             if (spell.isPresent()) {
-                spell.ifPresent(foundSpell -> Naming.network.spell(
+                spell.ifPresent(foundSpell -> Naming.network.spellToServer(
                         foundSpell.getLeft(),
                         foundSpell.getRight(),
                         foundSpell.getLeft()

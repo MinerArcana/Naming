@@ -24,6 +24,7 @@
   "key.naming.name": "Name",
   "screen.naming.title": "Naming",
   "spell.naming.calling": "Call",
+  "spell.naming.echo": "Echo",
   "spell.naming.halting": "Halt",
   "spell.naming.taming": "Tame",
   "spell.naming.taming_alt": "Befriend"

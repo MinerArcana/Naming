@@ -8,11 +8,14 @@ import com.minerarcana.naming.capability.Namer;
 import com.minerarcana.naming.capability.NamingCapabilityProvider;
 import com.minerarcana.naming.command.NamingCommand;
 import com.minerarcana.naming.content.NamingCriteriaTriggers;
+import com.minerarcana.naming.worlddata.EchoingWorldData;
 import com.minerarcana.naming.worlddata.ListeningWorldData;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
+import net.minecraft.world.storage.DimensionSavedDataManager;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.event.RegisterCommandsEvent;
 import net.minecraftforge.event.ServerChatEvent;
@@ -58,11 +61,15 @@ public class ForgeCommonEventHandler {
 
     @SubscribeEvent
     public static void worldTick(TickEvent.WorldTickEvent worldTickEvent) {
-        if (worldTickEvent.phase == TickEvent.Phase.END && worldTickEvent.world instanceof ServerWorld &&
-                worldTickEvent.world.random.nextInt(100) == 0) {
-            ((ServerWorld) worldTickEvent.world).getDataStorage()
-                    .computeIfAbsent(ListeningWorldData::new, ListeningWorldData.NAME)
-                    .clean();
+        World world = worldTickEvent.world;
+        if (worldTickEvent.phase == TickEvent.Phase.END && world instanceof ServerWorld) {
+            DimensionSavedDataManager manager = ((ServerWorld) world).getDataStorage();
+            manager.computeIfAbsent(EchoingWorldData::new, EchoingWorldData.NAME)
+                    .tick(world);
+            if (world.random.nextInt(100) == 0) {
+                manager.computeIfAbsent(ListeningWorldData::new, ListeningWorldData.NAME)
+                        .clean();
+            }
         }
     }
 }
