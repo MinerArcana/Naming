@@ -3,6 +3,7 @@ package com.minerarcana.naming.event;
 import com.minerarcana.naming.Naming;
 import com.minerarcana.naming.content.NamingKeyBindings;
 import com.minerarcana.naming.screen.NamerScreen;
+import com.minerarcana.naming.target.EmptyTarget;
 import com.minerarcana.naming.target.EntityNamingTarget;
 import com.minerarcana.naming.target.ItemStackNamingTarget;
 import net.minecraft.client.Minecraft;
@@ -50,8 +51,10 @@ public class ForgeClientEventHandler {
                     }
                     if (screen != null) {
                         minecraft.setScreen(screen);
+                    } else {
+                        minecraft.setScreen(new NamerScreen(new EmptyTarget()));
                     }
-                } 
+                }
             }
         }
     }

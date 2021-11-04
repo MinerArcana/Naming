@@ -22,6 +22,11 @@ public class NamingTargets {
             ItemStackNamingTarget::fromPacketBuffer
     );
 
+    public static final NamingTargetType EMPTY = INSTANCE.register(
+            "empty",
+            packetBuffer -> new EmptyTarget()
+    );
+
     private final Map<String, NamingTargetType> targetTypes;
 
     public NamingTargets() {
