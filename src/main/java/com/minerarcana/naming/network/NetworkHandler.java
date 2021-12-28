@@ -34,10 +34,16 @@ public class NetworkHandler {
                 .consumer(SpellServerMessage::consume)
                 .add();
 
-        this.channel.messageBuilder(SpellClientMessage.class, 1)
+        this.channel.messageBuilder(SpellClientMessage.class, 2)
                 .decoder(SpellClientMessage::decode)
                 .encoder(SpellClientMessage::encode)
                 .consumer(SpellClientMessage::consume)
+                .add();
+
+        this.channel.messageBuilder(SyncNamingMessage.class, 3)
+                .decoder(SyncNamingMessage::decode)
+                .encoder(SyncNamingMessage::encode)
+                .consumer(SyncNamingMessage::consume)
                 .add();
     }
 
@@ -51,5 +57,9 @@ public class NetworkHandler {
 
     public void spellToClient(ServerPlayerEntity player, Spell spell, String spoken) {
         this.channel.send(PacketDistributor.PLAYER.with(() -> player), new SpellClientMessage(spell, spoken));
+    }
+
+    public void syncCap(ServerPlayerEntity player, SyncNamingMessage message) {
+        this.channel.send(PacketDistributor.PLAYER.with(() -> player), message);
     }
 }

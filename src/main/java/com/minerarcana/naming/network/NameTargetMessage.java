@@ -1,5 +1,6 @@
 package com.minerarcana.naming.network;
 
+import com.minerarcana.naming.capability.Namer;
 import com.minerarcana.naming.content.NamingCriteriaTriggers;
 import com.minerarcana.naming.target.INamingTarget;
 import com.minerarcana.naming.target.NamingTargets;
@@ -29,12 +30,18 @@ public class NameTargetMessage {
             contextSupplier.get().enqueueWork(() -> {
                 ServerPlayerEntity player = contextSupplier.get().getSender();
                 if (player != null) {
-                    ServerWorld level = player.getLevel();
-                    namingTarget.hydrate(level);
-                    if (namingTarget.isValid(player)) {
-                        namingTarget.name(name, player);
-                        NamingCriteriaTriggers.NAMING.trigger(player, namingTarget.getTarget());
+                    boolean hasAbility = player.getCapability(Namer.CAP)
+                            .map(cap -> cap.hasAbility("naming"))
+                            .orElse(false);
+                    if (hasAbility) {
+                        ServerWorld level = player.getLevel();
+                        namingTarget.hydrate(level);
+                        if (namingTarget.isValid(player)) {
+                            namingTarget.name(name, player);
+                            NamingCriteriaTriggers.NAMING.trigger(player, namingTarget.getTarget());
+                        }
                     }
+
                 }
             });
         }

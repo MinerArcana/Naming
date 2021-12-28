@@ -2,6 +2,7 @@ package com.minerarcana.naming.capability;
 
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
+import com.minerarcana.naming.Naming;
 import com.minerarcana.naming.api.capability.INamer;
 import com.minerarcana.naming.content.NamingCriteriaTriggers;
 import com.minerarcana.naming.content.NamingEffects;
@@ -21,6 +22,7 @@ import net.minecraftforge.common.util.INBTSerializable;
 import org.apache.commons.lang3.mutable.MutableInt;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.function.Consumer;
@@ -145,5 +147,10 @@ public class Namer implements INamer, INBTSerializable<CompoundNBT> {
         for (int i = 0; i < nbtList.size(); i++) {
             consumer.accept(nbtList.getString(i));
         }
+    }
+
+    public void setAbilities(Collection<String> abilities) {
+        this.abilities.clear();
+        this.abilities.addAll(abilities);
     }
 }

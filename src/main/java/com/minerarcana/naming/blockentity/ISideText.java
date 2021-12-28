@@ -10,7 +10,7 @@ import java.util.function.Function;
 public interface ISideText {
     boolean renderSide(Direction side);
 
-    DyeColor getColor();
+    DyeColor getTextColor();
 
     IReorderingProcessor getRenderedMessage(int index, Function<ITextComponent, IReorderingProcessor> generate);
 }

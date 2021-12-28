@@ -2,11 +2,14 @@ package com.minerarcana.naming.api.capability;
 
 import com.minerarcana.naming.spell.Spell;
 import net.minecraft.entity.Entity;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraftforge.common.util.INBTSerializable;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.function.Supplier;
 
-public interface INamer {
+public interface INamer extends INBTSerializable<CompoundNBT> {
     Collection<String> getAbilities();
 
     boolean grantAbility(String name);

@@ -35,7 +35,7 @@ public class SpellClientMessage {
                         input,
                         spell.getTargeting()
                                 .getTargeted(
-                                        Minecraft.getInstance().player,
+                                        player,
                                         entity -> {
                                             if (entity.getCustomName() != null) {
                                                 return entity.getCustomName()

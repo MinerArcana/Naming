@@ -1,6 +1,7 @@
 package com.minerarcana.naming.event;
 
 import com.minerarcana.naming.Naming;
+import com.minerarcana.naming.capability.Namer;
 import com.minerarcana.naming.content.NamingKeyBindings;
 import com.minerarcana.naming.screen.NamerScreen;
 import com.minerarcana.naming.target.EmptyTarget;
@@ -34,8 +35,11 @@ public class ForgeClientEventHandler {
 
     private static void handleInputEvent(int key, int action) {
         Minecraft minecraft = Minecraft.getInstance();
-        if (action == 1 && minecraft.player != null && minecraft.screen == null) {
-            if (key == NamingKeyBindings.NAME.getKey().getValue()) {
+        if (key == NamingKeyBindings.NAME.getKey().getValue() && action == 1 && minecraft.player != null && minecraft.screen == null) {
+            boolean hasAbility = minecraft.player.getCapability(Namer.CAP)
+                    .map(cap -> cap.hasAbility("naming"))
+                    .orElse(false);
+            if (hasAbility) {
                 RayTraceResult result = minecraft.hitResult;
                 if (result instanceof EntityRayTraceResult) {
                     minecraft.setScreen(new NamerScreen(new EntityNamingTarget(((EntityRayTraceResult) result).getEntity())));
