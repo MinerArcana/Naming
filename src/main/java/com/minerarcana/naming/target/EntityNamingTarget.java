@@ -1,6 +1,7 @@
 package com.minerarcana.naming.target;
 
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.MobEntity;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.world.server.ServerWorld;
@@ -34,6 +35,9 @@ public class EntityNamingTarget implements INamingTarget {
         Entity entity = weakEntity.get();
         if (entity != null) {
             entity.setCustomName(new StringTextComponent(name));
+            if (entity instanceof MobEntity) {
+                ((MobEntity)entity).setPersistenceRequired();
+            }
         }
     }
 
