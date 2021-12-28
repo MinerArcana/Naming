@@ -27,7 +27,7 @@ public class SideTextBlockRenderer<T extends TileEntity & ISideText> extends Til
         pMatrixStack.pushPose();
         FontRenderer fontrenderer = this.renderer.getFont();
         pMatrixStack.scale(0.017816667F, -0.017816667F, 0.017816667F);
-        int i = pBlockEntity.getColor().getTextColor();
+        int i = pBlockEntity.getTextColor().getTextColor();
         int j = (int) ((double) NativeImage.getR(i) * 0.4D);
         int k = (int) ((double) NativeImage.getG(i) * 0.4D);
         int l = (int) ((double) NativeImage.getB(i) * 0.4D);

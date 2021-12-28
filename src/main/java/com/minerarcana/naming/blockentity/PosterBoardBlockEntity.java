@@ -2,6 +2,7 @@ package com.minerarcana.naming.blockentity;
 
 import com.minerarcana.naming.content.NamingBlocks;
 import net.minecraft.block.BlockState;
+import net.minecraft.item.DyeColor;
 import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.tileentity.SignTileEntity;
 import net.minecraft.tileentity.TileEntityType;
@@ -13,10 +14,9 @@ import net.minecraftforge.registries.ForgeRegistries;
 import javax.annotation.Nonnull;
 import java.util.function.Function;
 
-//TODO: This will explode on Server or In Production
 public class PosterBoardBlockEntity extends SignTileEntity implements ISideText {
-    @SuppressWarnings("Unused")
-    public PosterBoardBlockEntity(TileEntityType<PosterBoardBlockEntity> blockEntityTileEntityType) {
+    @SuppressWarnings("unused")
+    public PosterBoardBlockEntity(TileEntityType<PosterBoardBlockEntity> ignoredBlockEntityTileEntityType) {
         super();
     }
 
@@ -37,6 +37,11 @@ public class PosterBoardBlockEntity extends SignTileEntity implements ISideText 
         } else {
             return false;
         }
+    }
+
+    @Override
+    public DyeColor getTextColor() {
+        return this.getColor();
     }
 
     @Override

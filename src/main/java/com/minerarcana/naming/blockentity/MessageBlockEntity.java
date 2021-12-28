@@ -38,7 +38,7 @@ public abstract class MessageBlockEntity extends TileEntity implements ISideText
     }
 
     @Override
-    public DyeColor getColor() {
+    public DyeColor getTextColor() {
         return DyeColor.WHITE;
     }
 

@@ -5,8 +5,7 @@
   "refmap": "naming.refmap.json",
   "mixins": [
     "ContainerAccessor",
-    "ServerPlayNetHandlerMixin",
-    "SignTileEntityAccessor"
+    "ServerPlayNetHandlerMixin"
   ],
   "client": [
   ],
