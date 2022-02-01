@@ -109,4 +109,34 @@ public class ListeningStoneBlockEntity extends MessageBlockEntity implements Fun
         nbt.put("listeningTypes", listeningTypeNBT);
         return nbt;
     }
+
+    @Override
+    public void setRemoved() {
+        super.setRemoved();
+        if (this.getLevel() instanceof ServerWorld) {
+            ListeningWorldData listeningWorldData = ((ServerWorld) this.getLevel()).getDataStorage()
+                    .computeIfAbsent(ListeningWorldData::new, ListeningWorldData.NAME);
+            listeningWorldData.removeListener(this.getName(), this.getBlockPos());
+        }
+    }
+
+    @Override
+    public void onChunkUnloaded() {
+        super.onChunkUnloaded();
+        if (this.getLevel() instanceof ServerWorld) {
+            ListeningWorldData listeningWorldData = ((ServerWorld) this.getLevel()).getDataStorage()
+                    .computeIfAbsent(ListeningWorldData::new, ListeningWorldData.NAME);
+            listeningWorldData.removeListener(this.getName(), this.getBlockPos());
+        }
+    }
+
+    @Override
+    public void clearRemoved() {
+        super.clearRemoved();
+        if (this.getLevel() instanceof ServerWorld) {
+            ListeningWorldData listeningWorldData = ((ServerWorld) this.getLevel()).getDataStorage()
+                    .computeIfAbsent(ListeningWorldData::new, ListeningWorldData.NAME);
+            listeningWorldData.addListener(this.getName(), this.getBlockPos(), this);
+        }
+    }
 }
