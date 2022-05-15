@@ -9,6 +9,8 @@ import net.minecraftforge.fml.network.NetworkRegistry.ChannelBuilder;
 import net.minecraftforge.fml.network.PacketDistributor;
 import net.minecraftforge.fml.network.simple.SimpleChannel;
 
+import SimpleChannel;
+
 public class NetworkHandler {
     private final SimpleChannel channel;
 

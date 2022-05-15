@@ -6,6 +6,8 @@ import net.minecraftforge.fml.network.NetworkRegistry;
 import net.minecraftforge.fml.network.PacketDistributor;
 import net.minecraftforge.fml.network.simple.SimpleChannel;
 
+import SimpleChannel;
+
 public class PropertyNetwork {
     private static final String VERSION = "1";
     private final SimpleChannel channel;

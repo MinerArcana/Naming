@@ -11,6 +11,8 @@ import javax.annotation.Nonnull;
 import java.util.Collection;
 import java.util.Optional;
 
+import Ingredient;
+
 public class EchoSpell extends Spell {
     private final Ingredient CAN_ECHO = Ingredient.of(NamingItemTags.CAN_ECHO);
 

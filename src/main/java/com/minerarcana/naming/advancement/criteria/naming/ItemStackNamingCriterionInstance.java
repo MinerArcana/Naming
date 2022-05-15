@@ -9,6 +9,8 @@ import net.minecraft.world.server.ServerWorld;
 
 import javax.annotation.Nonnull;
 
+import Ingredient;
+
 public class ItemStackNamingCriterionInstance extends NamingCriterionInstance {
     private final Ingredient ingredient;
 

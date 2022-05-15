@@ -2,11 +2,6 @@ package com.minerarcana.naming.advancement.criteria.naming;
 
 import com.google.gson.JsonObject;
 import com.minerarcana.naming.advancement.criteria.EntityChecker;
-import net.minecraft.advancements.criterion.EntityPredicate;
-import net.minecraft.entity.Entity;
-import net.minecraft.loot.ConditionArraySerializer;
-import net.minecraft.util.math.vector.Vector3d;
-import net.minecraft.world.server.ServerWorld;
 
 import javax.annotation.Nonnull;
 import java.util.Locale;

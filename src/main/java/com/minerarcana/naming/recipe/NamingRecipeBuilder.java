@@ -15,6 +15,9 @@ import java.util.Objects;
 import java.util.function.Consumer;
 import java.util.regex.Pattern;
 
+import Ingredient;
+import ItemStack;
+
 public class NamingRecipeBuilder {
     private final ItemStack result;
     private Ingredient ingredient;

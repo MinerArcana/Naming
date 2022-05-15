@@ -15,6 +15,8 @@ import net.minecraft.util.math.vector.Vector3f;
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.List;
 
+import TileEntity;
+
 public class SideTextBlockRenderer<T extends TileEntity & ISideText> extends TileEntityRenderer<T> {
     public SideTextBlockRenderer(TileEntityRendererDispatcher dispatcher) {
         super(dispatcher);

@@ -3,6 +3,8 @@ package com.minerarcana.naming.content;
 import com.minerarcana.naming.Naming;
 import net.minecraft.util.text.ITextComponent;
 
+import ITextComponent;
+
 public class NamingText {
     public static ITextComponent KEY_CATEGORY = Naming.getRegistrate()
             .addRawLang("key.category.name", "Naming");

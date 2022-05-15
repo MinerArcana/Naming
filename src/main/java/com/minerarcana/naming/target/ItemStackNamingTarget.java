@@ -19,6 +19,9 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Optional;
 
+import Hand;
+import ItemStack;
+
 public class ItemStackNamingTarget implements INamingTarget {
     private final ItemStack itemStack;
     private final Hand hand;

@@ -7,6 +7,8 @@ import com.tterrag.registrate.util.entry.RegistryEntry;
 import net.minecraft.item.crafting.IRecipeSerializer;
 import net.minecraft.item.crafting.IRecipeType;
 
+import IRecipeType;
+
 public class NamingRecipes {
     public static final IRecipeType<NamingRecipe> NAMING_RECIPE_TYPE = IRecipeType.register("naming:naming");
 

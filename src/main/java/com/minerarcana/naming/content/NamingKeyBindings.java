@@ -11,6 +11,8 @@ import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber.Bus;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 
+import KeyBinding;
+
 @EventBusSubscriber(modid = Naming.ID, value = Dist.CLIENT, bus = Bus.MOD)
 public class NamingKeyBindings {
     private static final String CATEGORY = "key.category.naming";

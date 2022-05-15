@@ -1,9 +1,9 @@
 package com.minerarcana.naming.mixin;
 
 import com.minerarcana.naming.content.NamingCriteriaTriggers;
-import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.item.ItemStack;
-import net.minecraft.network.play.ServerPlayNetHandler;
+import net.minecraft.server.network.ServerGamePacketListenerImpl;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.network.ServerGamePacketListenerImpl;
 import org.spongepowered.asm.mixin.Mixin;

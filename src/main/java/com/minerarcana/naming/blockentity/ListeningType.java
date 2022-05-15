@@ -3,6 +3,8 @@ package com.minerarcana.naming.blockentity;
 import com.minerarcana.naming.content.NamingText;
 import net.minecraft.util.text.ITextComponent;
 
+import ITextComponent;
+
 public enum ListeningType implements IButtoned<ListeningType> {
     NONE(false, false, NamingText.NONE),
     LISTENING(true, false, NamingText.LISTENING),

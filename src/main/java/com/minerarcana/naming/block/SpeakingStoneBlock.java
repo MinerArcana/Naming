@@ -23,6 +23,8 @@ import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.Random;
 
+import BooleanProperty;
+
 public class SpeakingStoneBlock extends FacingMessageBlock {
     private static final BooleanProperty TRIGGERED = BlockStateProperties.TRIGGERED;
 

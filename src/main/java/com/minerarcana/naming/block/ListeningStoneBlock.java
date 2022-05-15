@@ -14,6 +14,8 @@ import net.minecraftforge.registries.ForgeRegistries;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 
+import BooleanProperty;
+
 public class ListeningStoneBlock extends FacingMessageBlock {
     public static final BooleanProperty LIT = BlockStateProperties.LIT;
 
