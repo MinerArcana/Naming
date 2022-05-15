@@ -1,9 +1,9 @@
 package com.minerarcana.naming.advancement.criteria;
 
 import com.mojang.datafixers.util.Either;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.monster.IMob;
-import net.minecraft.entity.passive.TameableEntity;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.TamableAnimal;
 
 import java.util.Arrays;
 import java.util.stream.Collectors;
@@ -12,13 +12,13 @@ public enum EntityChecker {
     HOSTILE {
         @Override
         public boolean matches(Entity entity) {
-            return entity instanceof IMob;
+            return entity instanceof Mob;
         }
     },
     TAMED {
         @Override
         public boolean matches(Entity entity) {
-            return entity instanceof TameableEntity && ((TameableEntity) entity).isTame();
+            return entity instanceof TamableAnimal && ((TamableAnimal) entity).isTame();
         }
     };
 

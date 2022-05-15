@@ -15,6 +15,9 @@ import net.minecraft.inventory.container.ContainerType;
 import net.minecraft.inventory.container.IContainerListener;
 import net.minecraft.util.IWorldPosCallable;
 import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.inventory.ContainerLevelAccess;
+import net.minecraft.world.inventory.MenuType;
 import org.apache.commons.lang3.tuple.Pair;
 
 import javax.annotation.Nonnull;
@@ -25,18 +28,18 @@ import java.util.Objects;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
 
-public abstract class MessageContainer<T extends Enum<T> & IButtoned<T>> extends Container implements IPropertyManaged {
-    private final IWorldPosCallable callable;
+public abstract class MessageContainer<T extends Enum<T> & IButtoned<T>> extends AbstractContainerMenu implements IPropertyManaged {
+    private final ContainerLevelAccess callable;
     private final PropertyManager propertyManager;
 
     private final Property<String> name;
     private final List<Pair<Property<Integer>, Property<String>>> listeners;
 
-    public MessageContainer(ContainerType<? extends MessageContainer> type, int containerId,
+    public MessageContainer(MenuType<? extends MessageContainer> type, int containerId,
                             MessageBlockEntity blockEntity, Function<Integer, T> getter,
                             BiConsumer<Integer, T> setting) {
         super(type, containerId);
-        this.callable = IWorldPosCallable.create(
+        this.callable = ContainerLevelAccess.create(
                 Objects.requireNonNull(blockEntity.getLevel()),
                 blockEntity.getBlockPos()
         );
@@ -76,7 +79,7 @@ public abstract class MessageContainer<T extends Enum<T> & IButtoned<T>> extends
         }
     }
 
-    public IWorldPosCallable getCallable() {
+    public ContainerAccessor getCallable() {
         return callable;
     }
 

@@ -15,14 +15,18 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '5.1.+', changing: true
-        classpath group: 'org.parchmentmc', name: 'librarian', version: '1.+'
+        classpath(group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '5.1.+', changing: true) {
+            exclude group: 'org.apache.logging.log4j'
+        }
+        classpath 'org.apache.logging.log4j:log4j-api:2.11.2'
+        classpath 'org.apache.logging.log4j:log4j-core:2.11.2'
+        classpath 'org.parchmentmc:librarian:1.+'
         classpath group: "org.spongepowered", name: "mixingradle", version: "0.7-SNAPSHOT"
     }
 }
 
 plugins {
-    id 'com.github.johnrengelman.shadow' version '5.2.0'
+    id 'com.github.johnrengelman.shadow' version '7.1.2'
 }
 
 apply plugin: "net.minecraftforge.gradle"
@@ -32,10 +36,12 @@ apply plugin: "java"
 apply plugin: "idea"
 apply plugin: 'org.spongepowered.mixin'
 
+apply from: 'https://raw.githubusercontent.com/SizableShrimp/Forge-Class-Remapper/main/classremapper.gradle'
+
 version = "${minecraft_version}-" + getVersion()
 archivesBaseName = "${mod_id}"
 
-java.toolchain.languageVersion = JavaLanguageVersion.of(8)
+java.toolchain.languageVersion = JavaLanguageVersion.of(17)
 
 repositories {
     mavenLocal()
@@ -53,9 +59,7 @@ test {
 }
 
 minecraft {
-    mappings channel: 'parchment', version: '2021.08.29-1.16.5'
-
-    accessTransformer = file('src/main/resources/META-INF/accesstransformer.cfg')
+    mappings channel: 'parchment', version: '2022.03.13-1.18.2'
 
     runs {
         client {
@@ -135,7 +139,7 @@ shadowJar {
 dependencies {
     minecraft "net.minecraftforge:forge:${minecraft_version}-${forge_version}"
 
-    def registrate = "com.tterrag.registrate:Registrate:MC1.16.5-${registrate_version}" as Object
+    def registrate = "com.tterrag.registrate:Registrate:MC1.18.2-1.0.25"
     implementation fg.deobf(registrate)
     shade registrate
 
@@ -184,7 +188,7 @@ jar {
                 "Implementation-Version"  : mod_version,
                 "Implementation-Vendor"   : mod_authors,
                 "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ"),
-                "MixinConfigs": "${mod_id}.mixins.json"
+                "MixinConfigs"            : "${mod_id}.mixins.json"
         ])
     }
 }
@@ -197,10 +201,6 @@ task srcJar(type: Jar) {
 task javadocJar(type: Jar, dependsOn: javadoc) {
     classifier = "javadoc"
     from javadoc.destinationDir
-}
-
-reobf {
-    shadowJar {}
 }
 
 reobf {

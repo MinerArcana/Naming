@@ -2,38 +2,40 @@ package com.minerarcana.naming.blockentity;
 
 import com.minerarcana.naming.block.ListeningStoneBlock;
 import net.minecraft.block.BlockState;
+import net.minecraft.core.Direction;
 import net.minecraft.inventory.container.INamedContainerProvider;
-import net.minecraft.item.DyeColor;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.nbt.ListNBT;
-import net.minecraft.nbt.StringNBT;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
+import net.minecraft.nbt.StringTag;
+import net.minecraft.nbt.Tag;
 import net.minecraft.network.NetworkManager;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextComponent;
 import net.minecraft.network.play.server.SUpdateTileEntityPacket;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.tileentity.TileEntityType;
-import net.minecraft.util.Direction;
+import net.minecraft.network.protocol.game.ServerboundBlockEntityTagQuery;
 import net.minecraft.util.IReorderingProcessor;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
-import net.minecraftforge.common.util.Constants;
+import net.minecraft.world.item.DyeColor;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.function.Function;
 
-public abstract class MessageBlockEntity extends TileEntity implements ISideText, INamedContainerProvider {
-    private final ITextComponent[] messages = new ITextComponent[]{
-            StringTextComponent.EMPTY,
-            StringTextComponent.EMPTY,
-            StringTextComponent.EMPTY,
-            StringTextComponent.EMPTY
+public abstract class MessageBlockEntity extends BlockEntity implements ISideText, INamedContainerProvider {
+    private final Component[] messages = new Component[]{
+            TextComponent.EMPTY,
+            TextComponent.EMPTY,
+            TextComponent.EMPTY,
+            TextComponent.EMPTY
     };
     private final IReorderingProcessor[] renderedMessages = new IReorderingProcessor[4];
 
     private String name = "";
 
-    public MessageBlockEntity(TileEntityType<?> blockEntityType) {
+    public MessageBlockEntity(BlockEntityType<?> blockEntityType) {
         super(blockEntityType);
     }
 
@@ -43,18 +45,18 @@ public abstract class MessageBlockEntity extends TileEntity implements ISideText
     }
 
     @Override
-    public IReorderingProcessor getRenderedMessage(int index, Function<ITextComponent, IReorderingProcessor> generate) {
+    public IReorderingProcessor getRenderedMessage(int index, Function<Component, IReorderingProcessor> generate) {
         if (renderedMessages[index] == null) {
             renderedMessages[index] = generate.apply(messages[index]);
         }
         return renderedMessages[index];
     }
 
-    public ITextComponent getMessage(int index) {
+    public Component getMessage(int index) {
         return messages[index];
     }
 
-    public void setMessage(int index, ITextComponent message) {
+    public void setMessage(int index, Component message) {
         messages[index] = message;
         renderedMessages[index] = null;
         this.setChanged();
@@ -64,7 +66,7 @@ public abstract class MessageBlockEntity extends TileEntity implements ISideText
                     this.getLevel().getChunkAt(this.getBlockPos()),
                     this.getBlockState(),
                     this.getBlockState(),
-                    Constants.BlockFlags.DEFAULT,
+                    Block.UPDATE_ALL,
                     512
             );
         }
@@ -72,32 +74,32 @@ public abstract class MessageBlockEntity extends TileEntity implements ISideText
 
     @Override
     @ParametersAreNonnullByDefault
-    public void load(BlockState state, CompoundNBT nbt) {
-        super.load(state, nbt);
+    public void load(CompoundTag nbt) {
+        super.load(nbt);
         loadMessages(nbt);
     }
 
-    protected void loadMessages(CompoundNBT nbt) {
+    protected void loadMessages(CompoundTag nbt) {
         this.name = nbt.getString("name");
-        ListNBT messagesNBT = nbt.getList("messages", Constants.NBT.TAG_STRING);
+        ListTag messagesNBT = nbt.getList("messages", Tag.TAG_STRING);
         for (int i = 0; i < messagesNBT.size(); i++) {
-            this.messages[i] = ITextComponent.Serializer.fromJson(messagesNBT.getString(i));
+            this.messages[i] = Component.Serializer.fromJson(messagesNBT.getString(i));
             this.renderedMessages[i] = null;
         }
     }
 
     @Override
-    @Nonnull
-    public CompoundNBT save(@Nonnull CompoundNBT compoundNBT) {
-        return saveMessages(super.save(compoundNBT));
+    protected void saveAdditional(@Nonnull CompoundTag compoundNBT) {
+        super.saveAdditional(compoundNBT);
+        saveMessages(compoundNBT);
     }
 
     @Nonnull
-    protected CompoundNBT saveMessages(@Nonnull CompoundNBT nbt) {
+    protected CompoundTag saveMessages(@Nonnull CompoundTag nbt) {
         nbt.putString("name", name);
-        ListNBT messagesNBT = new ListNBT();
-        for (ITextComponent message : messages) {
-            messagesNBT.add(StringNBT.valueOf(ITextComponent.Serializer.toJson(message)));
+        ListTag messagesNBT = new ListTag();
+        for (Component message : messages) {
+            messagesNBT.add(StringTag.valueOf(Component.Serializer.toJson(message)));
         }
         nbt.put("messages", messagesNBT);
         return nbt;
@@ -111,8 +113,8 @@ public abstract class MessageBlockEntity extends TileEntity implements ISideText
 
     @Nullable
     @Override
-    public SUpdateTileEntityPacket getUpdatePacket() {
-        return new SUpdateTileEntityPacket(this.getBlockPos(), -1, saveMessages(new CompoundNBT()));
+    public SerntityPacket getUpdatePacket() {
+        return new ServerboundBlockEntityTagQuery(this.getBlockPos(), -1, saveMessages(new CompoundTag()));
     }
 
     @Override
@@ -122,8 +124,10 @@ public abstract class MessageBlockEntity extends TileEntity implements ISideText
 
     @Override
     @Nonnull
-    public CompoundNBT getUpdateTag() {
-        return save(new CompoundNBT());
+    public CompoundTag getUpdateTag() {
+        CompoundTag compoundTag = new CompoundTag();
+        saveAdditional(compoundTag);
+        return compoundTag;
     }
 
     public String getName() {
@@ -136,11 +140,11 @@ public abstract class MessageBlockEntity extends TileEntity implements ISideText
 
     @Override
     @Nonnull
-    public ITextComponent getDisplayName() {
-        return new StringTextComponent(this.getName());
+    public Component getDisplayName() {
+        return new TextComponent(this.getName());
     }
 
-    public ITextComponent[] getMessages() {
+    public Component[] getMessages() {
         return messages;
     }
 
