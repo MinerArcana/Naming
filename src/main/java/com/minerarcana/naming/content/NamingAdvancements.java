@@ -1,31 +1,31 @@
 package com.minerarcana.naming.content;
 
 import com.minerarcana.naming.Naming;
-import com.minerarcana.naming.advancement.criteria.messaged.MessageTarget;
 import com.minerarcana.naming.advancement.criteria.EntityChecker;
+import com.minerarcana.naming.advancement.criteria.messaged.MessageTarget;
 import com.mojang.datafixers.util.Function3;
 import com.tterrag.registrate.providers.RegistrateAdvancementProvider;
 import net.minecraft.advancements.Advancement;
 import net.minecraft.advancements.AdvancementRewards;
 import net.minecraft.advancements.DisplayInfo;
 import net.minecraft.advancements.FrameType;
-import net.minecraft.advancements.criterion.EntityPredicate;
-import net.minecraft.advancements.criterion.InventoryChangeTrigger;
-import net.minecraft.command.FunctionObject;
-import net.minecraft.entity.EntityType;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.util.IItemProvider;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.advancements.critereon.EntityPredicate;
+import net.minecraft.advancements.critereon.InventoryChangeTrigger;
+import net.minecraft.commands.CommandFunction;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.level.ItemLike;
 
 import java.util.Locale;
 
 public class NamingAdvancements {
     public static void generateAdvancements(RegistrateAdvancementProvider provider) {
-        Function3<IItemProvider, String, String, DisplayInfo> displayInfo = displayInfoFunction(provider);
+        Function3<ItemLike, String, String, DisplayInfo> displayInfo = displayInfoFunction(provider);
 
         Advancement magicOfNames = Advancement.Builder.advancement()
-                .addCriterion("root", InventoryChangeTrigger.Instance.hasItems(Items.BOOK))
+                .addCriterion("root", InventoryChangeTrigger.TriggerInstance.hasItems(Items.BOOK))
                 .display(
                         new ItemStack(Items.BOOK),
                         provider.title("naming", "magic_of_names", "Magic of Names"),
@@ -129,13 +129,13 @@ public class NamingAdvancements {
                 0,
                 new ResourceLocation[0],
                 new ResourceLocation[0],
-                new FunctionObject.CacheableFunction(
+                new CommandFunction.CacheableFunction(
                         Naming.rl(name)
                 )
         );
     }
 
-    private static Function3<IItemProvider, String, String, DisplayInfo> displayInfoFunction(RegistrateAdvancementProvider provider) {
+    private static Function3<ItemLike, String, String, DisplayInfo> displayInfoFunction(RegistrateAdvancementProvider provider) {
         return (item, title, desc) -> {
             String name = title.toLowerCase(Locale.ROOT)
                     .replace(" ", "_");

@@ -7,25 +7,25 @@ import com.minerarcana.naming.advancement.criteria.EntityChecker;
 import com.minerarcana.naming.capability.Namer;
 import com.minerarcana.naming.content.NamingRegistries;
 import com.minerarcana.naming.spell.Spell;
-import net.minecraft.advancements.criterion.AbstractCriterionTrigger;
-import net.minecraft.advancements.criterion.EntityPredicate;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.loot.ConditionArrayParser;
-import net.minecraft.util.JSONUtils;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.advancements.critereon.DeserializationContext;
+import net.minecraft.advancements.critereon.EntityPredicate;
+import net.minecraft.advancements.critereon.SimpleCriterionTrigger;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.util.GsonHelper;
+import net.minecraft.world.entity.Entity;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 
-public class TargetedSpellCriterionTrigger extends AbstractCriterionTrigger<TargetedSpellCriterionInstance> {
+public class TargetedSpellCriterionTrigger extends SimpleCriterionTrigger<TargetedSpellCriterionInstance> {
     public static final ResourceLocation ID = Naming.rl("targeted_spell");
 
     @Override
     @Nonnull
     @ParametersAreNonnullByDefault
-    protected TargetedSpellCriterionInstance createInstance(JsonObject pJson, EntityPredicate.AndPredicate pEntityPredicate, ConditionArrayParser pConditionsParser) {
+    protected TargetedSpellCriterionInstance createInstance(JsonObject pJson, EntityPredicate.Composite pEntityPredicate, DeserializationContext pConditionsParser) {
         Spell spell = null;
         if (pJson.has("spell")) {
             ResourceLocation spellName = ResourceLocation.tryParse(pJson.getAsJsonPrimitive("spell").getAsString());
@@ -44,7 +44,7 @@ public class TargetedSpellCriterionTrigger extends AbstractCriterionTrigger<Targ
             return new TargetedSpellCriterionInstance(
                     pEntityPredicate,
                     spell,
-                    EntityChecker.getByName(JSONUtils.getAsString(pJson, "checker"))
+                    EntityChecker.getByName(GsonHelper.getAsString(pJson, "checker"))
                             .mapRight(JsonParseException::new)
                             .orThrow()
             );
@@ -53,7 +53,7 @@ public class TargetedSpellCriterionTrigger extends AbstractCriterionTrigger<Targ
         }
     }
 
-    public void trigger(ServerPlayerEntity playerEntity, Spell spell, Entity targeted) {
+    public void trigger(ServerPlayer playerEntity, Spell spell, Entity targeted) {
         playerEntity.getCapability(Namer.CAP)
                 .ifPresent(namer -> this.trigger(
                         playerEntity,
@@ -63,11 +63,11 @@ public class TargetedSpellCriterionTrigger extends AbstractCriterionTrigger<Targ
     }
 
     public TargetedSpellCriterionInstance forEntity(@Nullable Spell spell, EntityPredicate entityPredicate) {
-        return new TargetedSpellCriterionInstance(EntityPredicate.AndPredicate.ANY, spell, entityPredicate);
+        return new TargetedSpellCriterionInstance(EntityPredicate.Composite.ANY, spell, entityPredicate);
     }
 
     public TargetedSpellCriterionInstance forChecker(@Nonnull Spell spell, EntityChecker checker) {
-        return new TargetedSpellCriterionInstance(EntityPredicate.AndPredicate.ANY, spell, checker);
+        return new TargetedSpellCriterionInstance(EntityPredicate.Composite.ANY, spell, checker);
     }
 
     @Override

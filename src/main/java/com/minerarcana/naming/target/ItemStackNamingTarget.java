@@ -4,14 +4,14 @@ import com.minerarcana.naming.capability.Namer;
 import com.minerarcana.naming.content.NamingRecipes;
 import com.minerarcana.naming.recipe.NamingInventory;
 import com.minerarcana.naming.recipe.NamingRecipe;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.network.PacketBuffer;
-import net.minecraft.util.Hand;
-import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.world.server.ServerWorld;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
 
@@ -19,14 +19,11 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Optional;
 
-import Hand;
-import ItemStack;
-
 public class ItemStackNamingTarget implements INamingTarget {
     private final ItemStack itemStack;
-    private final Hand hand;
+    private final InteractionHand hand;
 
-    public ItemStackNamingTarget(ItemStack itemStack, Hand hand) {
+    public ItemStackNamingTarget(ItemStack itemStack, InteractionHand hand) {
         this.itemStack = itemStack;
         this.hand = hand;
     }
@@ -41,8 +38,7 @@ public class ItemStackNamingTarget implements INamingTarget {
 
     @Override
     public void name(@Nonnull String name, Entity namer) {
-        if (namer instanceof LivingEntity && namer.level != null) {
-            LivingEntity livingNamer = (LivingEntity) namer;
+        if (namer instanceof LivingEntity livingNamer) {
             NamingInventory namingInventory = new NamingInventory(
                     name,
                     livingNamer.getItemInHand(hand),
@@ -60,8 +56,8 @@ public class ItemStackNamingTarget implements INamingTarget {
                 ItemStack result = recipeOptional.get().assemble(namingInventory);
                 if (inputStack.isEmpty()) {
                     livingNamer.setItemInHand(hand, result);
-                } else if (livingNamer instanceof PlayerEntity) {
-                    ItemHandlerHelper.giveItemToPlayer((PlayerEntity) livingNamer, result);
+                } else if (livingNamer instanceof Player) {
+                    ItemHandlerHelper.giveItemToPlayer((Player) livingNamer, result);
                 } else {
                     livingNamer.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY)
                             .map(itemHandler -> ItemHandlerHelper.insertItem(itemHandler, result, false))
@@ -70,7 +66,7 @@ public class ItemStackNamingTarget implements INamingTarget {
                 }
             } else {
                 if (!inputStack.isEmpty()) {
-                    inputStack.setHoverName(new StringTextComponent(name));
+                    inputStack.setHoverName(new TextComponent(name));
                 }
             }
         }
@@ -83,13 +79,13 @@ public class ItemStackNamingTarget implements INamingTarget {
     }
 
     @Override
-    public void toPacketBuffer(PacketBuffer buffer) {
+    public void toPacketBuffer(FriendlyByteBuf buffer) {
         buffer.writeItemStack(itemStack, false);
         buffer.writeEnum(hand);
     }
 
     @Override
-    public void hydrate(ServerWorld serverWorld) {
+    public void hydrate(ServerLevel serverWorld) {
 
     }
 
@@ -104,10 +100,10 @@ public class ItemStackNamingTarget implements INamingTarget {
         return itemStack;
     }
 
-    public static ItemStackNamingTarget fromPacketBuffer(PacketBuffer packetBuffer) {
+    public static ItemStackNamingTarget fromPacketBuffer(FriendlyByteBuf packetBuffer) {
         return new ItemStackNamingTarget(
                 packetBuffer.readItem(),
-                packetBuffer.readEnum(Hand.class)
+                packetBuffer.readEnum(InteractionHand.class)
         );
     }
 }

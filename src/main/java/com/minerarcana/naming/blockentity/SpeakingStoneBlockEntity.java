@@ -1,15 +1,17 @@
 package com.minerarcana.naming.blockentity;
 
 import com.minerarcana.naming.container.SpeakingContainer;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.container.Container;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.nbt.ListNBT;
-import net.minecraft.nbt.StringNBT;
-import net.minecraft.tileentity.TileEntityType;
-import net.minecraft.util.Direction;
-import net.minecraftforge.common.util.Constants;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
+import net.minecraft.nbt.StringTag;
+import net.minecraft.nbt.Tag;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.state.BlockState;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -32,13 +34,13 @@ public class SpeakingStoneBlockEntity extends MessageBlockEntity {
             ""
     };
 
-    private WeakReference<PlayerEntity> ownerReference;
+    private WeakReference<Player> ownerReference;
     private UUID ownerUUID;
 
     private boolean heard = false;
 
-    public SpeakingStoneBlockEntity(TileEntityType<?> blockEntityType) {
-        super(blockEntityType);
+    public SpeakingStoneBlockEntity(BlockEntityType<?> pType, BlockPos pWorldPosition, BlockState pBlockState) {
+        super(pType, pWorldPosition, pBlockState);
     }
 
     @Override
@@ -49,20 +51,20 @@ public class SpeakingStoneBlockEntity extends MessageBlockEntity {
     @Nullable
     @Override
     @ParametersAreNonnullByDefault
-    public Container createMenu(int containerId, PlayerInventory playerInventory, PlayerEntity playerEntity) {
+    public AbstractContainerMenu createMenu(int containerId, Inventory playerInventory, Player playerEntity) {
         return new SpeakingContainer(
                 containerId,
                 this
         );
     }
 
-    public void setOwner(@Nullable PlayerEntity entity) {
+    public void setOwner(@Nullable Player entity) {
         this.ownerReference = new WeakReference<>(entity);
         this.ownerUUID = entity != null ? entity.getUUID() : null;
     }
 
     @Nullable
-    public PlayerEntity getOwner() {
+    public Player getOwner() {
         if (this.ownerReference == null || this.ownerReference.get() == null) {
             if (this.getLevel() != null && this.ownerUUID != null) {
                 this.ownerReference = new WeakReference<>(this.getLevel()
@@ -107,29 +109,29 @@ public class SpeakingStoneBlockEntity extends MessageBlockEntity {
     }
 
     @Override
-    protected void loadMessages(CompoundNBT nbt) {
+    protected void loadMessages(CompoundTag nbt) {
         super.loadMessages(nbt);
-        ListNBT speakingTargetsListNBT = nbt.getList("speakingTargets", Constants.NBT.TAG_STRING);
+        ListTag speakingTargetsListNBT = nbt.getList("speakingTargets", Tag.TAG_STRING);
         for (int i = 0; i < speakingTargetsListNBT.size(); i++) {
             this.speakingTargets[i] = SpeakingTarget.valueOf(speakingTargetsListNBT.getString(i));
         }
-        ListNBT targetNamesNBT = nbt.getList("targetNames", Constants.NBT.TAG_STRING);
+        ListTag targetNamesNBT = nbt.getList("targetNames", Tag.TAG_STRING);
         for (int i = 0; i < targetNamesNBT.size(); i++) {
             this.targetNames[i] = targetNamesNBT.getString(i);
         }
     }
 
     @Nonnull
-    protected CompoundNBT saveMessages(@Nonnull CompoundNBT nbt) {
+    protected CompoundTag saveMessages(@Nonnull CompoundTag nbt) {
         nbt = super.saveMessages(nbt);
-        ListNBT speakingTargetsNBT = new ListNBT();
+        ListTag speakingTargetsNBT = new ListTag();
         for (SpeakingTarget speakingTarget : speakingTargets) {
-            speakingTargetsNBT.add(StringNBT.valueOf(speakingTarget.name()));
+            speakingTargetsNBT.add(StringTag.valueOf(speakingTarget.name()));
         }
         nbt.put("speakingTargets", speakingTargetsNBT);
-        ListNBT targetNamesNBT = new ListNBT();
+        ListTag targetNamesNBT = new ListTag();
         for (String speakingTargetName : targetNames) {
-            targetNamesNBT.add(StringNBT.valueOf(speakingTargetName));
+            targetNamesNBT.add(StringTag.valueOf(speakingTargetName));
         }
         nbt.put("targetNames", targetNamesNBT);
         return nbt;

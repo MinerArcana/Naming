@@ -12,10 +12,10 @@ import com.minerarcana.naming.recipe.NamingRecipeBuilder;
 import com.minerarcana.naming.renderer.SideTextBlockRenderer;
 import com.tterrag.registrate.providers.RegistrateRecipeProvider;
 import com.tterrag.registrate.util.entry.BlockEntry;
-import net.minecraft.data.ShapelessRecipeBuilder;
-import net.minecraft.item.ItemGroup;
-import net.minecraft.item.Items;
-import net.minecraft.item.crafting.Ingredient;
+import net.minecraft.data.recipes.ShapelessRecipeBuilder;
+import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraftforge.client.model.generators.ModelFile;
 import net.minecraftforge.common.Tags;
 
@@ -25,15 +25,15 @@ public class NamingBlocks {
     public static final BlockEntry<PosterBoardBlock> POSTER_BOARD = Naming.getRegistrate()
             .object("poster_board")
             .block(PosterBoardBlock::new)
-            .tileEntity(PosterBoardBlockEntity::new)
+            .blockEntity(PosterBoardBlockEntity::new)
             .renderer(() -> SideTextBlockRenderer::new)
             .build()
             .item(PosterBoardBlockItem::new)
-            .group(() -> ItemGroup.TAB_MISC)
+            .tab(() -> CreativeModeTab.TAB_MISC)
             .recipe((context, provider) -> ShapelessRecipeBuilder.shapeless(context.get())
                     .requires(Items.PAPER)
                     .requires(Tags.Items.STONE)
-                    .unlockedBy("item", RegistrateRecipeProvider.hasItem(Items.PAPER))
+                    .unlockedBy("item", RegistrateRecipeProvider.has(Items.PAPER))
                     .save(provider)
             )
             .build()
@@ -64,10 +64,10 @@ public class NamingBlocks {
                     .withAbility("listening_stone")
                     .build(provider)
             )
-            .group(() -> ItemGroup.TAB_MISC)
+            .tab(() -> CreativeModeTab.TAB_MISC)
             .model((context, provider) -> provider.blockItem(context, "_off"))
             .build()
-            .tileEntity(ListeningStoneBlockEntity::new)
+            .blockEntity(ListeningStoneBlockEntity::new)
             .renderer(() -> SideTextBlockRenderer::new)
             .build()
             .register();
@@ -88,9 +88,9 @@ public class NamingBlocks {
                     .withAbility("speaking_stone")
                     .build(provider)
             )
-            .group(() -> ItemGroup.TAB_MISC)
+            .tab(() -> CreativeModeTab.TAB_MISC)
             .build()
-            .tileEntity(SpeakingStoneBlockEntity::new)
+            .blockEntity(SpeakingStoneBlockEntity::new)
             .renderer(() -> SideTextBlockRenderer::new)
             .build()
             .register();

@@ -3,15 +3,14 @@ package com.minerarcana.naming.spell;
 import com.minerarcana.naming.api.capability.INamer;
 import com.minerarcana.naming.content.NamingItemTags;
 import com.minerarcana.naming.content.NamingRegistries;
-import net.minecraft.entity.Entity;
-import net.minecraft.item.crafting.Ingredient;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.item.crafting.Ingredient;
 import org.apache.commons.lang3.tuple.Pair;
 
 import javax.annotation.Nonnull;
 import java.util.Collection;
 import java.util.Optional;
 
-import Ingredient;
 
 public class EchoSpell extends Spell {
     private final Ingredient CAN_ECHO = Ingredient.of(NamingItemTags.CAN_ECHO);

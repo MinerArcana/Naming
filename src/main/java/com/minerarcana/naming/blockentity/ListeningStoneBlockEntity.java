@@ -4,17 +4,18 @@ import com.minerarcana.naming.block.ListeningStoneBlock;
 import com.minerarcana.naming.container.ListeningContainer;
 import com.minerarcana.naming.content.NamingBlocks;
 import com.minerarcana.naming.worlddata.ListeningWorldData;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.container.Container;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.nbt.ListNBT;
-import net.minecraft.nbt.StringNBT;
-import net.minecraft.tileentity.TileEntityType;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
-import net.minecraft.world.server.ServerWorld;
-import net.minecraftforge.common.util.Constants;
+import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
+import net.minecraft.nbt.StringTag;
+import net.minecraft.nbt.Tag;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.state.BlockState;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -29,15 +30,15 @@ public class ListeningStoneBlockEntity extends MessageBlockEntity implements Fun
             ListeningType.NONE
     };
 
-    public ListeningStoneBlockEntity(TileEntityType<ListeningStoneBlockEntity> blockEntityType) {
-        super(blockEntityType);
+    public ListeningStoneBlockEntity(BlockEntityType<?> pType, BlockPos pWorldPosition, BlockState pBlockState) {
+        super(pType, pWorldPosition, pBlockState);
     }
 
     @Override
     public void setName(String name) {
-        if (this.getLevel() instanceof ServerWorld) {
-            ListeningWorldData listeningWorldData = ((ServerWorld) this.getLevel()).getDataStorage()
-                    .computeIfAbsent(ListeningWorldData::new, ListeningWorldData.NAME);
+        if (this.getLevel() instanceof ServerLevel) {
+            ListeningWorldData listeningWorldData = ((ServerLevel) this.getLevel()).getDataStorage()
+                    .computeIfAbsent(ListeningWorldData::new, ListeningWorldData::new, ListeningWorldData.NAME);
             listeningWorldData.removeListener(this.getName(), this.getBlockPos());
             listeningWorldData.addListener(name, this.getBlockPos(), this);
         }
@@ -55,19 +56,18 @@ public class ListeningStoneBlockEntity extends MessageBlockEntity implements Fun
             this.getLevel().setBlockAndUpdate(this.getBlockPos(), this.getBlockState()
                     .setValue(ListeningStoneBlock.LIT, true)
             );
-            this.getLevel().getBlockTicks()
-                    .scheduleTick(this.getBlockPos(), NamingBlocks.LISTENING_STONE.get(), 20);
+            this.getLevel().scheduleTick(this.getBlockPos(), NamingBlocks.LISTENING_STONE.get(), 20);
         }
         return listeningType;
     }
 
     @Override
     @ParametersAreNonnullByDefault
-    public void setLevelAndPosition(World level, BlockPos position) {
-        super.setLevelAndPosition(level, position);
-        if (this.getLevel() instanceof ServerWorld) {
-            ((ServerWorld) this.getLevel()).getDataStorage()
-                    .computeIfAbsent(ListeningWorldData::new, ListeningWorldData.NAME)
+    public void setLevel(Level level) {
+        super.setLevel(level);
+        if (this.getLevel() instanceof ServerLevel) {
+            ((ServerLevel) this.getLevel()).getDataStorage()
+                    .computeIfAbsent(ListeningWorldData::new, ListeningWorldData::new, ListeningWorldData.NAME)
                     .addListener(this.getName(), this.worldPosition, this);
         }
     }
@@ -83,7 +83,7 @@ public class ListeningStoneBlockEntity extends MessageBlockEntity implements Fun
     @Nullable
     @Override
     @ParametersAreNonnullByDefault
-    public Container createMenu(int containerId, PlayerInventory inventory, PlayerEntity playerEntity) {
+    public AbstractContainerMenu createMenu(int containerId, Inventory inventory, Player playerEntity) {
         return new ListeningContainer(
                 containerId,
                 this
@@ -91,20 +91,20 @@ public class ListeningStoneBlockEntity extends MessageBlockEntity implements Fun
     }
 
     @Override
-    protected void loadMessages(CompoundNBT nbt) {
+    protected void loadMessages(CompoundTag nbt) {
         super.loadMessages(nbt);
-        ListNBT listeningTypesNBT = nbt.getList("listeningTypes", Constants.NBT.TAG_STRING);
+        ListTag listeningTypesNBT = nbt.getList("listeningTypes", Tag.TAG_STRING);
         for (int i = 0; i < listeningTypesNBT.size(); i++) {
             this.listeningTypes[i] = ListeningType.valueOf(listeningTypesNBT.getString(i));
         }
     }
 
     @Nonnull
-    protected CompoundNBT saveMessages(@Nonnull CompoundNBT nbt) {
+    protected CompoundTag saveMessages(@Nonnull CompoundTag nbt) {
         nbt = super.saveMessages(nbt);
-        ListNBT listeningTypeNBT = new ListNBT();
+        ListTag listeningTypeNBT = new ListTag();
         for (ListeningType listeningType : listeningTypes) {
-            listeningTypeNBT.add(StringNBT.valueOf(listeningType.name()));
+            listeningTypeNBT.add(StringTag.valueOf(listeningType.name()));
         }
         nbt.put("listeningTypes", listeningTypeNBT);
         return nbt;
@@ -113,9 +113,9 @@ public class ListeningStoneBlockEntity extends MessageBlockEntity implements Fun
     @Override
     public void setRemoved() {
         super.setRemoved();
-        if (this.getLevel() instanceof ServerWorld) {
-            ListeningWorldData listeningWorldData = ((ServerWorld) this.getLevel()).getDataStorage()
-                    .computeIfAbsent(ListeningWorldData::new, ListeningWorldData.NAME);
+        if (this.getLevel() instanceof ServerLevel) {
+            ListeningWorldData listeningWorldData = ((ServerLevel) this.getLevel()).getDataStorage()
+                    .computeIfAbsent(ListeningWorldData::new, ListeningWorldData::new, ListeningWorldData.NAME);
             listeningWorldData.removeListener(this.getName(), this.getBlockPos());
         }
     }
@@ -123,9 +123,9 @@ public class ListeningStoneBlockEntity extends MessageBlockEntity implements Fun
     @Override
     public void onChunkUnloaded() {
         super.onChunkUnloaded();
-        if (this.getLevel() instanceof ServerWorld) {
-            ListeningWorldData listeningWorldData = ((ServerWorld) this.getLevel()).getDataStorage()
-                    .computeIfAbsent(ListeningWorldData::new, ListeningWorldData.NAME);
+        if (this.getLevel() instanceof ServerLevel) {
+            ListeningWorldData listeningWorldData = ((ServerLevel) this.getLevel()).getDataStorage()
+                    .computeIfAbsent(ListeningWorldData::new, ListeningWorldData::new, ListeningWorldData.NAME);
             listeningWorldData.removeListener(this.getName(), this.getBlockPos());
         }
     }
@@ -133,9 +133,9 @@ public class ListeningStoneBlockEntity extends MessageBlockEntity implements Fun
     @Override
     public void clearRemoved() {
         super.clearRemoved();
-        if (this.getLevel() instanceof ServerWorld) {
-            ListeningWorldData listeningWorldData = ((ServerWorld) this.getLevel()).getDataStorage()
-                    .computeIfAbsent(ListeningWorldData::new, ListeningWorldData.NAME);
+        if (this.getLevel() instanceof ServerLevel) {
+            ListeningWorldData listeningWorldData = ((ServerLevel) this.getLevel()).getDataStorage()
+                    .computeIfAbsent(ListeningWorldData::new, ListeningWorldData::new, ListeningWorldData.NAME);
             listeningWorldData.addListener(this.getName(), this.getBlockPos(), this);
         }
     }

@@ -1,42 +1,44 @@
 package com.minerarcana.naming.blockentity;
 
 import com.minerarcana.naming.block.ListeningStoneBlock;
-import net.minecraft.block.BlockState;
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.inventory.container.INamedContainerProvider;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.StringTag;
 import net.minecraft.nbt.Tag;
-import net.minecraft.network.NetworkManager;
+import net.minecraft.network.Connection;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextComponent;
-import net.minecraft.network.play.server.SUpdateTileEntityPacket;
-import net.minecraft.network.protocol.game.ServerboundBlockEntityTagQuery;
-import net.minecraft.util.IReorderingProcessor;
+import net.minecraft.network.protocol.Packet;
+import net.minecraft.network.protocol.game.ClientGamePacketListener;
+import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
+import net.minecraft.util.FormattedCharSequence;
+import net.minecraft.world.MenuProvider;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.state.BlockState;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.function.Function;
 
-public abstract class MessageBlockEntity extends BlockEntity implements ISideText, INamedContainerProvider {
+public abstract class MessageBlockEntity extends BlockEntity implements ISideText, MenuProvider {
     private final Component[] messages = new Component[]{
             TextComponent.EMPTY,
             TextComponent.EMPTY,
             TextComponent.EMPTY,
             TextComponent.EMPTY
     };
-    private final IReorderingProcessor[] renderedMessages = new IReorderingProcessor[4];
+    private final FormattedCharSequence[] renderedMessages = new FormattedCharSequence[4];
 
     private String name = "";
 
-    public MessageBlockEntity(BlockEntityType<?> blockEntityType) {
-        super(blockEntityType);
+    public MessageBlockEntity(BlockEntityType<?> pType, BlockPos pWorldPosition, BlockState pBlockState) {
+        super(pType, pWorldPosition, pBlockState);
     }
 
     @Override
@@ -45,7 +47,7 @@ public abstract class MessageBlockEntity extends BlockEntity implements ISideTex
     }
 
     @Override
-    public IReorderingProcessor getRenderedMessage(int index, Function<Component, IReorderingProcessor> generate) {
+    public FormattedCharSequence getRenderedMessage(int index, Function<Component, FormattedCharSequence> generate) {
         if (renderedMessages[index] == null) {
             renderedMessages[index] = generate.apply(messages[index]);
         }
@@ -107,18 +109,20 @@ public abstract class MessageBlockEntity extends BlockEntity implements ISideTex
 
 
     @Override
-    public void onDataPacket(NetworkManager net, SUpdateTileEntityPacket pkt) {
-        this.loadMessages(pkt.getTag());
+    public void onDataPacket(Connection net, ClientboundBlockEntityDataPacket pkt) {
+        if (pkt.getTag() != null) {
+            this.loadMessages(pkt.getTag());
+        }
     }
 
     @Nullable
     @Override
-    public SerntityPacket getUpdatePacket() {
-        return new ServerboundBlockEntityTagQuery(this.getBlockPos(), -1, saveMessages(new CompoundTag()));
+    public Packet<ClientGamePacketListener> getUpdatePacket(){
+        return ClientboundBlockEntityDataPacket.create(this);
     }
 
     @Override
-    public void handleUpdateTag(BlockState state, CompoundNBT tag) {
+    public void handleUpdateTag(CompoundTag tag) {
         this.loadMessages(tag);
     }
 

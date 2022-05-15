@@ -5,13 +5,13 @@ import com.minerarcana.naming.content.NamingRegistries;
 import com.minerarcana.naming.content.NamingText;
 import com.minerarcana.naming.spell.Spell;
 import com.minerarcana.naming.target.INamingTarget;
-import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.gui.widget.TextFieldWidget;
-import net.minecraft.entity.Entity;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.client.gui.components.EditBox;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.Entity;
 import org.apache.commons.lang3.tuple.Pair;
 
 import javax.annotation.Nonnull;
@@ -26,7 +26,7 @@ public class NamerScreen extends Screen {
     private final int imageHeight = 28;
 
     private final INamingTarget namingTarget;
-    private TextFieldWidget name;
+    private EditBox name;
 
     public NamerScreen(INamingTarget namingTarget) {
         super(NamingText.SCREEN_TITLE);
@@ -40,7 +40,7 @@ public class NamerScreen extends Screen {
     }
 
     @Override
-    public void render(@Nonnull MatrixStack matrixStack, int pMouseX, int pMouseY, float pPartialTicks) {
+    public void render(@Nonnull PoseStack matrixStack, int pMouseX, int pMouseY, float pPartialTicks) {
         this.renderBackground(matrixStack);
         this.renderBg(matrixStack);
         super.render(matrixStack, pMouseX, pMouseY, pPartialTicks);
@@ -48,10 +48,9 @@ public class NamerScreen extends Screen {
         this.renderFg(matrixStack, pMouseX, pMouseY, pPartialTicks);
     }
 
-    @SuppressWarnings("deprecation")
-    protected void renderBg(MatrixStack pMatrixStack) {
-        RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
-        this.getMinecraft().getTextureManager().bind(LOCATION);
+    protected void renderBg(PoseStack pMatrixStack) {
+        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
+        this.getMinecraft().getTextureManager().bindForSetup(LOCATION);
         int i = (this.width - this.imageWidth) / 2;
         int j = (this.height - this.imageHeight) / 2;
         this.blit(pMatrixStack, i, j, 0, 0, this.imageWidth, this.imageHeight);
@@ -63,7 +62,7 @@ public class NamerScreen extends Screen {
         this.getMinecraft().keyboardHandler.setSendRepeatsToGui(true);
         int i = (this.width - this.imageWidth) / 2;
         int j = (this.height - this.imageHeight) / 2;
-        this.name = new TextFieldWidget(this.font, i + 10, j + 10, 103, 12, NamingText.SCREEN_TITLE);
+        this.name = new EditBox(this.font, i + 10, j + 10, 103, 12, NamingText.SCREEN_TITLE);
         this.name.setCanLoseFocus(false);
         this.name.setTextColor(-1);
         this.name.setTextColorUneditable(-1);
@@ -73,7 +72,7 @@ public class NamerScreen extends Screen {
         if (nameValue != null) {
             this.name.setValue(nameValue);
         }
-        this.children.add(this.name);
+        this.renderables.add(this.name);
         this.setInitialFocus(this.name);
     }
 
@@ -134,7 +133,7 @@ public class NamerScreen extends Screen {
         super.onClose();
     }
 
-    public void renderFg(MatrixStack pPoseStack, int pMouseX, int pMouseY, float pPartialTicks) {
+    public void renderFg(PoseStack pPoseStack, int pMouseX, int pMouseY, float pPartialTicks) {
         this.name.render(pPoseStack, pMouseX, pMouseY, pPartialTicks);
     }
 }

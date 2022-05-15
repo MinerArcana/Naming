@@ -11,13 +11,13 @@ import com.minerarcana.naming.content.NamingCriteriaTriggers;
 import com.minerarcana.naming.network.SyncNamingMessage;
 import com.minerarcana.naming.worlddata.EchoingWorldData;
 import com.minerarcana.naming.worlddata.ListeningWorldData;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.world.World;
-import net.minecraft.world.server.ServerWorld;
-import net.minecraft.world.storage.DimensionSavedDataManager;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.storage.DimensionDataStorage;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.event.RegisterCommandsEvent;
 import net.minecraftforge.event.ServerChatEvent;
@@ -32,7 +32,7 @@ public class ForgeCommonEventHandler {
 
     @SubscribeEvent
     public static void capabilityRegister(AttachCapabilitiesEvent<Entity> entityAttachCapabilitiesEvent) {
-        if (entityAttachCapabilitiesEvent.getObject() instanceof PlayerEntity) {
+        if (entityAttachCapabilitiesEvent.getObject() instanceof Player) {
             NamingCapabilityProvider provider = new NamingCapabilityProvider();
             entityAttachCapabilitiesEvent.addCapability(Naming.rl("namer"), provider);
             entityAttachCapabilitiesEvent.addListener(provider::invalidate);
@@ -41,12 +41,12 @@ public class ForgeCommonEventHandler {
 
     @SubscribeEvent
     public static void playerJoinWorld(EntityJoinWorldEvent event) {
-        if (event.getEntity() instanceof ServerPlayerEntity) {
+        if (event.getEntity() instanceof ServerPlayer) {
             event.getEntity().getCapability(Namer.CAP)
                     .ifPresent(cap -> {
                         if (cap instanceof Namer) {
                             Naming.network.syncCap(
-                                    (ServerPlayerEntity) event.getEntity(),
+                                    (ServerPlayer) event.getEntity(),
                                     new SyncNamingMessage(cap.getAbilities())
                             );
                         }
@@ -58,7 +58,7 @@ public class ForgeCommonEventHandler {
     public static void playerClone(PlayerEvent.Clone cloneEvent) {
         cloneEvent.getOriginal().getCapability(Namer.CAP)
                 .ifPresent(cap -> {
-                    CompoundNBT compoundNBT = cap.serializeNBT();
+                    CompoundTag compoundNBT = cap.serializeNBT();
                     cloneEvent.getPlayer().getCapability(Namer.CAP)
                             .ifPresent(newCap -> newCap.deserializeNBT(compoundNBT));
                 });
@@ -72,10 +72,10 @@ public class ForgeCommonEventHandler {
 
     @SubscribeEvent
     public static void serverChat(ServerChatEvent serverChatEvent) {
-        ServerPlayerEntity player = serverChatEvent.getPlayer();
+        ServerPlayer player = serverChatEvent.getPlayer();
         ListeningType listeningType = player.getLevel()
                 .getDataStorage()
-                .computeIfAbsent(ListeningWorldData::new, ListeningWorldData.NAME)
+                .computeIfAbsent(ListeningWorldData::new, ListeningWorldData::new, ListeningWorldData.NAME)
                 .speakTo(serverChatEvent.getMessage());
 
         if (listeningType.isListening()) {
@@ -90,13 +90,13 @@ public class ForgeCommonEventHandler {
 
     @SubscribeEvent
     public static void worldTick(TickEvent.WorldTickEvent worldTickEvent) {
-        World world = worldTickEvent.world;
-        if (worldTickEvent.phase == TickEvent.Phase.END && world instanceof ServerWorld) {
-            DimensionSavedDataManager manager = ((ServerWorld) world).getDataStorage();
-            manager.computeIfAbsent(EchoingWorldData::new, EchoingWorldData.NAME)
+        Level world = worldTickEvent.world;
+        if (worldTickEvent.phase == TickEvent.Phase.END && world instanceof ServerLevel) {
+            DimensionDataStorage manager = ((ServerLevel) world).getDataStorage();
+            manager.computeIfAbsent(EchoingWorldData::new, EchoingWorldData::new, EchoingWorldData.NAME)
                     .tick(world);
             if (world.random.nextInt(100) == 0) {
-                manager.computeIfAbsent(ListeningWorldData::new, ListeningWorldData.NAME)
+                manager.computeIfAbsent(ListeningWorldData::new, ListeningWorldData::new, ListeningWorldData.NAME)
                         .clean();
             }
         }

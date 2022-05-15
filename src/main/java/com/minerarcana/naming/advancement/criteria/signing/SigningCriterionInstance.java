@@ -1,20 +1,20 @@
 package com.minerarcana.naming.advancement.criteria.signing;
 
 import com.google.gson.JsonObject;
-import net.minecraft.advancements.criterion.CriterionInstance;
-import net.minecraft.advancements.criterion.EntityPredicate;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.Ingredient;
-import net.minecraft.loot.ConditionArraySerializer;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.advancements.critereon.AbstractCriterionTriggerInstance;
+import net.minecraft.advancements.critereon.EntityPredicate;
+import net.minecraft.advancements.critereon.SerializationContext;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.Ingredient;
 
 import javax.annotation.Nonnull;
 
-public class SigningCriterionInstance extends CriterionInstance {
+public class SigningCriterionInstance extends AbstractCriterionTriggerInstance {
     private final String title;
     private final Ingredient item;
 
-    public SigningCriterionInstance(ResourceLocation id, String title, Ingredient item, EntityPredicate.AndPredicate predicate) {
+    public SigningCriterionInstance(ResourceLocation id, String title, Ingredient item, EntityPredicate.Composite predicate) {
         super(id, predicate);
         this.title = title;
         this.item = item;
@@ -22,7 +22,7 @@ public class SigningCriterionInstance extends CriterionInstance {
 
     @Override
     @Nonnull
-    public JsonObject serializeToJson(@Nonnull ConditionArraySerializer conditions) {
+    public JsonObject serializeToJson(@Nonnull SerializationContext conditions) {
         JsonObject jsonObject = super.serializeToJson(conditions);
         if (title != null) {
             jsonObject.addProperty("title", title);

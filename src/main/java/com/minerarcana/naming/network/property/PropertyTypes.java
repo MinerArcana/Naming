@@ -1,7 +1,7 @@
 package com.minerarcana.naming.network.property;
 
 import com.google.common.collect.Lists;
-import net.minecraft.network.PacketBuffer;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraftforge.fluids.FluidStack;
 
 import java.util.List;
@@ -13,23 +13,23 @@ public class PropertyTypes {
     private static final List<PropertyType<?>> types = Lists.newArrayList();
 
     public static PropertyType<FluidStack> FLUID_STACK = addType("fluid_stack", FluidStack.class,
-            PacketBuffer::readFluidStack, PacketBuffer::writeFluidStack, FluidStack::isFluidEqual);
-    public static PropertyType<Boolean> BOOLEAN = addType("boolean", Boolean.class, PacketBuffer::readBoolean,
-            PacketBuffer::writeBoolean);
-    public static PropertyType<Integer> INTEGER = addType("integer", Integer.class, PacketBuffer::readInt,
-            PacketBuffer::writeInt);
-    public static PropertyType<Double> DOUBLE = addType("double", Double.class, PacketBuffer::readDouble,
-            PacketBuffer::writeDouble);
-    public static PropertyType<String> STRING = addType("string", String.class, PacketBuffer::readUtf,
-            PacketBuffer::writeUtf);
+            FriendlyByteBuf::readFluidStack, FriendlyByteBuf::writeFluidStack, FluidStack::isFluidEqual);
+    public static PropertyType<Boolean> BOOLEAN = addType("boolean", Boolean.class, FriendlyByteBuf::readBoolean,
+            FriendlyByteBuf::writeBoolean);
+    public static PropertyType<Integer> INTEGER = addType("integer", Integer.class, FriendlyByteBuf::readInt,
+            FriendlyByteBuf::writeInt);
+    public static PropertyType<Double> DOUBLE = addType("double", Double.class, FriendlyByteBuf::readDouble,
+            FriendlyByteBuf::writeDouble);
+    public static PropertyType<String> STRING = addType("string", String.class, FriendlyByteBuf::readUtf,
+            FriendlyByteBuf::writeUtf);
 
-    public static <T> PropertyType<T> addType(String name, Class<T> tClass, Function<PacketBuffer, T> reader,
-                                              BiConsumer<PacketBuffer, T> writer) {
+    public static <T> PropertyType<T> addType(String name, Class<T> tClass, Function<FriendlyByteBuf, T> reader,
+                                              BiConsumer<FriendlyByteBuf, T> writer) {
         return addType(new PropertyType<>(name, tClass, reader, writer));
     }
 
-    public static <T> PropertyType<T> addType(String name, Class<T> tClass, Function<PacketBuffer, T> reader,
-                                              BiConsumer<PacketBuffer, T> writer, BiPredicate<T, T> equals) {
+    public static <T> PropertyType<T> addType(String name, Class<T> tClass, Function<FriendlyByteBuf, T> reader,
+                                              BiConsumer<FriendlyByteBuf, T> writer, BiPredicate<T, T> equals) {
         return addType(new PropertyType<>(name, tClass, reader, writer, equals));
     }
 

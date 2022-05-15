@@ -5,9 +5,9 @@ import com.minerarcana.naming.content.NamingEffects;
 import com.minerarcana.naming.spell.Spell;
 import it.unimi.dsi.fastutil.ints.IntArrayList;
 import it.unimi.dsi.fastutil.ints.IntList;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.network.PacketBuffer;
-import net.minecraftforge.fml.network.NetworkEvent;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraftforge.network.NetworkEvent;
 
 import java.util.function.Supplier;
 
@@ -22,7 +22,7 @@ public class SpellServerMessage {
         this.targeted = targeted;
     }
 
-    public void encode(PacketBuffer packetBuffer) {
+    public void encode(FriendlyByteBuf packetBuffer) {
         packetBuffer.writeRegistryId(spell);
         packetBuffer.writeUtf(input);
         packetBuffer.writeVarIntArray(targeted);
@@ -30,7 +30,7 @@ public class SpellServerMessage {
 
     public boolean consume(Supplier<NetworkEvent.Context> contextSupplier) {
         contextSupplier.get().enqueueWork(() -> {
-            ServerPlayerEntity caster = contextSupplier.get().getSender();
+            ServerPlayer caster = contextSupplier.get().getSender();
             if (caster != null) {
                 if (!caster.hasEffect(NamingEffects.HOARSE.get())) {
                     caster.getCapability(Namer.CAP)
@@ -45,7 +45,7 @@ public class SpellServerMessage {
         return true;
     }
 
-    public static SpellServerMessage decode(PacketBuffer packetBuffer) {
+    public static SpellServerMessage decode(FriendlyByteBuf packetBuffer) {
         return new SpellServerMessage(
                 packetBuffer.readRegistryId(),
                 packetBuffer.readUtf(),

@@ -1,11 +1,11 @@
 package com.minerarcana.naming.recipe;
 
 import com.google.gson.JsonObject;
-import net.minecraft.item.crafting.IRecipeSerializer;
-import net.minecraft.item.crafting.Ingredient;
-import net.minecraft.network.PacketBuffer;
-import net.minecraft.util.JSONUtils;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.GsonHelper;
+import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraftforge.common.crafting.CraftingHelper;
 import net.minecraftforge.registries.ForgeRegistryEntry;
 
@@ -14,7 +14,7 @@ import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.regex.Pattern;
 
-public class NamingRecipeSerializer extends ForgeRegistryEntry<IRecipeSerializer<?>> implements IRecipeSerializer<NamingRecipe> {
+public class NamingRecipeSerializer extends ForgeRegistryEntry<RecipeSerializer<?>> implements RecipeSerializer<NamingRecipe> {
     @Override
     @Nonnull
     @ParametersAreNonnullByDefault
@@ -22,15 +22,15 @@ public class NamingRecipeSerializer extends ForgeRegistryEntry<IRecipeSerializer
         return new NamingRecipe(
                 id,
                 Ingredient.fromJson(jsonObject.get("ingredient")),
-                Pattern.compile(JSONUtils.getAsString(jsonObject, "pattern")),
+                Pattern.compile(GsonHelper.getAsString(jsonObject, "pattern")),
                 CraftingHelper.getItemStack(jsonObject.getAsJsonObject("result"), true),
-                JSONUtils.getAsString(jsonObject, "ability", ""));
+                GsonHelper.getAsString(jsonObject, "ability", ""));
     }
 
     @Nullable
     @Override
     @ParametersAreNonnullByDefault
-    public NamingRecipe fromNetwork(ResourceLocation id, PacketBuffer packetBuffer) {
+    public NamingRecipe fromNetwork(ResourceLocation id, FriendlyByteBuf packetBuffer) {
         return new NamingRecipe(
                 id,
                 Ingredient.fromNetwork(packetBuffer),
@@ -42,7 +42,7 @@ public class NamingRecipeSerializer extends ForgeRegistryEntry<IRecipeSerializer
 
     @Override
     @ParametersAreNonnullByDefault
-    public void toNetwork(PacketBuffer packetBuffer, NamingRecipe namingRecipe) {
+    public void toNetwork(FriendlyByteBuf packetBuffer, NamingRecipe namingRecipe) {
         namingRecipe.getIngredient().toNetwork(packetBuffer);
         packetBuffer.writeUtf(namingRecipe.getPattern().pattern());
         packetBuffer.writeItemStack(namingRecipe.getResultItem(), false);

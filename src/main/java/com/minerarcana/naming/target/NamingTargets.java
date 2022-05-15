@@ -1,12 +1,10 @@
 package com.minerarcana.naming.target;
 
 import com.google.common.collect.Maps;
-import net.minecraft.network.PacketBuffer;
-import net.minecraft.world.server.ServerWorld;
+import net.minecraft.network.FriendlyByteBuf;
 
 import javax.annotation.Nullable;
 import java.util.Map;
-import java.util.function.BiFunction;
 import java.util.function.Function;
 
 public class NamingTargets {
@@ -33,24 +31,24 @@ public class NamingTargets {
         targetTypes = Maps.newHashMap();
     }
 
-    public <T extends INamingTarget> NamingTargetType register(String name, Function<PacketBuffer, T> creator) {
+    public <T extends INamingTarget> NamingTargetType register(String name, Function<FriendlyByteBuf, T> creator) {
         NamingTargetType targetType = new NamingTargetType(name, creator);
         this.targetTypes.put(name, targetType);
         return targetType;
     }
 
-    public void toPacketBuffer(INamingTarget namingTarget, PacketBuffer packetBuffer) {
+    public void toPacketBuffer(INamingTarget namingTarget, FriendlyByteBuf packetBuffer) {
         NamingTargetType targetType = namingTarget.getType();
-        packetBuffer.writeUtf(targetType.getName());
+        packetBuffer.writeUtf(targetType.name());
         namingTarget.toPacketBuffer(packetBuffer);
     }
 
     @Nullable
-    public INamingTarget fromPacketBuffer(PacketBuffer packetBuffer) {
-        String name = packetBuffer.readUtf(32767);
+    public INamingTarget fromPacketBuffer(FriendlyByteBuf packetBuffer) {
+        String name = packetBuffer.readUtf();
         NamingTargetType targetType = targetTypes.get(name);
         if (targetType != null) {
-            return targetType.getCreator().apply(packetBuffer);
+            return targetType.creator().apply(packetBuffer);
         } else {
             return null;
         }

@@ -1,8 +1,8 @@
 package com.minerarcana.naming.target;
 
-import net.minecraft.entity.Entity;
-import net.minecraft.network.PacketBuffer;
-import net.minecraft.world.server.ServerWorld;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.entity.Entity;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -25,12 +25,12 @@ public class EmptyTarget implements INamingTarget {
     }
 
     @Override
-    public void toPacketBuffer(PacketBuffer buffer) {
+    public void toPacketBuffer(FriendlyByteBuf buffer) {
 
     }
 
     @Override
-    public void hydrate(ServerWorld serverWorld) {
+    public void hydrate(ServerLevel serverWorld) {
 
     }
 

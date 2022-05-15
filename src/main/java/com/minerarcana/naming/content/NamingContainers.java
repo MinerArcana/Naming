@@ -7,22 +7,20 @@ import com.minerarcana.naming.container.ListeningContainer;
 import com.minerarcana.naming.container.SpeakingContainer;
 import com.minerarcana.naming.screen.MessageScreen;
 import com.minerarcana.naming.screen.SpeakingStoneScreen;
-import com.tterrag.registrate.util.entry.RegistryEntry;
-import net.minecraft.inventory.container.ContainerType;
-
+import com.tterrag.registrate.util.entry.MenuEntry;
 public class NamingContainers {
 
-    public static final RegistryEntry<ContainerType<ListeningContainer>> LISTENING = Naming.getRegistrate()
+    public static final MenuEntry<ListeningContainer> LISTENING = Naming.getRegistrate()
             .object("listening_stone")
-            .<ListeningContainer, MessageScreen<ListeningContainer, ListeningType>>container(
+            .<ListeningContainer, MessageScreen<ListeningContainer, ListeningType>>menu(
                     ListeningContainer::new,
                     () -> MessageScreen::new
             )
             .register();
 
-    public static final RegistryEntry<ContainerType<SpeakingContainer>> SPEAKING = Naming.getRegistrate()
+    public static final MenuEntry<SpeakingContainer> SPEAKING = Naming.getRegistrate()
             .object("speaking_stone")
-            .<SpeakingContainer, MessageScreen<SpeakingContainer, SpeakingTarget>>container(
+            .<SpeakingContainer, MessageScreen<SpeakingContainer, SpeakingTarget>>menu(
                     SpeakingContainer::new,
                     () -> SpeakingStoneScreen::new
             )

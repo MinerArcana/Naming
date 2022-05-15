@@ -5,34 +5,34 @@ import com.minerarcana.naming.Naming;
 import com.minerarcana.naming.blockentity.IButtoned;
 import com.minerarcana.naming.container.MessageContainer;
 import com.minerarcana.naming.network.property.Property;
-import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.screen.inventory.ContainerScreen;
-import net.minecraft.client.gui.widget.TextFieldWidget;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.client.gui.components.EditBox;
+import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.player.Inventory;
 import org.apache.commons.lang3.tuple.Pair;
 
 import javax.annotation.Nonnull;
 import java.util.List;
 import java.util.Objects;
 
-public class MessageScreen<T extends MessageContainer<U>, U extends Enum<U> & IButtoned<U>> extends ContainerScreen<T> {
+public class MessageScreen<T extends MessageContainer<U>, U extends Enum<U> & IButtoned<U>> extends AbstractContainerScreen<T> {
     private final ResourceLocation location;
-    private TextFieldWidget nameField;
-    private List<TextFieldWidget> listenerFields;
+    private EditBox nameField;
+    private List<EditBox> listenerFields;
 
-    public MessageScreen(T pMenu, PlayerInventory pPlayerInventory, ITextComponent pTitle) {
+    public MessageScreen(T pMenu, Inventory pPlayerInventory, Component pTitle) {
         super(pMenu, pPlayerInventory, pTitle);
         this.imageHeight = 97;
         this.imageWidth = 176;
         this.location = Naming.rl("textures/screen/listening_stone.png");
     }
 
-    protected MessageScreen(T pMenu, PlayerInventory pPlayerInventory, ITextComponent pTitle, int imageWidth,
+    protected MessageScreen(T pMenu, Inventory pPlayerInventory, Component pTitle, int imageWidth,
                             ResourceLocation location) {
         super(pMenu, pPlayerInventory, pTitle);
         this.imageHeight = 97;
@@ -41,8 +41,8 @@ public class MessageScreen<T extends MessageContainer<U>, U extends Enum<U> & IB
     }
 
     @Override
-    public void tick() {
-        super.tick();
+    public void containerTick() {
+        super.containerTick();
         this.nameField.tick();
         String name = this.menu.getName().get();
         if (name != null && !nameField.getValue().equalsIgnoreCase(name)) {
@@ -50,7 +50,7 @@ public class MessageScreen<T extends MessageContainer<U>, U extends Enum<U> & IB
         }
         for (int i = 0; i < this.listenerFields.size(); i++) {
             String listenerValue = this.menu.getListeners().get(i).getValue().get();
-            TextFieldWidget listenerField = this.listenerFields.get(i);
+            EditBox listenerField = this.listenerFields.get(i);
             if (listenerValue != null && !listenerValue.equalsIgnoreCase(listenerField.getValue())) {
                 listenerField.setValue(listenerValue);
             }
@@ -59,7 +59,7 @@ public class MessageScreen<T extends MessageContainer<U>, U extends Enum<U> & IB
     }
 
     @Override
-    public void render(@Nonnull MatrixStack matrixStack, int pMouseX, int pMouseY, float pPartialTicks) {
+    public void render(@Nonnull PoseStack matrixStack, int pMouseX, int pMouseY, float pPartialTicks) {
         this.renderBackground(matrixStack);
         super.render(matrixStack, pMouseX, pMouseY, pPartialTicks);
         RenderSystem.disableBlend();
@@ -67,15 +67,15 @@ public class MessageScreen<T extends MessageContainer<U>, U extends Enum<U> & IB
     }
 
     @Override
-    protected void renderLabels(@Nonnull MatrixStack pMatrixStack, int pX, int pY) {
+    protected void renderLabels(@Nonnull PoseStack pMatrixStack, int pX, int pY) {
 
     }
 
     @Override
     @SuppressWarnings("deprecation")
-    protected void renderBg(@Nonnull MatrixStack pMatrixStack, float pPartialTicks, int pX, int pY) {
-        RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
-        this.getMinecraft().getTextureManager().bind(location);
+    protected void renderBg(@Nonnull PoseStack pMatrixStack, float pPartialTicks, int pX, int pY) {
+        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
+        this.getMinecraft().getTextureManager().bindForSetup(location);
         int i = (this.width - this.imageWidth) / 2;
         int j = (this.height - this.imageHeight) / 2;
         this.blit(pMatrixStack, i, j, 0, 0, this.imageWidth, this.imageHeight);
@@ -86,9 +86,9 @@ public class MessageScreen<T extends MessageContainer<U>, U extends Enum<U> & IB
         }
     }
 
-    public void renderFg(MatrixStack pPoseStack, int pMouseX, int pMouseY, float pPartialTicks) {
+    public void renderFg(PoseStack pPoseStack, int pMouseX, int pMouseY, float pPartialTicks) {
         this.nameField.render(pPoseStack, pMouseX, pMouseY, pPartialTicks);
-        for (TextFieldWidget textFieldWidget : this.listenerFields) {
+        for (EditBox textFieldWidget : this.listenerFields) {
             textFieldWidget.render(pPoseStack, pMouseX, pMouseY, pPartialTicks);
         }
     }
@@ -104,7 +104,7 @@ public class MessageScreen<T extends MessageContainer<U>, U extends Enum<U> & IB
         this.listenerFields = Lists.newArrayList();
         for (int x = 0; x < this.menu.getListeners().size(); x++) {
             Pair<Property<Integer>, Property<String>> properties = this.menu.getListeners().get(x);
-            this.addButton(new MessageTypeButton<>(
+            this.addWidget(new MessageTypeButton<>(
                     i + 4,
                     x * 18 + j + 22,
                     menu.getEnum(),
@@ -116,8 +116,8 @@ public class MessageScreen<T extends MessageContainer<U>, U extends Enum<U> & IB
         }
     }
 
-    protected TextFieldWidget createTextField(int x, int y, Property<String> property) {
-        TextFieldWidget textFieldWidget = new TextFieldWidget(this.font, x, y, 103, 12, StringTextComponent.EMPTY);
+    protected EditBox createTextField(int x, int y, Property<String> property) {
+        EditBox textFieldWidget = new EditBox(this.font, x, y, 103, 12, TextComponent.EMPTY);
         textFieldWidget.setCanLoseFocus(true);
         textFieldWidget.setEditable(true);
         textFieldWidget.setTextColor(-1);
@@ -131,7 +131,7 @@ public class MessageScreen<T extends MessageContainer<U>, U extends Enum<U> & IB
         textFieldWidget.setResponder(value -> this.menu.getPropertyManager()
                 .updateServer(property, value)
         );
-        this.children.add(textFieldWidget);
+        this.renderables.add(textFieldWidget);
         return textFieldWidget;
     }
 

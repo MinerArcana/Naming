@@ -1,9 +1,7 @@
 package com.minerarcana.naming.blockentity;
 
 import com.minerarcana.naming.content.NamingText;
-import net.minecraft.util.text.ITextComponent;
-
-import ITextComponent;
+import net.minecraft.network.chat.Component;
 
 public enum ListeningType implements IButtoned<ListeningType> {
     NONE(false, false, NamingText.NONE),
@@ -12,9 +10,9 @@ public enum ListeningType implements IButtoned<ListeningType> {
 
     private final boolean listening;
     private final boolean consuming;
-    private final ITextComponent message;
+    private final Component message;
 
-    ListeningType(boolean listening, boolean consuming, ITextComponent title) {
+    ListeningType(boolean listening, boolean consuming, Component title) {
         this.listening = listening;
         this.consuming = consuming;
         this.message = title;
@@ -29,20 +27,16 @@ public enum ListeningType implements IButtoned<ListeningType> {
     }
 
     @Override
-    public ITextComponent getMessage() {
+    public Component getMessage() {
         return message;
     }
 
     @Override
     public ListeningType cycle() {
-        switch (this) {
-            case NONE:
-                return LISTENING;
-            case LISTENING:
-                return CONSUMING;
-            case CONSUMING:
-                return NONE;
-        }
-        return NONE;
+        return switch (this) {
+            case NONE -> LISTENING;
+            case LISTENING -> CONSUMING;
+            case CONSUMING -> NONE;
+        };
     }
 }

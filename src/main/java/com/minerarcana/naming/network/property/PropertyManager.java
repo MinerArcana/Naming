@@ -1,8 +1,8 @@
 package com.minerarcana.naming.network.property;
 
 import com.google.common.collect.Lists;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.inventory.container.IContainerListener;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.inventory.ContainerListener;
 import org.apache.commons.lang3.tuple.Triple;
 
 import java.util.Collection;
@@ -47,11 +47,11 @@ public class PropertyManager {
                 ));
     }
 
-    public void updateClient(Collection<IContainerListener> containerListeners, boolean firstTime) {
-        List<ServerPlayerEntity> playerListeners = Lists.newArrayList();
-        for (IContainerListener listener : containerListeners) {
-            if (listener instanceof ServerPlayerEntity) {
-                playerListeners.add((ServerPlayerEntity) listener);
+    public void updateClient(Collection<ContainerListener> containerListeners, boolean firstTime) {
+        List<ServerPlayer> playerListeners = Lists.newArrayList();
+        for (ContainerListener listener : containerListeners) {
+            if (listener instanceof ServerPlayer) {
+                playerListeners.add((ServerPlayer) listener);
             }
         }
 
@@ -65,7 +65,7 @@ public class PropertyManager {
             }
 
             if (!dirtyProperties.isEmpty()) {
-                for (ServerPlayerEntity playerEntity : playerListeners) {
+                for (ServerPlayer playerEntity : playerListeners) {
                     propertyInstance.getNetwork()
                             .sendClientUpdate(
                                     playerEntity,

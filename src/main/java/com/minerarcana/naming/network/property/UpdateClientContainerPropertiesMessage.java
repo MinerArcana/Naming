@@ -1,11 +1,11 @@
 package com.minerarcana.naming.network.property;
 
 import com.google.common.collect.Lists;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.entity.player.ClientPlayerEntity;
-import net.minecraft.inventory.container.Container;
-import net.minecraft.network.PacketBuffer;
-import net.minecraftforge.fml.network.NetworkEvent;
+import com.minerarcana.naming.util.ClientGetter;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraftforge.network.NetworkEvent;
 import org.apache.commons.lang3.tuple.Triple;
 
 import java.util.List;
@@ -20,7 +20,7 @@ public class UpdateClientContainerPropertiesMessage {
         this.updates = updates;
     }
 
-    public void encode(PacketBuffer packetBuffer) {
+    public void encode(FriendlyByteBuf packetBuffer) {
         packetBuffer.writeShort(windowId);
         List<Triple<PropertyType<?>, Short, Object>> validUpdates = Lists.newArrayList();
         for (Triple<PropertyType<?>, Short, Object> update : updates) {
@@ -39,9 +39,9 @@ public class UpdateClientContainerPropertiesMessage {
 
     public boolean consume(Supplier<NetworkEvent.Context> contextSupplier) {
         contextSupplier.get().enqueueWork(() -> {
-            ClientPlayerEntity playerEntity = Minecraft.getInstance().player;
-            if (playerEntity != null && playerEntity.containerMenu != null) {
-                Container container = playerEntity.containerMenu;
+            Player playerEntity = ClientGetter.getPlayerEntity();
+            if (playerEntity != null) {
+                AbstractContainerMenu container = playerEntity.containerMenu;
                 if (container.containerId == windowId) {
                     if (container instanceof IPropertyManaged) {
                         PropertyManager propertyManager = ((IPropertyManaged) container).getPropertyManager();
@@ -55,7 +55,7 @@ public class UpdateClientContainerPropertiesMessage {
         return true;
     }
 
-    public static UpdateClientContainerPropertiesMessage decode(PacketBuffer packetBuffer) {
+    public static UpdateClientContainerPropertiesMessage decode(FriendlyByteBuf packetBuffer) {
         short windowId = packetBuffer.readShort();
         short updateAmount = packetBuffer.readShort();
         List<Triple<PropertyType<?>, Short, Object>> updates = Lists.newArrayList();

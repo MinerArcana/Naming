@@ -1,33 +1,32 @@
 package com.minerarcana.naming.renderer;
 
 import com.minerarcana.naming.blockentity.ISideText;
-import com.mojang.blaze3d.matrix.MatrixStack;
-import net.minecraft.client.gui.FontRenderer;
-import net.minecraft.client.renderer.IRenderTypeBuffer;
-import net.minecraft.client.renderer.texture.NativeImage;
-import net.minecraft.client.renderer.tileentity.TileEntityRenderer;
-import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.Direction;
-import net.minecraft.util.IReorderingProcessor;
-import net.minecraft.util.math.vector.Vector3f;
+import com.mojang.blaze3d.platform.NativeImage;
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.math.Vector3f;
+import net.minecraft.client.gui.Font;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
+import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
+import net.minecraft.core.Direction;
+import net.minecraft.util.FormattedCharSequence;
+import net.minecraft.world.level.block.entity.BlockEntity;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.List;
 
-import TileEntity;
+public class SideTextBlockRenderer<T extends BlockEntity & ISideText> implements BlockEntityRenderer<T> {
+    private final Font font;
 
-public class SideTextBlockRenderer<T extends TileEntity & ISideText> extends TileEntityRenderer<T> {
-    public SideTextBlockRenderer(TileEntityRendererDispatcher dispatcher) {
-        super(dispatcher);
+    public SideTextBlockRenderer(BlockEntityRendererProvider.Context context) {
+        this.font = context.getFont();
     }
 
     @Override
     @ParametersAreNonnullByDefault
-    public void render(T pBlockEntity, float pPartialTicks, MatrixStack pMatrixStack,
-                       IRenderTypeBuffer pBuffer, int pCombinedLight, int pCombinedOverlay) {
+    public void render(T pBlockEntity, float pPartialTicks, PoseStack pMatrixStack,
+                       MultiBufferSource pBuffer, int pCombinedLight, int pCombinedOverlay) {
         pMatrixStack.pushPose();
-        FontRenderer fontrenderer = this.renderer.getFont();
         pMatrixStack.scale(0.017816667F, -0.017816667F, 0.017816667F);
         int i = pBlockEntity.getTextColor().getTextColor();
         int j = (int) ((double) NativeImage.getR(i) * 0.4D);
@@ -45,13 +44,13 @@ public class SideTextBlockRenderer<T extends TileEntity & ISideText> extends Til
                 }
                 pMatrixStack.translate(0, -36.5, 28.25);
                 for (int k1 = 0; k1 < 4; ++k1) {
-                    IReorderingProcessor reorderingProcessor = pBlockEntity.getRenderedMessage(k1, (textComponent) -> {
-                        List<IReorderingProcessor> list = fontrenderer.split(textComponent, 90);
-                        return list.isEmpty() ? IReorderingProcessor.EMPTY : list.get(0);
+                    FormattedCharSequence reorderingProcessor = pBlockEntity.getRenderedMessage(k1, (textComponent) -> {
+                        List<FormattedCharSequence> list = font.split(textComponent, 90);
+                        return list.isEmpty() ? FormattedCharSequence.EMPTY : list.get(0);
                     });
                     if (reorderingProcessor != null) {
-                        float f3 = (float) (-fontrenderer.width(reorderingProcessor) / 2);
-                        fontrenderer.drawInBatch(reorderingProcessor, f3, (float) (k1 * 10 - 20), i1, false,
+                        float f3 = (float) (-font.width(reorderingProcessor) / 2);
+                        font.drawInBatch(reorderingProcessor, f3, (float) (k1 * 10 - 20), i1, false,
                                 pMatrixStack.last().pose(), pBuffer, false, 0, pCombinedLight);
                     }
                 }

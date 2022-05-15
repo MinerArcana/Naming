@@ -3,9 +3,9 @@ package com.minerarcana.naming.network;
 import com.google.common.collect.Sets;
 import com.minerarcana.naming.capability.Namer;
 import com.minerarcana.naming.util.ClientGetter;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.network.PacketBuffer;
-import net.minecraftforge.fml.network.NetworkEvent;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.world.entity.player.Player;
+import net.minecraftforge.network.NetworkEvent;
 
 import java.util.Collection;
 import java.util.Set;
@@ -18,7 +18,7 @@ public class SyncNamingMessage {
         this.abilities = abilities;
     }
 
-    public void encode(PacketBuffer buffer) {
+    public void encode(FriendlyByteBuf buffer) {
         buffer.writeInt(abilities.size());
         for (String ability : abilities) {
             buffer.writeUtf(ability);
@@ -27,7 +27,7 @@ public class SyncNamingMessage {
 
     public boolean consume(Supplier<NetworkEvent.Context> contextSupplier) {
         contextSupplier.get().enqueueWork(() -> {
-            PlayerEntity player = ClientGetter.getPlayerEntity();
+            Player player = ClientGetter.getPlayerEntity();
             if (player != null) {
                 player.getCapability(Namer.CAP)
                         .ifPresent(cap -> {
@@ -40,7 +40,7 @@ public class SyncNamingMessage {
         return true;
     }
 
-    public static SyncNamingMessage decode(PacketBuffer packetBuffer) {
+    public static SyncNamingMessage decode(FriendlyByteBuf packetBuffer) {
         int length = packetBuffer.readInt();
         Set<String> abilities = Sets.newHashSet();
         for (int x = 0; x < length; x++) {

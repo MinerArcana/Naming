@@ -1,14 +1,14 @@
 package com.minerarcana.naming.item;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.BlockItem;
-import net.minecraft.item.ItemStack;
-import net.minecraft.tileentity.SignTileEntity;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.SignBlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
 
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
@@ -21,13 +21,13 @@ public class PosterBoardBlockItem extends BlockItem {
 
     @Override
     @ParametersAreNonnullByDefault
-    protected boolean updateCustomBlockEntityTag(BlockPos blockPos, World level, @Nullable PlayerEntity player,
+    protected boolean updateCustomBlockEntityTag(BlockPos blockPos, Level level, @Nullable Player player,
                                                  ItemStack itemStack, BlockState blockState) {
         boolean flag = updateCustomBlockEntityTag(level, player, blockPos, itemStack);
         if (!level.isClientSide && !flag && player != null) {
-            TileEntity tileEntity = level.getBlockEntity(blockPos);
-            if (tileEntity instanceof SignTileEntity) {
-                player.openTextEdit((SignTileEntity) tileEntity);
+            BlockEntity tileEntity = level.getBlockEntity(blockPos);
+            if (tileEntity instanceof SignBlockEntity) {
+                player.openTextEdit((SignBlockEntity) tileEntity);
             }
         }
 

@@ -3,13 +3,11 @@ package com.minerarcana.naming.network;
 import com.minerarcana.naming.Naming;
 import com.minerarcana.naming.spell.Spell;
 import com.minerarcana.naming.target.INamingTarget;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraftforge.fml.network.NetworkRegistry;
-import net.minecraftforge.fml.network.NetworkRegistry.ChannelBuilder;
-import net.minecraftforge.fml.network.PacketDistributor;
-import net.minecraftforge.fml.network.simple.SimpleChannel;
-
-import SimpleChannel;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraftforge.network.NetworkRegistry;
+import net.minecraftforge.network.NetworkRegistry.ChannelBuilder;
+import net.minecraftforge.network.PacketDistributor;
+import net.minecraftforge.network.simple.SimpleChannel;
 
 public class NetworkHandler {
     private final SimpleChannel channel;
@@ -57,11 +55,11 @@ public class NetworkHandler {
         this.channel.send(PacketDistributor.SERVER.noArg(), new SpellServerMessage(spell, spoken, targeted));
     }
 
-    public void spellToClient(ServerPlayerEntity player, Spell spell, String spoken) {
+    public void spellToClient(ServerPlayer player, Spell spell, String spoken) {
         this.channel.send(PacketDistributor.PLAYER.with(() -> player), new SpellClientMessage(spell, spoken));
     }
 
-    public void syncCap(ServerPlayerEntity player, SyncNamingMessage message) {
+    public void syncCap(ServerPlayer player, SyncNamingMessage message) {
         this.channel.send(PacketDistributor.PLAYER.with(() -> player), message);
     }
 }

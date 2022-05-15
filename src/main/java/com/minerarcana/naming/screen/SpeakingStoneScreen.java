@@ -5,12 +5,12 @@ import com.minerarcana.naming.Naming;
 import com.minerarcana.naming.blockentity.SpeakingTarget;
 import com.minerarcana.naming.container.SpeakingContainer;
 import com.minerarcana.naming.network.property.Property;
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.widget.TextFieldWidget;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.client.gui.components.EditBox;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.world.entity.player.Inventory;
 import org.apache.commons.lang3.tuple.Pair;
 
 import javax.annotation.Nonnull;
@@ -18,18 +18,18 @@ import java.util.List;
 import java.util.Objects;
 
 public class SpeakingStoneScreen extends MessageScreen<SpeakingContainer, SpeakingTarget> {
-    private List<TextFieldWidget> targetNameFields;
+    private List<EditBox> targetNameFields;
 
-    public SpeakingStoneScreen(SpeakingContainer pMenu, PlayerInventory pPlayerInventory, ITextComponent pTitle) {
+    public SpeakingStoneScreen(SpeakingContainer pMenu, Inventory pPlayerInventory, Component pTitle) {
         super(pMenu, pPlayerInventory, pTitle, 256, Naming.rl("textures/screen/speaking_stone.png"));
     }
 
     @Override
-    public void tick() {
-        super.tick();
+    public void containerTick() {
+        super.containerTick();
         for (int i = 0; i < this.targetNameFields.size(); i++) {
             String listenerValue = this.menu.getTargetNameProperties().get(i).get();
-            TextFieldWidget listenerField = this.targetNameFields.get(i);
+            EditBox listenerField = this.targetNameFields.get(i);
             SpeakingTarget speakingTarget = this.menu.getEnumFor(i);
             if (speakingTarget.isNeedsTargetName()) {
                 listenerField.setEditable(true);
@@ -47,7 +47,7 @@ public class SpeakingStoneScreen extends MessageScreen<SpeakingContainer, Speaki
     }
 
     @Override
-    protected void renderBg(@Nonnull MatrixStack pMatrixStack, float pPartialTicks, int pX, int pY) {
+    protected void renderBg(@Nonnull PoseStack pMatrixStack, float pPartialTicks, int pX, int pY) {
         super.renderBg(pMatrixStack, pPartialTicks, pX, pY);
 
         int i = (this.width - this.imageWidth) / 2;
@@ -60,9 +60,9 @@ public class SpeakingStoneScreen extends MessageScreen<SpeakingContainer, Speaki
     }
 
     @Override
-    public void renderFg(MatrixStack pPoseStack, int pMouseX, int pMouseY, float pPartialTicks) {
+    public void renderFg(PoseStack pPoseStack, int pMouseX, int pMouseY, float pPartialTicks) {
         super.renderFg(pPoseStack, pMouseX, pMouseY, pPartialTicks);
-        for (TextFieldWidget textFieldWidget : this.targetNameFields) {
+        for (EditBox textFieldWidget : this.targetNameFields) {
             textFieldWidget.render(pPoseStack, pMouseX, pMouseY, pPartialTicks);
         }
     }
@@ -76,8 +76,8 @@ public class SpeakingStoneScreen extends MessageScreen<SpeakingContainer, Speaki
         this.targetNameFields = Lists.newArrayList();
         for (int x = 0; x < this.menu.getTargetNameProperties().size(); x++) {
             Property<String> stringProperty = this.menu.getTargetNameProperties().get(x);
-            TextFieldWidget targetNameWidget = new TextFieldWidget(this.font, i + 64, x * 18 + j + 26, 78, 12, StringTextComponent.EMPTY);
-            this.children.add(targetNameWidget);
+            EditBox targetNameWidget = new EditBox(this.font, i + 64, x * 18 + j + 26, 78, 12, TextComponent.EMPTY);
+            this.renderables.add(targetNameWidget);
             targetNameWidget.setEditable(this.menu.getEnumFor(x).isNeedsTargetName());
             if (stringProperty.get() != null && this.menu.getEnumFor(x).isNeedsTargetName()) {
                 targetNameWidget.setValue(stringProperty.getOrElse(""));

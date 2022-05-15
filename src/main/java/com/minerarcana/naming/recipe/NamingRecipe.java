@@ -1,19 +1,19 @@
 package com.minerarcana.naming.recipe;
 
 import com.minerarcana.naming.content.NamingRecipes;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.IRecipe;
-import net.minecraft.item.crafting.IRecipeSerializer;
-import net.minecraft.item.crafting.IRecipeType;
-import net.minecraft.item.crafting.Ingredient;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.world.World;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.item.crafting.Recipe;
+import net.minecraft.world.item.crafting.RecipeSerializer;
+import net.minecraft.world.item.crafting.RecipeType;
+import net.minecraft.world.level.Level;
 
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.regex.Pattern;
 
-public class NamingRecipe implements IRecipe<NamingInventory> {
+public class NamingRecipe implements Recipe<NamingInventory> {
     private final ResourceLocation id;
     private final Ingredient ingredient;
     private final Pattern pattern;
@@ -30,7 +30,7 @@ public class NamingRecipe implements IRecipe<NamingInventory> {
 
     @Override
     @ParametersAreNonnullByDefault
-    public boolean matches(NamingInventory namingInventory, World level) {
+    public boolean matches(NamingInventory namingInventory, Level level) {
         return this.ingredient.test(namingInventory.getItem(0)) &&
                 this.pattern.matcher(namingInventory.getName()).matches() &&
                 (this.ability.isEmpty() || namingInventory.hasAbility(this.ability));
@@ -62,13 +62,13 @@ public class NamingRecipe implements IRecipe<NamingInventory> {
 
     @Override
     @Nonnull
-    public IRecipeSerializer<?> getSerializer() {
+    public RecipeSerializer<?> getSerializer() {
         return NamingRecipes.NAMING_RECIPE_SERIALIZER.get();
     }
 
     @Override
     @Nonnull
-    public IRecipeType<?> getType() {
+    public RecipeType<?> getType() {
         return NamingRecipes.NAMING_RECIPE_TYPE;
     }
 

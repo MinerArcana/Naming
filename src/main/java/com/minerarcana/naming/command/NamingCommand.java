@@ -5,13 +5,13 @@ import com.minerarcana.naming.capability.Namer;
 import com.minerarcana.naming.network.SyncNamingMessage;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
-import net.minecraft.command.CommandSource;
-import net.minecraft.command.Commands;
-import net.minecraft.command.arguments.EntityArgument;
-import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraft.commands.CommandSourceStack;
+import net.minecraft.commands.Commands;
+import net.minecraft.commands.arguments.EntityArgument;
+import net.minecraft.server.level.ServerPlayer;
 
 public class NamingCommand {
-    public static LiteralArgumentBuilder<CommandSource> create() {
+    public static LiteralArgumentBuilder<CommandSourceStack> create() {
         return Commands.literal("naming")
                 .then(Commands.literal("grant")
                         .then(Commands.argument("target", EntityArgument.entities())
@@ -23,9 +23,9 @@ public class NamingCommand {
                                                     .mapToInt(entity -> entity.getCapability(Namer.CAP)
                                                             .map(namer -> {
                                                                         if (namer.grantAbility(ability)) {
-                                                                            if (entity instanceof ServerPlayerEntity) {
+                                                                            if (entity instanceof ServerPlayer) {
                                                                                 Naming.network.syncCap(
-                                                                                        (ServerPlayerEntity) entity,
+                                                                                        (ServerPlayer) entity,
                                                                                         new SyncNamingMessage(namer.getAbilities())
                                                                                 );
                                                                             }

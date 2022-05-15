@@ -2,21 +2,18 @@ package com.minerarcana.naming.recipe;
 
 import com.google.gson.JsonObject;
 import com.minerarcana.naming.content.NamingRecipes;
-import net.minecraft.data.IFinishedRecipe;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.IRecipeSerializer;
-import net.minecraft.item.crafting.Ingredient;
-import net.minecraft.util.IItemProvider;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.data.recipes.FinishedRecipe;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.item.crafting.RecipeSerializer;
+import net.minecraft.world.level.ItemLike;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Objects;
 import java.util.function.Consumer;
 import java.util.regex.Pattern;
-
-import Ingredient;
-import ItemStack;
 
 public class NamingRecipeBuilder {
     private final ItemStack result;
@@ -47,11 +44,11 @@ public class NamingRecipeBuilder {
         return this;
     }
 
-    public void build(Consumer<IFinishedRecipe> recipeConsumer) {
+    public void build(Consumer<FinishedRecipe> recipeConsumer) {
         this.build(recipeConsumer, result.getItem().getRegistryName());
     }
 
-    public void build(Consumer<IFinishedRecipe> recipeConsumer, ResourceLocation id) {
+    public void build(Consumer<FinishedRecipe> recipeConsumer, ResourceLocation id) {
         Objects.requireNonNull(result, "Result cannot be null");
         Objects.requireNonNull(ingredient, "Ingredient cannot be null");
         Objects.requireNonNull(pattern, "Pattern cannot be null");
@@ -65,11 +62,11 @@ public class NamingRecipeBuilder {
         ));
     }
 
-    public static NamingRecipeBuilder of(IItemProvider item) {
+    public static NamingRecipeBuilder of(ItemLike item) {
         return new NamingRecipeBuilder(new ItemStack(item));
     }
 
-    public static class NamingFinishedRecipe implements IFinishedRecipe {
+    public static class NamingFinishedRecipe implements FinishedRecipe {
         private final ResourceLocation id;
         private final ItemStack result;
         private final Ingredient ingredient;
@@ -111,7 +108,7 @@ public class NamingRecipeBuilder {
 
         @Override
         @Nonnull
-        public IRecipeSerializer<?> getType() {
+        public RecipeSerializer<?> getType() {
             return NamingRecipes.NAMING_RECIPE_SERIALIZER.get();
         }
 

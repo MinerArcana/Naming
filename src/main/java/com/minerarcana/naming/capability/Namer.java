@@ -2,35 +2,34 @@ package com.minerarcana.naming.capability;
 
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
-import com.minerarcana.naming.Naming;
 import com.minerarcana.naming.api.capability.INamer;
 import com.minerarcana.naming.content.NamingCriteriaTriggers;
 import com.minerarcana.naming.content.NamingEffects;
 import com.minerarcana.naming.spell.Spell;
 import com.minerarcana.naming.util.CachedValue;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.nbt.ListNBT;
-import net.minecraft.nbt.StringNBT;
-import net.minecraft.potion.EffectInstance;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
+import net.minecraft.nbt.StringTag;
+import net.minecraft.nbt.Tag;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.capabilities.CapabilityInject;
-import net.minecraftforge.common.util.Constants;
+import net.minecraftforge.common.capabilities.CapabilityManager;
+import net.minecraftforge.common.capabilities.CapabilityToken;
 import net.minecraftforge.common.util.INBTSerializable;
 import org.apache.commons.lang3.mutable.MutableInt;
 
 import java.util.Collection;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
-public class Namer implements INamer, INBTSerializable<CompoundNBT> {
-    @CapabilityInject(INamer.class)
-    public static Capability<INamer> CAP = null;
+public class Namer implements INamer, INBTSerializable<CompoundTag> {
+    public static Capability<INamer> CAP = CapabilityManager.get(new CapabilityToken<>() {
+    });
 
     private final Set<String> abilities;
     private final Set<String> heardHistory;
@@ -95,12 +94,12 @@ public class Namer implements INamer, INBTSerializable<CompoundNBT> {
         boolean cast = this.hasAbility("spells") && spell.canCast(caster, this) && spell.cast(caster, this, input, targeted.get());
         if (cast) {
             this.castings.computeIfAbsent(spell, value -> new MutableInt()).increment();
-            if (caster instanceof ServerPlayerEntity) {
-                NamingCriteriaTriggers.SPELL.trigger((ServerPlayerEntity) caster);
+            if (caster instanceof ServerPlayer) {
+                NamingCriteriaTriggers.SPELL.trigger((ServerPlayer) caster);
             }
         }
         if (caster instanceof LivingEntity && spell.getHoarseTicks() > 0) {
-            ((LivingEntity) caster).addEffect(new EffectInstance(NamingEffects.HOARSE.get(), spell.getHoarseTicks()));
+            ((LivingEntity) caster).addEffect(new MobEffectInstance(NamingEffects.HOARSE.get(), spell.getHoarseTicks()));
         }
     }
 
@@ -116,24 +115,24 @@ public class Namer implements INamer, INBTSerializable<CompoundNBT> {
     }
 
     @Override
-    public CompoundNBT serializeNBT() {
-        CompoundNBT nbt = new CompoundNBT();
+    public CompoundTag serializeNBT() {
+        CompoundTag nbt = new CompoundTag();
         nbt.put("abilities", create(abilities));
         nbt.put("heard", create(heardHistory));
         nbt.put("spoken", create(spokenHistory));
         return nbt;
     }
 
-    private ListNBT create(Collection<String> list) {
-        ListNBT listNBT = new ListNBT();
+    private ListTag create(Collection<String> list) {
+        ListTag listNBT = new ListTag();
         list.stream()
-                .map(StringNBT::valueOf)
+                .map(StringTag::valueOf)
                 .forEach(listNBT::add);
         return listNBT;
     }
 
     @Override
-    public void deserializeNBT(CompoundNBT nbt) {
+    public void deserializeNBT(CompoundTag nbt) {
         abilities.clear();
         addTo(nbt, "abilities", abilities::add);
         heardHistory.clear();
@@ -142,8 +141,8 @@ public class Namer implements INamer, INBTSerializable<CompoundNBT> {
         addTo(nbt, "spoken", spokenHistory::add);
     }
 
-    private void addTo(CompoundNBT nbt, String field, Consumer<String> consumer) {
-        ListNBT nbtList = nbt.getList(field, Constants.NBT.TAG_STRING);
+    private void addTo(CompoundTag nbt, String field, Consumer<String> consumer) {
+        ListTag nbtList = nbt.getList(field, Tag.TAG_STRING);
         for (int i = 0; i < nbtList.size(); i++) {
             consumer.accept(nbtList.getString(i));
         }

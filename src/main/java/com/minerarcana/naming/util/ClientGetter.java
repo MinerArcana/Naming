@@ -1,12 +1,10 @@
 package com.minerarcana.naming.util;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.entity.player.PlayerEntity;
-
-import PlayerEntity;
+import net.minecraft.world.entity.player.Player;
 
 public class ClientGetter {
-    public static PlayerEntity getPlayerEntity() {
+    public static Player getPlayerEntity() {
         return Minecraft.getInstance().player;
     }
 }

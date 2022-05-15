@@ -3,9 +3,9 @@ package com.minerarcana.naming.worlddata;
 import com.google.common.collect.HashBasedTable;
 import com.google.common.collect.Table;
 import com.minerarcana.naming.blockentity.ListeningType;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.storage.WorldSavedData;
+import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.level.saveddata.SavedData;
 
 import javax.annotation.Nonnull;
 import java.util.Locale;
@@ -14,14 +14,17 @@ import java.util.function.Function;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class ListeningWorldData extends WorldSavedData {
+public class ListeningWorldData extends SavedData {
     private static final Pattern NAME_CHECK = Pattern.compile("^(?<name>\\w+)(\\s+)(?<speech>.*)");
     public static final String NAME = "listening";
 
     private final Table<String, BlockPos, WeakFunction<String, ListeningType>> listeners;
 
+    public ListeningWorldData(CompoundTag tag) {
+        this.listeners = HashBasedTable.create();
+    }
+
     public ListeningWorldData() {
-        super(NAME);
         this.listeners = HashBasedTable.create();
     }
 
@@ -62,13 +65,8 @@ public class ListeningWorldData extends WorldSavedData {
     }
 
     @Override
-    public void load(@Nonnull CompoundNBT nbt) {
-
-    }
-
-    @Override
     @Nonnull
-    public CompoundNBT save(@Nonnull CompoundNBT nbt) {
+    public CompoundTag save(@Nonnull CompoundTag nbt) {
         return nbt;
     }
 }

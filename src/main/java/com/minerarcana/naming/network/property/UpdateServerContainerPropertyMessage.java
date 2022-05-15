@@ -1,9 +1,9 @@
 package com.minerarcana.naming.network.property;
 
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.inventory.container.Container;
-import net.minecraft.network.PacketBuffer;
-import net.minecraftforge.fml.network.NetworkEvent;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraftforge.network.NetworkEvent;
 
 import java.util.function.Supplier;
 
@@ -20,7 +20,7 @@ public class UpdateServerContainerPropertyMessage {
         this.value = value;
     }
 
-    public static UpdateServerContainerPropertyMessage decode(PacketBuffer packetBuffer) {
+    public static UpdateServerContainerPropertyMessage decode(FriendlyByteBuf packetBuffer) {
         short windowId = packetBuffer.readShort();
         PropertyType<?> propertyType = PropertyTypes.getByIndex(packetBuffer.readShort());
         short property = packetBuffer.readShort();
@@ -28,7 +28,7 @@ public class UpdateServerContainerPropertyMessage {
         return new UpdateServerContainerPropertyMessage(windowId, propertyType, property, value);
     }
 
-    public void encode(PacketBuffer packetBuffer) {
+    public void encode(FriendlyByteBuf packetBuffer) {
         packetBuffer.writeShort(containerId);
         packetBuffer.writeShort(PropertyTypes.getIndex(propertyType));
         packetBuffer.writeShort(property);
@@ -37,9 +37,9 @@ public class UpdateServerContainerPropertyMessage {
 
     public boolean consume(Supplier<NetworkEvent.Context> contextSupplier) {
         contextSupplier.get().enqueueWork(() -> {
-            PlayerEntity playerEntity = contextSupplier.get().getSender();
+            Player playerEntity = contextSupplier.get().getSender();
             if (playerEntity != null) {
-                Container container = playerEntity.containerMenu;
+                AbstractContainerMenu container = playerEntity.containerMenu;
                 if (container.containerId == containerId) {
                     if (container instanceof IPropertyManaged) {
                         ((IPropertyManaged) container).getPropertyManager()

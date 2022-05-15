@@ -1,11 +1,11 @@
 package com.minerarcana.naming.spell;
 
 import com.minerarcana.naming.api.capability.INamer;
-import net.minecraft.entity.Entity;
-import net.minecraft.util.Util;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.LanguageMap;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.Util;
+import net.minecraft.locale.Language;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.entity.Entity;
 import net.minecraftforge.registries.ForgeRegistryEntry;
 
 import javax.annotation.Nonnull;
@@ -22,8 +22,8 @@ public abstract class Spell extends ForgeRegistryEntry<Spell> {
         return descriptionId;
     }
 
-    public ITextComponent getDescription() {
-        return new TranslationTextComponent(this.getDescriptionId());
+    public Component getDescription() {
+        return new TranslatableComponent(this.getDescriptionId());
     }
 
     public boolean canCast(@Nonnull Entity caster, @Nonnull INamer namer) {
@@ -37,7 +37,7 @@ public abstract class Spell extends ForgeRegistryEntry<Spell> {
     }
 
     public boolean matches(String spell, String spoken) {
-        String contents = LanguageMap.getInstance().getOrDefault(this.getDescriptionId());
+        String contents = Language.getInstance().getOrDefault(this.getDescriptionId());
         return contents.equalsIgnoreCase(spell);
     }
 

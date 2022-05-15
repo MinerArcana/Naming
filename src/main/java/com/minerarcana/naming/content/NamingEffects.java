@@ -2,14 +2,14 @@ package com.minerarcana.naming.content;
 
 import com.minerarcana.naming.Naming;
 import com.tterrag.registrate.util.entry.RegistryEntry;
-import net.minecraft.item.DyeColor;
-import net.minecraft.potion.Effect;
-import net.minecraft.potion.EffectType;
+import net.minecraft.world.effect.MobEffect;
+import net.minecraft.world.effect.MobEffectCategory;
+import net.minecraft.world.item.DyeColor;
 
 public class NamingEffects {
-    public static final RegistryEntry<Effect> HOARSE = Naming.getRegistrate()
+    public static final RegistryEntry<MobEffect> HOARSE = Naming.getRegistrate()
             .object("hoarse")
-            .simple(Effect.class, () -> new Effect(EffectType.HARMFUL, DyeColor.RED.getTextColor()) {
+            .simple(MobEffect.class, () -> new MobEffect(MobEffectCategory.HARMFUL, DyeColor.RED.getTextColor()) {
             });
 
     public static void setup() {

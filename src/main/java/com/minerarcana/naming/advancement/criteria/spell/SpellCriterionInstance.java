@@ -3,19 +3,19 @@ package com.minerarcana.naming.advancement.criteria.spell;
 import com.google.gson.JsonObject;
 import com.minerarcana.naming.api.capability.INamer;
 import com.minerarcana.naming.spell.Spell;
-import net.minecraft.advancements.criterion.CriterionInstance;
-import net.minecraft.advancements.criterion.EntityPredicate;
-import net.minecraft.loot.ConditionArraySerializer;
+import net.minecraft.advancements.critereon.AbstractCriterionTriggerInstance;
+import net.minecraft.advancements.critereon.EntityPredicate;
+import net.minecraft.advancements.critereon.SerializationContext;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Objects;
 
-public class SpellCriterionInstance extends CriterionInstance {
+public class SpellCriterionInstance extends AbstractCriterionTriggerInstance {
     private final Spell spell;
     private final int castings;
 
-    public SpellCriterionInstance(EntityPredicate.AndPredicate playerPredicate, @Nullable Spell spell, int castings) {
+    public SpellCriterionInstance(EntityPredicate.Composite playerPredicate, @Nullable Spell spell, int castings) {
         super(SpellCriterionTrigger.ID, playerPredicate);
         this.spell = spell;
         this.castings = castings;
@@ -31,7 +31,7 @@ public class SpellCriterionInstance extends CriterionInstance {
 
     @Override
     @Nonnull
-    public JsonObject serializeToJson(@Nonnull ConditionArraySerializer pConditions) {
+    public JsonObject serializeToJson(@Nonnull SerializationContext pConditions) {
         JsonObject jsonObject = super.serializeToJson(pConditions);
         jsonObject.addProperty("castings", castings);
         if (spell != null) {

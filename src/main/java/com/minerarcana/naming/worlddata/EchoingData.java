@@ -3,12 +3,12 @@ package com.minerarcana.naming.worlddata;
 import com.minerarcana.naming.Naming;
 import com.minerarcana.naming.capability.Namer;
 import com.minerarcana.naming.spell.Spell;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.util.text.ChatType;
-import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.world.IWorld;
-import net.minecraft.world.server.ServerWorld;
+import net.minecraft.network.chat.ChatType;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.level.LevelAccessor;
 
 public class EchoingData {
     private final Spell spell;
@@ -29,20 +29,20 @@ public class EchoingData {
         return echoTime;
     }
 
-    public EchoingData doEcho(IWorld world) {
+    public EchoingData doEcho(LevelAccessor world) {
         Entity entity = this.entityReference.get(world);
-        if (entity != null && world instanceof ServerWorld) {
+        if (entity != null && world instanceof ServerLevel) {
             if (spell == null) {
-                ((ServerWorld) world).getServer()
+                ((ServerLevel) world).getServer()
                         .getPlayerList()
                         .broadcastMessage(
-                                new StringTextComponent(input),
+                                new TextComponent(input),
                                 ChatType.CHAT,
                                 entity.getUUID()
                         );
             } else {
-                if (entity instanceof ServerPlayerEntity) {
-                    Naming.network.spellToClient((ServerPlayerEntity) entity, spell, input);
+                if (entity instanceof ServerPlayer) {
+                    Naming.network.spellToClient((ServerPlayer) entity, spell, input);
                 } else {
                     entity.getCapability(Namer.CAP)
                             .ifPresent(namer -> namer.castSpell(

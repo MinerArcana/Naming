@@ -9,14 +9,11 @@ import com.minerarcana.naming.network.property.IPropertyManaged;
 import com.minerarcana.naming.network.property.Property;
 import com.minerarcana.naming.network.property.PropertyManager;
 import com.minerarcana.naming.network.property.PropertyTypes;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.world.inventory.AbstractContainerMenu;
-import net.minecraft.world.inventory.MenuType;
-import net.minecraft.inventory.container.IContainerListener;
-import net.minecraft.world.inventory.ContainerLevelAccess;
-import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.ContainerLevelAccess;
+import net.minecraft.world.inventory.ContainerListener;
 import net.minecraft.world.inventory.MenuType;
 import org.apache.commons.lang3.tuple.Pair;
 
@@ -58,16 +55,16 @@ public abstract class MessageContainer<T extends Enum<T> & IButtoned<T>> extends
                     ),
                     this.propertyManager.addTrackedProperty(PropertyTypes.STRING.create(
                             () -> blockEntity.getMessage(finalI).getContents(),
-                            message -> blockEntity.setMessage(finalI, new StringTextComponent(message)))
+                            message -> blockEntity.setMessage(finalI, new TextComponent(message)))
                     )
             ));
         }
     }
 
     @SuppressWarnings("unused")
-    public MessageContainer(@Nullable ContainerType<?> type, int containerId, PlayerInventory playerInventory) {
+    public MessageContainer(@Nullable MenuType<?> type, int containerId, Inventory playerInventory) {
         super(type, containerId);
-        this.callable = IWorldPosCallable.NULL;
+        this.callable = ContainerLevelAccess.NULL;
         this.propertyManager = Naming.properties.createManager(containerId);
         this.name = this.propertyManager.addTrackedProperty(PropertyTypes.STRING);
         this.listeners = Lists.newArrayList();
@@ -79,7 +76,7 @@ public abstract class MessageContainer<T extends Enum<T> & IButtoned<T>> extends
         }
     }
 
-    public ContainerAccessor getCallable() {
+    public ContainerLevelAccess getCallable() {
         return callable;
     }
 
@@ -95,7 +92,7 @@ public abstract class MessageContainer<T extends Enum<T> & IButtoned<T>> extends
     }
 
     @Override
-    public void addSlotListener(@Nonnull IContainerListener pListener) {
+    public void addSlotListener(@Nonnull ContainerListener pListener) {
         super.addSlotListener(pListener);
         this.propertyManager.updateClient(Collections.singleton(pListener), true);
     }

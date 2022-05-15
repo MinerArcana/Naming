@@ -7,10 +7,10 @@ import com.minerarcana.naming.content.NamingBlocks;
 import com.minerarcana.naming.content.NamingContainers;
 import com.minerarcana.naming.network.property.Property;
 import com.minerarcana.naming.network.property.PropertyTypes;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.container.Container;
-import net.minecraft.inventory.container.ContainerType;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.inventory.MenuType;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -39,7 +39,7 @@ public class SpeakingContainer extends MessageContainer<SpeakingTarget> {
         }
     }
 
-    public SpeakingContainer(@Nullable ContainerType<?> type, int containerId, PlayerInventory playerInventory) {
+    public SpeakingContainer(@Nullable MenuType<?> type, int containerId, Inventory playerInventory) {
         super(type, containerId, playerInventory);
         this.targetNameProperties = Lists.newArrayList();
         for (int i = 0; i < 4; i++) {
@@ -50,8 +50,8 @@ public class SpeakingContainer extends MessageContainer<SpeakingTarget> {
     }
 
     @Override
-    public boolean stillValid(@Nonnull PlayerEntity pPlayer) {
-        return Container.stillValid(this.getCallable(), pPlayer, NamingBlocks.SPEAKING_STONE.get());
+    public boolean stillValid(@Nonnull Player pPlayer) {
+        return AbstractContainerMenu.stillValid(this.getCallable(), pPlayer, NamingBlocks.SPEAKING_STONE.get());
     }
 
     public List<Property<String>> getTargetNameProperties() {

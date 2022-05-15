@@ -1,10 +1,10 @@
 package com.minerarcana.naming.target;
 
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.MobEntity;
-import net.minecraft.network.PacketBuffer;
-import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.world.server.ServerWorld;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.Mob;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -34,9 +34,9 @@ public class EntityNamingTarget implements INamingTarget {
     public void name(@Nonnull String name, Entity namer) {
         Entity entity = weakEntity.get();
         if (entity != null) {
-            entity.setCustomName(new StringTextComponent(name));
-            if (entity instanceof MobEntity) {
-                ((MobEntity)entity).setPersistenceRequired();
+            entity.setCustomName(new TextComponent(name));
+            if (entity instanceof Mob) {
+                ((Mob) entity).setPersistenceRequired();
             }
         }
     }
@@ -53,7 +53,7 @@ public class EntityNamingTarget implements INamingTarget {
     }
 
     @Override
-    public void hydrate(ServerWorld serverWorld) {
+    public void hydrate(ServerLevel serverWorld) {
         this.weakEntity = new WeakReference<>(serverWorld.getEntity(id));
     }
 
@@ -68,11 +68,11 @@ public class EntityNamingTarget implements INamingTarget {
         return weakEntity.get();
     }
 
-    public void toPacketBuffer(PacketBuffer buffer) {
+    public void toPacketBuffer(FriendlyByteBuf buffer) {
         buffer.writeInt(id);
     }
 
-    public static EntityNamingTarget fromPacketBuffer(PacketBuffer buffer) {
+    public static EntityNamingTarget fromPacketBuffer(FriendlyByteBuf buffer) {
         return new EntityNamingTarget(buffer.readInt());
     }
 }

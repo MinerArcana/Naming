@@ -1,6 +1,6 @@
 package com.minerarcana.naming.network.property;
 
-import net.minecraft.network.PacketBuffer;
+import net.minecraft.network.FriendlyByteBuf;
 
 import java.util.Objects;
 import java.util.function.*;
@@ -8,15 +8,15 @@ import java.util.function.*;
 public class PropertyType<T> implements Comparable<PropertyType<?>> {
     private final String name;
     private final Class<T> tClass;
-    private final Function<PacketBuffer, T> reader;
-    private final BiConsumer<PacketBuffer, T> writer;
+    private final Function<FriendlyByteBuf, T> reader;
+    private final BiConsumer<FriendlyByteBuf, T> writer;
     private final BiPredicate<T, T> equals;
 
-    public PropertyType(String name, Class<T> tClass, Function<PacketBuffer, T> reader, BiConsumer<PacketBuffer, T> writer) {
+    public PropertyType(String name, Class<T> tClass, Function<FriendlyByteBuf, T> reader, BiConsumer<FriendlyByteBuf, T> writer) {
         this(name, tClass, reader, writer, Objects::equals);
     }
 
-    public PropertyType(String name, Class<T> tClass, Function<PacketBuffer, T> reader, BiConsumer<PacketBuffer, T> writer,
+    public PropertyType(String name, Class<T> tClass, Function<FriendlyByteBuf, T> reader, BiConsumer<FriendlyByteBuf, T> writer,
                         BiPredicate<T, T> equals) {
         this.name = name;
         this.tClass = tClass;
@@ -25,11 +25,11 @@ public class PropertyType<T> implements Comparable<PropertyType<?>> {
         this.equals = equals;
     }
 
-    public Function<PacketBuffer, T> getReader() {
+    public Function<FriendlyByteBuf, T> getReader() {
         return reader;
     }
 
-    public BiConsumer<PacketBuffer, T> getWriter() {
+    public BiConsumer<FriendlyByteBuf, T> getWriter() {
         return writer;
     }
 
@@ -58,7 +58,7 @@ public class PropertyType<T> implements Comparable<PropertyType<?>> {
         return tClass.isInstance(object);
     }
 
-    public void attemptWrite(PacketBuffer packetBuffer, Object object) {
+    public void attemptWrite(FriendlyByteBuf packetBuffer, Object object) {
         if (tClass.isInstance(object)) {
             this.getWriter().accept(packetBuffer, tClass.cast(object));
         }

@@ -8,11 +8,11 @@ import com.minerarcana.naming.target.EmptyTarget;
 import com.minerarcana.naming.target.EntityNamingTarget;
 import com.minerarcana.naming.target.ItemStackNamingTarget;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.Hand;
-import net.minecraft.util.math.EntityRayTraceResult;
-import net.minecraft.util.math.RayTraceResult;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.phys.EntityHitResult;
+import net.minecraft.world.phys.HitResult;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.InputEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -40,14 +40,14 @@ public class ForgeClientEventHandler {
                     .map(cap -> cap.hasAbility("naming"))
                     .orElse(false);
             if (hasAbility) {
-                RayTraceResult result = minecraft.hitResult;
-                if (result instanceof EntityRayTraceResult) {
-                    minecraft.setScreen(new NamerScreen(new EntityNamingTarget(((EntityRayTraceResult) result).getEntity())));
-                } else if (result == null || result.getType() == RayTraceResult.Type.MISS) {
-                    Iterator<Hand> hands = Arrays.stream(Hand.values()).iterator();
+                HitResult result = minecraft.hitResult;
+                if (result instanceof EntityHitResult) {
+                    minecraft.setScreen(new NamerScreen(new EntityNamingTarget(((EntityHitResult) result).getEntity())));
+                } else if (result == null || result.getType() == HitResult.Type.MISS) {
+                    Iterator<InteractionHand> hands = Arrays.stream(InteractionHand.values()).iterator();
                     Screen screen = null;
                     while (screen == null && hands.hasNext()) {
-                        Hand hand = hands.next();
+                        InteractionHand hand = hands.next();
                         ItemStack itemStack = minecraft.player.getItemInHand(hand);
                         if (!itemStack.isEmpty()) {
                             screen = new NamerScreen(new ItemStackNamingTarget(itemStack, hand));

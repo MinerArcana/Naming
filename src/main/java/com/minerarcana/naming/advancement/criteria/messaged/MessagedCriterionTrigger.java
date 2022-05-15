@@ -5,34 +5,34 @@ import com.google.gson.JsonParseException;
 import com.minerarcana.naming.Naming;
 import com.minerarcana.naming.api.capability.INamer;
 import com.minerarcana.naming.capability.Namer;
-import net.minecraft.advancements.criterion.AbstractCriterionTrigger;
-import net.minecraft.advancements.criterion.EntityPredicate;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.loot.ConditionArrayParser;
-import net.minecraft.util.JSONUtils;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.advancements.critereon.DeserializationContext;
+import net.minecraft.advancements.critereon.EntityPredicate;
+import net.minecraft.advancements.critereon.SimpleCriterionTrigger;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.util.GsonHelper;
 
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.Arrays;
 import java.util.regex.Pattern;
 
-public class MessagedCriterionTrigger extends AbstractCriterionTrigger<MessagedCriterionInstance> {
+public class MessagedCriterionTrigger extends SimpleCriterionTrigger<MessagedCriterionInstance> {
     public static final ResourceLocation ID = Naming.rl("messaged");
 
     @Override
     @Nonnull
     @ParametersAreNonnullByDefault
-    protected MessagedCriterionInstance createInstance(JsonObject pJson, EntityPredicate.AndPredicate pEntityPredicate, ConditionArrayParser pConditionsParser) {
-        MessageTarget messageTarget = MessageTarget.byName(JSONUtils.getAsString(pJson, "target"))
+    protected MessagedCriterionInstance createInstance(JsonObject pJson, EntityPredicate.Composite pEntityPredicate, DeserializationContext pConditionsParser) {
+        MessageTarget messageTarget = MessageTarget.byName(GsonHelper.getAsString(pJson, "target"))
                 .orElseThrow(() -> new JsonParseException(String.format(
                         "Invalid MessageTarget not in [%s]",
                         Arrays.toString(MessageTarget.values())
                 )));
         if (pJson.has("pattern")) {
-            return new MessagedCriterionInstance(pEntityPredicate, -1, Pattern.compile(JSONUtils.getAsString(pJson, "pattern")), messageTarget);
+            return new MessagedCriterionInstance(pEntityPredicate, -1, Pattern.compile(GsonHelper.getAsString(pJson, "pattern")), messageTarget);
         } else {
-            return new MessagedCriterionInstance(pEntityPredicate, JSONUtils.getAsInt(pJson, "phrases"), null, messageTarget);
+            return new MessagedCriterionInstance(pEntityPredicate, GsonHelper.getAsInt(pJson, "phrases"), null, messageTarget);
         }
     }
 
@@ -42,13 +42,13 @@ public class MessagedCriterionTrigger extends AbstractCriterionTrigger<MessagedC
         return ID;
     }
 
-    public void trigger(ServerPlayerEntity player, String phrase, MessageTarget messageTarget) {
+    public void trigger(ServerPlayer player, String phrase, MessageTarget messageTarget) {
         INamer namer = player.getCapability(Namer.CAP)
                 .orElse(new Namer());
         this.trigger(player, instance -> instance.matches(namer, phrase, messageTarget));
     }
 
     public MessagedCriterionInstance phrases(int i, MessageTarget messageTarget) {
-        return new MessagedCriterionInstance(EntityPredicate.AndPredicate.ANY, i, null, messageTarget);
+        return new MessagedCriterionInstance(EntityPredicate.Composite.ANY, i, null, messageTarget);
     }
 }

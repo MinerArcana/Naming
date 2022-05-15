@@ -1,11 +1,9 @@
 package com.minerarcana.naming.blockentity;
 
-import net.minecraft.util.text.ITextComponent;
-
-import ITextComponent;
+import net.minecraft.network.chat.Component;
 
 public interface IButtoned<T extends Enum<T>> {
-    ITextComponent getMessage();
+    Component getMessage();
 
     T cycle();
 }

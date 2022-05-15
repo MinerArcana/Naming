@@ -1,8 +1,8 @@
 package com.minerarcana.naming.worlddata;
 
-import net.minecraft.entity.Entity;
-import net.minecraft.world.IWorld;
-import net.minecraft.world.server.ServerWorld;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.level.LevelAccessor;
 
 import javax.annotation.Nullable;
 import java.lang.ref.WeakReference;
@@ -23,9 +23,9 @@ public class WeakEntityReference {
     }
 
     @Nullable
-    public Entity get(IWorld world) {
-        if (entityReference.get() == null && world instanceof ServerWorld) {
-            entityReference = new WeakReference<>(((ServerWorld) world).getEntity(entityUUID));
+    public Entity get(LevelAccessor world) {
+        if (entityReference.get() == null && world instanceof ServerLevel) {
+            entityReference = new WeakReference<>(((ServerLevel) world).getEntity(entityUUID));
         }
         return entityReference.get();
     }

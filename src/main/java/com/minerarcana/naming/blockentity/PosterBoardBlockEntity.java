@@ -1,31 +1,33 @@
 package com.minerarcana.naming.blockentity;
 
 import com.minerarcana.naming.content.NamingBlocks;
-import net.minecraft.block.BlockState;
-import net.minecraft.item.DyeColor;
-import net.minecraft.state.properties.BlockStateProperties;
-import net.minecraft.tileentity.SignTileEntity;
-import net.minecraft.tileentity.TileEntityType;
-import net.minecraft.util.Direction;
-import net.minecraft.util.IReorderingProcessor;
-import net.minecraft.util.text.ITextComponent;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.network.chat.Component;
+import net.minecraft.util.FormattedCharSequence;
+import net.minecraft.world.item.DyeColor;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.entity.SignBlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraftforge.registries.ForgeRegistries;
 
 import javax.annotation.Nonnull;
 import java.util.function.Function;
 
-public class PosterBoardBlockEntity extends SignTileEntity implements ISideText {
+public class PosterBoardBlockEntity extends SignBlockEntity implements ISideText {
     @SuppressWarnings("unused")
-    public PosterBoardBlockEntity(TileEntityType<PosterBoardBlockEntity> ignoredBlockEntityTileEntityType) {
-        super();
+    public PosterBoardBlockEntity(BlockEntityType<?> ignoredBlockEntityType, BlockPos pPos, BlockState pState) {
+        super(pPos, pState);
     }
 
     @Nonnull
-    public TileEntityType<?> getType() {
-        return NamingBlocks.POSTER_BOARD.getSibling(ForgeRegistries.TILE_ENTITIES)
+    public BlockEntityType<?> getType() {
+        return NamingBlocks.POSTER_BOARD.getSibling(ForgeRegistries.BLOCK_ENTITIES)
                 .orElseThrow(() -> new IllegalStateException("No Poster Board Block Entity Type Found"));
     }
 
+    @Override
     public boolean renderSide(Direction direction) {
         if (direction.getAxis() != Direction.Axis.Y) {
             BlockState blockState = this.getBlockState();
@@ -45,7 +47,7 @@ public class PosterBoardBlockEntity extends SignTileEntity implements ISideText 
     }
 
     @Override
-    public IReorderingProcessor getRenderedMessage(int index, Function<ITextComponent, IReorderingProcessor> generate) {
-        return this.getRenderMessage(index, generate);
+    public FormattedCharSequence getRenderedMessage(int index, Function<Component, FormattedCharSequence> generate) {
+        return this.getRenderMessages(false, generate)[index];
     }
 }

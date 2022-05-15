@@ -1,8 +1,8 @@
 package com.minerarcana.naming.capability;
 
 import com.minerarcana.naming.api.capability.INamer;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.util.Direction;
+import net.minecraft.core.Direction;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ICapabilitySerializable;
 import net.minecraftforge.common.util.LazyOptional;
@@ -10,7 +10,7 @@ import net.minecraftforge.common.util.LazyOptional;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-public class NamingCapabilityProvider implements ICapabilitySerializable<CompoundNBT> {
+public class NamingCapabilityProvider implements ICapabilitySerializable<CompoundTag> {
     private final Namer namer;
     private final LazyOptional<INamer> lazy;
 
@@ -26,12 +26,12 @@ public class NamingCapabilityProvider implements ICapabilitySerializable<Compoun
     }
 
     @Override
-    public CompoundNBT serializeNBT() {
+    public CompoundTag serializeNBT() {
         return namer.serializeNBT();
     }
 
     @Override
-    public void deserializeNBT(CompoundNBT nbt) {
+    public void deserializeNBT(CompoundTag nbt) {
         namer.deserializeNBT(nbt);
     }
 

@@ -1,24 +1,25 @@
 package com.minerarcana.naming.block;
 
 import com.minerarcana.naming.blockentity.PosterBoardBlockEntity;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.DyeItem;
-import net.minecraft.item.ItemStack;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ActionResultType;
-import net.minecraft.util.Hand;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.world.IBlockReader;
-import net.minecraft.world.World;
+import net.minecraft.core.BlockPos;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.DyeItem;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.EntityBlock;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.BlockHitResult;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 
-public class PosterBoardBlock extends Block {
+public class PosterBoardBlock extends Block implements EntityBlock {
     public PosterBoardBlock(Properties properties) {
         super(properties);
     }
@@ -27,16 +28,14 @@ public class PosterBoardBlock extends Block {
     @Nonnull
     @SuppressWarnings("deprecation")
     @ParametersAreNonnullByDefault
-    public ActionResultType use(BlockState blockState, World level, BlockPos blockPos, PlayerEntity player, Hand hand,
-                                BlockRayTraceResult rayTraceResult) {
+    public InteractionResult use(BlockState pState, Level level, BlockPos pPos, Player player, InteractionHand hand, BlockHitResult pHit) {
         ItemStack itemstack = player.getItemInHand(hand);
-        boolean canColor = itemstack.getItem() instanceof DyeItem && player.abilities.mayBuild;
+        boolean canColor = itemstack.getItem() instanceof DyeItem && player.getAbilities().mayBuild;
         if (level.isClientSide) {
-            return canColor ? ActionResultType.SUCCESS : ActionResultType.CONSUME;
+            return canColor ? InteractionResult.SUCCESS : InteractionResult.CONSUME;
         } else {
-            TileEntity tileentity = level.getBlockEntity(blockPos);
-            if (tileentity instanceof PosterBoardBlockEntity) {
-                PosterBoardBlockEntity posterBoardBlockEntity = (PosterBoardBlockEntity) tileentity;
+            BlockEntity blockEntity = level.getBlockEntity(pPos);
+            if (blockEntity instanceof PosterBoardBlockEntity posterBoardBlockEntity) {
                 if (canColor) {
                     boolean colorSet = posterBoardBlockEntity.setColor(((DyeItem) itemstack.getItem()).getDyeColor());
                     if (colorSet && !player.isCreative()) {
@@ -44,21 +43,18 @@ public class PosterBoardBlock extends Block {
                     }
                 }
 
-                return posterBoardBlockEntity.executeClickCommands(player) ? ActionResultType.SUCCESS : ActionResultType.PASS;
+                return player instanceof ServerPlayer && posterBoardBlockEntity.executeClickCommands((ServerPlayer) player) ?
+                        InteractionResult.SUCCESS : InteractionResult.PASS;
             } else {
-                return ActionResultType.PASS;
+                return InteractionResult.PASS;
             }
         }
     }
 
-    @Override
-    public boolean hasTileEntity(BlockState state) {
-        return true;
-    }
-
     @Nullable
     @Override
-    public TileEntity createTileEntity(BlockState state, IBlockReader world) {
-        return new PosterBoardBlockEntity(null);
+    @ParametersAreNonnullByDefault
+    public BlockEntity newBlockEntity(BlockPos pPos, BlockState pState) {
+        return new PosterBoardBlockEntity(null, pPos, pState);
     }
 }

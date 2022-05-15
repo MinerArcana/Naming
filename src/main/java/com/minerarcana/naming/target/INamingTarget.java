@@ -1,8 +1,8 @@
 package com.minerarcana.naming.target;
 
-import net.minecraft.entity.Entity;
-import net.minecraft.network.PacketBuffer;
-import net.minecraft.world.server.ServerWorld;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.entity.Entity;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -15,9 +15,9 @@ public interface INamingTarget {
     @Nullable
     String getName();
 
-    void toPacketBuffer(PacketBuffer buffer);
+    void toPacketBuffer(FriendlyByteBuf buffer);
 
-    void hydrate(ServerWorld serverWorld);
+    void hydrate(ServerLevel serverWorld);
 
     @Nonnull
     NamingTargetType getType();
