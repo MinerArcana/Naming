@@ -19,10 +19,11 @@ import java.util.List;
 public class SpeakingContainer extends MessageContainer<SpeakingTarget> {
     private final List<Property<String>> targetNameProperties;
 
-    public SpeakingContainer(int containerId, SpeakingStoneBlockEntity blockEntity) {
+    public SpeakingContainer(int containerId, Inventory inventory, SpeakingStoneBlockEntity blockEntity) {
         super(
                 NamingContainers.SPEAKING.get(),
                 containerId,
+                inventory,
                 blockEntity,
                 blockEntity::getSpeakingTarget,
                 blockEntity::setSpeakingTarget

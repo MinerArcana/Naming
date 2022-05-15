@@ -54,6 +54,7 @@ public class SpeakingStoneBlockEntity extends MessageBlockEntity {
     public AbstractContainerMenu createMenu(int containerId, Inventory playerInventory, Player playerEntity) {
         return new SpeakingContainer(
                 containerId,
+                playerInventory,
                 this
         );
     }

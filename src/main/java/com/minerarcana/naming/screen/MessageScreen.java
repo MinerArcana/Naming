@@ -72,7 +72,6 @@ public class MessageScreen<T extends MessageContainer<U>, U extends Enum<U> & IB
     }
 
     @Override
-    @SuppressWarnings("deprecation")
     protected void renderBg(@Nonnull PoseStack pMatrixStack, float pPartialTicks, int pX, int pY) {
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
         RenderSystem.setShaderTexture(0, location);
@@ -101,18 +100,24 @@ public class MessageScreen<T extends MessageContainer<U>, U extends Enum<U> & IB
         int j = (this.height - this.imageHeight) / 2;
         this.nameField = createTextField(i + 7, j + 8, this.menu.getName());
         this.nameField.setFocus(true);
+        this.setInitialFocus(this.nameField);
+        this.addWidget(this.nameField);
         this.listenerFields = Lists.newArrayList();
         for (int x = 0; x < this.menu.getListeners().size(); x++) {
             Pair<Property<Integer>, Property<String>> properties = this.menu.getListeners().get(x);
-            this.addWidget(new MessageTypeButton<>(
+            MessageTypeButton<U> button = new MessageTypeButton<>(
                     i + 4,
                     x * 18 + j + 22,
                     menu.getEnum(),
                     properties.getLeft(),
                     getMenu().getPropertyManager(),
                     location
-            ));
-            this.listenerFields.add(createTextField(i + this.imageWidth - 111, x * 18 + j + 26, properties.getRight()));
+            );
+            this.addWidget(button);
+            this.renderables.add(button);
+            EditBox editBox = createTextField(i + this.imageWidth - 111, x * 18 + j + 26, properties.getRight());
+            this.listenerFields.add(editBox);
+            this.addWidget(editBox);
         }
     }
 

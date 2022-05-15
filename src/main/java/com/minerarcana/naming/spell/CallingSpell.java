@@ -9,13 +9,14 @@ import net.minecraft.world.entity.ai.behavior.EntityTracker;
 import net.minecraft.world.entity.ai.memory.MemoryModuleType;
 import net.minecraft.world.entity.ai.memory.MemoryStatus;
 import net.minecraft.world.entity.ai.memory.WalkTarget;
+import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nonnull;
 import java.util.Collection;
 
 public class CallingSpell extends Spell {
     @Override
-    public boolean cast(@Nonnull Entity caster, INamer namer, String spoken, Collection<Entity> targeted) {
+    public boolean cast(@Nonnull Entity caster, INamer namer, String spoken, @NotNull Collection<Entity> targeted) {
         targeted.forEach(entity -> {
             if (entity instanceof LivingEntity) {
                 Brain<?> brain = ((LivingEntity) entity).getBrain();

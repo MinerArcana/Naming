@@ -13,10 +13,11 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 public class ListeningContainer extends MessageContainer<ListeningType> {
-    public ListeningContainer(int containerId, ListeningStoneBlockEntity blockEntity) {
+    public ListeningContainer(int containerId, Inventory inventory, ListeningStoneBlockEntity blockEntity) {
         super(
                 NamingContainers.LISTENING.get(),
                 containerId,
+                inventory,
                 blockEntity,
                 blockEntity::getListeningType,
                 blockEntity::setListeningType

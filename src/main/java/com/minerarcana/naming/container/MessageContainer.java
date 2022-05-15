@@ -10,6 +10,7 @@ import com.minerarcana.naming.network.property.Property;
 import com.minerarcana.naming.network.property.PropertyManager;
 import com.minerarcana.naming.network.property.PropertyTypes;
 import net.minecraft.network.chat.TextComponent;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.ContainerLevelAccess;
@@ -31,11 +32,13 @@ public abstract class MessageContainer<T extends Enum<T> & IButtoned<T>> extends
 
     private final Property<String> name;
     private final List<Pair<Property<Integer>, Property<String>>> listeners;
+    private final Inventory inventory;
 
-    public MessageContainer(MenuType<? extends MessageContainer> type, int containerId,
+    public MessageContainer(MenuType<? extends MessageContainer> type, int containerId, Inventory inventory,
                             MessageBlockEntity blockEntity, Function<Integer, T> getter,
                             BiConsumer<Integer, T> setting) {
         super(type, containerId);
+        this.inventory = inventory;
         this.callable = ContainerLevelAccess.create(
                 Objects.requireNonNull(blockEntity.getLevel()),
                 blockEntity.getBlockPos()
@@ -64,6 +67,7 @@ public abstract class MessageContainer<T extends Enum<T> & IButtoned<T>> extends
     @SuppressWarnings("unused")
     public MessageContainer(@Nullable MenuType<?> type, int containerId, Inventory playerInventory) {
         super(type, containerId);
+        this.inventory = playerInventory;
         this.callable = ContainerLevelAccess.NULL;
         this.propertyManager = Naming.properties.createManager(containerId);
         this.name = this.propertyManager.addTrackedProperty(PropertyTypes.STRING);
@@ -88,13 +92,17 @@ public abstract class MessageContainer<T extends Enum<T> & IButtoned<T>> extends
     @Override
     public void broadcastChanges() {
         super.broadcastChanges();
-        this.propertyManager.updateClient(((ContainerAccessor) this).getContainerListeners(), false);
+        if (inventory.player instanceof ServerPlayer serverPlayer) {
+            this.propertyManager.updateClient(serverPlayer, false);
+        }
     }
 
     @Override
-    public void addSlotListener(@Nonnull ContainerListener pListener) {
-        super.addSlotListener(pListener);
-        this.propertyManager.updateClient(Collections.singleton(pListener), true);
+    public void sendAllDataToRemote() {
+        super.sendAllDataToRemote();
+        if (inventory.player instanceof ServerPlayer serverPlayer) {
+            this.propertyManager.updateClient(serverPlayer, true);
+        }
     }
 
     public List<Pair<Property<Integer>, Property<String>>> getListeners() {

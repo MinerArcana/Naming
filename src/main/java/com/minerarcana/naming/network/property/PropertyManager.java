@@ -47,35 +47,25 @@ public class PropertyManager {
                 ));
     }
 
-    public void updateClient(Collection<ContainerListener> containerListeners, boolean firstTime) {
-        List<ServerPlayer> playerListeners = Lists.newArrayList();
-        for (ContainerListener listener : containerListeners) {
-            if (listener instanceof ServerPlayer) {
-                playerListeners.add((ServerPlayer) listener);
+    public void updateClient(ServerPlayer serverPlayer, boolean firstTime) {
+
+        List<Triple<PropertyType<?>, Short, Object>> dirtyProperties = Lists.newArrayList();
+        for (short i = 0; i < properties.size(); i++) {
+            Property<?> property = properties.get(i);
+            if (property.isDirty() || firstTime) {
+                dirtyProperties.add(Triple.of(property.getPropertyType(), i, property.get()));
             }
         }
 
-        if (!playerListeners.isEmpty()) {
-            List<Triple<PropertyType<?>, Short, Object>> dirtyProperties = Lists.newArrayList();
-            for (short i = 0; i < properties.size(); i++) {
-                Property<?> property = properties.get(i);
-                if (property.isDirty() || firstTime) {
-                    dirtyProperties.add(Triple.of(property.getPropertyType(), i, property.get()));
-                }
-            }
-
-            if (!dirtyProperties.isEmpty()) {
-                for (ServerPlayer playerEntity : playerListeners) {
-                    propertyInstance.getNetwork()
-                            .sendClientUpdate(
-                                    playerEntity,
-                                    new UpdateClientContainerPropertiesMessage(
-                                            containerId,
-                                            dirtyProperties
-                                    )
-                            );
-                }
-            }
+        if (!dirtyProperties.isEmpty()) {
+            propertyInstance.getNetwork()
+                    .sendClientUpdate(
+                            serverPlayer,
+                            new UpdateClientContainerPropertiesMessage(
+                                    containerId,
+                                    dirtyProperties
+                            )
+                    );
         }
     }
 

@@ -86,6 +86,7 @@ public class ListeningStoneBlockEntity extends MessageBlockEntity implements Fun
     public AbstractContainerMenu createMenu(int containerId, Inventory inventory, Player playerEntity) {
         return new ListeningContainer(
                 containerId,
+                inventory,
                 this
         );
     }
