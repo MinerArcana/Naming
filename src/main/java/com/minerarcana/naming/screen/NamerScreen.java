@@ -50,7 +50,7 @@ public class NamerScreen extends Screen {
 
     protected void renderBg(PoseStack pMatrixStack) {
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-        this.getMinecraft().getTextureManager().bindForSetup(LOCATION);
+        RenderSystem.setShaderTexture(0, LOCATION);
         int i = (this.width - this.imageWidth) / 2;
         int j = (this.height - this.imageHeight) / 2;
         this.blit(pMatrixStack, i, j, 0, 0, this.imageWidth, this.imageHeight);

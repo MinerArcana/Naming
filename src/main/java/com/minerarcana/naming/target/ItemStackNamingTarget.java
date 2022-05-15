@@ -46,7 +46,7 @@ public class ItemStackNamingTarget implements INamingTarget {
             );
             Optional<NamingRecipe> recipeOptional = livingNamer.level.getRecipeManager()
                     .getRecipeFor(
-                            NamingRecipes.NAMING_RECIPE_TYPE,
+                            NamingRecipes.NAMING_RECIPE_TYPE.get(),
                             namingInventory,
                             livingNamer.level
                     );

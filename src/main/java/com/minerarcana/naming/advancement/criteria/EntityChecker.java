@@ -4,6 +4,7 @@ import com.mojang.datafixers.util.Either;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.TamableAnimal;
+import net.minecraft.world.entity.monster.Enemy;
 
 import java.util.Arrays;
 import java.util.stream.Collectors;
@@ -12,7 +13,7 @@ public enum EntityChecker {
     HOSTILE {
         @Override
         public boolean matches(Entity entity) {
-            return entity instanceof Mob;
+            return entity instanceof Enemy;
         }
     },
     TAMED {

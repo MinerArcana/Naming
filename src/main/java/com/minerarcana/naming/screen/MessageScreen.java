@@ -75,7 +75,7 @@ public class MessageScreen<T extends MessageContainer<U>, U extends Enum<U> & IB
     @SuppressWarnings("deprecation")
     protected void renderBg(@Nonnull PoseStack pMatrixStack, float pPartialTicks, int pX, int pY) {
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-        this.getMinecraft().getTextureManager().bindForSetup(location);
+        RenderSystem.setShaderTexture(0, location);
         int i = (this.width - this.imageWidth) / 2;
         int j = (this.height - this.imageHeight) / 2;
         this.blit(pMatrixStack, i, j, 0, 0, this.imageWidth, this.imageHeight);

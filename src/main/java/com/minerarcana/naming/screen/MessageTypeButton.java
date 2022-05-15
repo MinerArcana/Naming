@@ -46,7 +46,7 @@ public class MessageTypeButton<T extends Enum<T> & IButtoned<T>> extends Button 
     public void renderButton(@Nonnull PoseStack pMatrixStack, int pMouseX, int pMouseY, float pPartialTicks) {
         Minecraft minecraft = Minecraft.getInstance();
         Font font = minecraft.font;
-        minecraft.getTextureManager().bindForSetup(location);
+        RenderSystem.setShaderTexture(0, location);
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, this.alpha);
         int i = this.isHovered ? 1 : 0;
         RenderSystem.enableBlend();

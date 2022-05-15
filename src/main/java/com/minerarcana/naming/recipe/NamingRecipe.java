@@ -69,7 +69,7 @@ public class NamingRecipe implements Recipe<NamingInventory> {
     @Override
     @Nonnull
     public RecipeType<?> getType() {
-        return NamingRecipes.NAMING_RECIPE_TYPE;
+        return NamingRecipes.NAMING_RECIPE_TYPE.get();
     }
 
     public Ingredient getIngredient() {

@@ -30,17 +30,20 @@ public class Naming {
     public static NetworkHandler network;
 
     public Naming() {
+
+        IEventBus modBus = FMLJavaModLoadingContext.get()
+            .getModEventBus();
+
         NamingRegistries.setup();
         NamingCriteriaTriggers.setup();
         NamingText.setup();
         NamingBlocks.setup();
-        NamingRecipes.setup();
+        NamingRecipes.setup(modBus);
         NamingContainers.setup();
         NamingEffects.setup();
         NamingSpells.setup();
 
-        IEventBus modBus = FMLJavaModLoadingContext.get()
-                .getModEventBus();
+
 
         modBus.addListener(this::registerCapabilities);
         properties = new PropertyInstance(ID, LOGGER);
