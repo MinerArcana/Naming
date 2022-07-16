@@ -93,7 +93,9 @@ public class Namer implements INamer, INBTSerializable<CompoundTag> {
     public void castSpell(Entity caster, Spell spell, String input, Supplier<Collection<Entity>> targeted) {
         boolean cast = this.hasAbility("spells") && spell.canCast(caster, this) && spell.cast(caster, this, input, targeted.get());
         if (cast) {
-            this.castings.computeIfAbsent(spell, value -> new MutableInt()).increment();
+            this.castings.computeIfAbsent(spell, value -> new MutableInt())
+                    .increment();
+            this.totalCastings.invalidate();
             if (caster instanceof ServerPlayer) {
                 NamingCriteriaTriggers.SPELL.trigger((ServerPlayer) caster);
             }

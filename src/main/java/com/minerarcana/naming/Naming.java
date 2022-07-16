@@ -1,5 +1,6 @@
 package com.minerarcana.naming;
 
+import com.minerarcana.naming.api.capability.INameable;
 import com.minerarcana.naming.api.capability.INamer;
 import com.minerarcana.naming.content.*;
 import com.minerarcana.naming.network.NetworkHandler;
@@ -7,12 +8,10 @@ import com.minerarcana.naming.network.property.PropertyInstance;
 import com.tterrag.registrate.Registrate;
 import com.tterrag.registrate.providers.ProviderType;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraftforge.common.capabilities.CapabilityManager;
 import net.minecraftforge.common.capabilities.RegisterCapabilitiesEvent;
 import net.minecraftforge.common.util.Lazy;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -32,7 +31,7 @@ public class Naming {
     public Naming() {
 
         IEventBus modBus = FMLJavaModLoadingContext.get()
-            .getModEventBus();
+                .getModEventBus();
 
         NamingRegistries.setup();
         NamingCriteriaTriggers.setup();
@@ -44,7 +43,6 @@ public class Naming {
         NamingSpells.setup();
 
 
-
         modBus.addListener(this::registerCapabilities);
         properties = new PropertyInstance(ID, LOGGER);
         network = new NetworkHandler();
@@ -52,6 +50,7 @@ public class Naming {
 
     public void registerCapabilities(RegisterCapabilitiesEvent event) {
         event.register(INamer.class);
+        event.register(INameable.class);
     }
 
     public static Registrate getRegistrate() {

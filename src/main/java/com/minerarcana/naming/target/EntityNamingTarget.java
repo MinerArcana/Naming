@@ -1,5 +1,6 @@
 package com.minerarcana.naming.target;
 
+import com.minerarcana.naming.capability.Nameable;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.server.level.ServerLevel;
@@ -38,6 +39,8 @@ public class EntityNamingTarget implements INamingTarget {
             if (entity instanceof Mob) {
                 ((Mob) entity).setPersistenceRequired();
             }
+            entity.getCapability(Nameable.CAP)
+                    .ifPresent(nameable -> nameable.setMagicallyNamedBy(namer));
         }
     }
 
