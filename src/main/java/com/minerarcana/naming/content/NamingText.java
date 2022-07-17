@@ -2,11 +2,12 @@ package com.minerarcana.naming.content;
 
 import com.minerarcana.naming.Naming;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
 
 @SuppressWarnings("unused")
 public class NamingText {
     public static Component KEY_CATEGORY = Naming.getRegistrate()
-            .addRawLang("key.category.name", "Naming");
+            .addRawLang("key.category.naming", "Naming");
 
     public static Component KEY = Naming.getRegistrate()
             .addRawLang("key.naming.name", "Name");
@@ -32,8 +33,11 @@ public class NamingText {
     public static Component LISTENERS = Naming.getRegistrate()
             .addRawLang("button.naming.speaking_target.listeners", "Listeners");
 
-    public static Component ABILITIES = Naming.getRegistrate()
-            .addRawLang("naming.current_abilities", "Current Abilities:");
+    public static Component CURRENT_ABILITIES = Naming.getRegistrate()
+            .addRawLang("command.naming.current_abilities", "Current Abilities:");
+
+    public static TranslatableComponent SYNCED = Naming.getRegistrate()
+            .addRawLang("command.naming.number_synced", "Synced %s Player(s)");
 
     public static Component CALLING_SPELL = Naming.getRegistrate()
             .addLang("spell", Naming.rl("calling"), "Call");
