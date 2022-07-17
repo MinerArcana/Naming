@@ -21,6 +21,7 @@ import net.minecraftforge.common.capabilities.CapabilityToken;
 import net.minecraftforge.common.util.INBTSerializable;
 import org.apache.commons.lang3.mutable.MutableInt;
 
+import javax.annotation.Nonnull;
 import java.util.Collection;
 import java.util.Map;
 import java.util.Set;
@@ -55,6 +56,7 @@ public class Namer implements INamer, INBTSerializable<CompoundTag> {
     }
 
     @Override
+    @Nonnull
     public Collection<String> getAbilities() {
         return abilities;
     }

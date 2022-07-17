@@ -4,11 +4,13 @@ import com.minerarcana.naming.spell.Spell;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.Entity;
 import net.minecraftforge.common.util.INBTSerializable;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Collection;
 import java.util.function.Supplier;
 
 public interface INamer extends INBTSerializable<CompoundTag> {
+    @NotNull
     Collection<String> getAbilities();
 
     boolean grantAbility(String name);
