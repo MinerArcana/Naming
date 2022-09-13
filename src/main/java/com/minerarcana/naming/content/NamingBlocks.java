@@ -84,7 +84,7 @@ public class NamingBlocks {
             .item(PosterBoardBlockItem::new)
             .recipe((context, provider) -> NamingRecipeBuilder.of(context.get())
                     .withIngredient(Ingredient.of(POSTER_BOARD.get()))
-                    .withPattern("[rR]epeat.*")
+                    .withPattern("([rR]epeat.*|[sS]peak.*)")
                     .withAbility("speaking_stone")
                     .build(provider)
             )

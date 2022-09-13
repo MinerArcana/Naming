@@ -3,7 +3,7 @@
   "ingredient": {
     "item": "naming:poster_board"
   },
-  "pattern": "[rR]epeat.*",
+  "pattern": "([rR]epeat.*|[sS]peak.*)",
   "result": {
     "item": "naming:speaking_stone"
   },
