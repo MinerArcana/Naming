@@ -69,12 +69,20 @@ public class ForgeCommonEventHandler {
 
     @SubscribeEvent
     public static void playerClone(PlayerEvent.Clone cloneEvent) {
-        cloneEvent.getOriginal().getCapability(Namer.CAP)
+        cloneEvent.getOriginal()
+                .reviveCaps();
+
+        cloneEvent.getOriginal()
+                .getCapability(Namer.CAP)
                 .ifPresent(cap -> {
                     CompoundTag compoundNBT = cap.serializeNBT();
-                    cloneEvent.getPlayer().getCapability(Namer.CAP)
+                    cloneEvent.getPlayer()
+                            .getCapability(Namer.CAP)
                             .ifPresent(newCap -> newCap.deserializeNBT(compoundNBT));
                 });
+
+        cloneEvent.getOriginal()
+                .invalidateCaps();
     }
 
     @SubscribeEvent
