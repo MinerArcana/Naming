@@ -39,6 +39,12 @@ public class NamingText {
     public static TranslatableComponent SYNCED = Naming.getRegistrate()
             .addRawLang("command.naming.number_synced", "Synced %s Player(s)");
 
+    public static TranslatableComponent JEI_SPEAK = Naming.getRegistrate()
+            .addRawLang("jei.naming.speak", "Speak '%s' to Transmute");
+
+    public static TranslatableComponent MISSING_ABILITY = Naming.getRegistrate()
+            .addRawLang("ability.naming.missing", "You lack the ability to do this");
+
     public static Component CALLING_SPELL = Naming.getRegistrate()
             .addLang("spell", Naming.rl("calling"), "Call");
 

@@ -8,6 +8,7 @@ import com.minerarcana.naming.network.SyncNamingMessage;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
+import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.commands.arguments.EntityArgument;
@@ -18,6 +19,7 @@ import net.minecraft.world.entity.Entity;
 
 import java.util.Collection;
 import java.util.Collections;
+import java.util.function.BiPredicate;
 
 public class NamingCommand {
     public static LiteralArgumentBuilder<CommandSourceStack> create() {
@@ -26,29 +28,15 @@ public class NamingCommand {
                         .requires(stack -> stack.hasPermission(2))
                         .then(Commands.argument("target", EntityArgument.entities())
                                 .then(Commands.argument("ability", StringArgumentType.greedyString())
-                                        .executes(context -> {
-                                            String ability = StringArgumentType.getString(context, "ability");
-                                            return EntityArgument.getEntities(context, "target")
-                                                    .stream()
-                                                    .mapToInt(entity -> entity.getCapability(Namer.CAP)
-                                                            .map(namer -> {
-                                                                        if (namer.grantAbility(ability)) {
-                                                                            if (entity instanceof ServerPlayer) {
-                                                                                Naming.network.syncCap(
-                                                                                        (ServerPlayer) entity,
-                                                                                        new SyncNamingMessage(namer.getAbilities())
-                                                                                );
-                                                                            }
-
-                                                                            return 1;
-                                                                        } else {
-                                                                            return 0;
-                                                                        }
-                                                                    }
-                                                            ).orElse(0)
-                                                    )
-                                                    .sum();
-                                        })
+                                        .executes(context -> alterAbilities(context, INamer::grantAbility))
+                                )
+                        )
+                )
+                .then(Commands.literal("remove")
+                        .requires(stack -> stack.hasPermission(2))
+                        .then(Commands.argument("target", EntityArgument.entities())
+                                .then(Commands.argument("ability", StringArgumentType.greedyString())
+                                        .executes(context -> alterAbilities(context, INamer::removeAbility))
                                 )
                         )
                 )
@@ -67,6 +55,30 @@ public class NamingCommand {
                                 Collections.singleton(context.getSource().getPlayerOrException())
                         ))
                 );
+    }
+
+    private static int alterAbilities(CommandContext<CommandSourceStack> context, BiPredicate<INamer, String> alterAbilities) throws CommandSyntaxException {
+        String ability = StringArgumentType.getString(context, "ability");
+        return EntityArgument.getEntities(context, "target")
+                .stream()
+                .mapToInt(entity -> entity.getCapability(Namer.CAP)
+                        .map(namer -> {
+                                    if (alterAbilities.test(namer, ability)) {
+                                        if (entity instanceof ServerPlayer) {
+                                            Naming.network.syncCap(
+                                                    (ServerPlayer) entity,
+                                                    new SyncNamingMessage(namer.getAbilities())
+                                            );
+                                        }
+
+                                        return 1;
+                                    } else {
+                                        return 0;
+                                    }
+                                }
+                        ).orElse(0)
+                )
+                .sum();
     }
 
     private static int listForEntity(CommandContext<CommandSourceStack> context, Entity entity) {

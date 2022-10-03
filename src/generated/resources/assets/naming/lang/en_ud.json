@@ -1,4 +1,5 @@
 {
+  "ability.naming.missing": "s\u0131\u0265\u0287 op o\u0287 \u028E\u0287\u0131\u05DF\u0131q\u0250 \u01DD\u0265\u0287 \u029E\u0254\u0250\u05DF no\u028E",
   "advancements.naming.magic_of_names.description": "\u0287\u0279\u2C6F s,\u0279\u01DD\u026F\u0250N \u01DD\u0265\u27D8 :s\u01DD\u026F\u0250N \u025Fo \u0254\u0131b\u0250W \u01DD\u0265\u27D8",
   "advancements.naming.magic_of_names.title": "s\u01DD\u026F\u0250N \u025Fo \u0254\u0131b\u0250W",
   "advancements.naming.the_fifth_degree.description": "no\u028E \u0287ou \u01DD\u0279\u0250 o\u0265\u028D \u01DDso\u0265\u0287 \u0287\u05DF\u0250H pu\u0250 \u05DF\u05DF\u0250\u0186 o\u0287 \u0279\u01DD\u028Do\u0500 \u025Fo sp\u0279oM \u01DD\u0265\u0287 \u0265\u0287\u0279o\u025F \u029E\u0250\u01DDdS",
@@ -22,6 +23,7 @@
   "button.naming.speaking_target.owner": "\u0279\u01DDu\u028DO",
   "command.naming.current_abilities": ":s\u01DD\u0131\u0287\u0131\u05DF\u0131q\u2C6F \u0287u\u01DD\u0279\u0279n\u0186",
   "command.naming.number_synced": ")s(\u0279\u01DD\u028E\u0250\u05DF\u0500 %s p\u01DD\u0254u\u028ES",
+  "jei.naming.speak": "\u01DD\u0287n\u026Fsu\u0250\u0279\u27D8 o\u0287 ,%s, \u029E\u0250\u01DDdS",
   "key.category.naming": "bu\u0131\u026F\u0250N",
   "key.naming.name": "\u01DD\u026F\u0250N",
   "screen.naming.title": "bu\u0131\u026F\u0250N",

@@ -67,6 +67,11 @@ public class Namer implements INamer, INBTSerializable<CompoundTag> {
     }
 
     @Override
+    public boolean removeAbility(String name) {
+        return abilities.remove(name);
+    }
+
+    @Override
     public boolean hasAbility(String name) {
         return abilities.contains(name);
     }

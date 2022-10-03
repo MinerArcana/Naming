@@ -15,6 +15,8 @@ public interface INamer extends INBTSerializable<CompoundTag> {
 
     boolean grantAbility(String name);
 
+    boolean removeAbility(String name);
+
     boolean hasAbility(String name);
 
     /**

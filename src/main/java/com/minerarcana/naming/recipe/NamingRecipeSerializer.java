@@ -23,8 +23,10 @@ public class NamingRecipeSerializer extends ForgeRegistryEntry<RecipeSerializer<
                 id,
                 Ingredient.fromJson(jsonObject.get("ingredient")),
                 Pattern.compile(GsonHelper.getAsString(jsonObject, "pattern")),
+                GsonHelper.getAsString(jsonObject, "example", null),
                 CraftingHelper.getItemStack(jsonObject.getAsJsonObject("result"), true),
-                GsonHelper.getAsString(jsonObject, "ability", ""));
+                GsonHelper.getAsString(jsonObject, "ability", "")
+        );
     }
 
     @Nullable
@@ -35,6 +37,7 @@ public class NamingRecipeSerializer extends ForgeRegistryEntry<RecipeSerializer<
                 id,
                 Ingredient.fromNetwork(packetBuffer),
                 Pattern.compile(packetBuffer.readUtf()),
+                packetBuffer.readUtf(),
                 packetBuffer.readItem(),
                 packetBuffer.readUtf()
         );
@@ -45,6 +48,7 @@ public class NamingRecipeSerializer extends ForgeRegistryEntry<RecipeSerializer<
     public void toNetwork(FriendlyByteBuf packetBuffer, NamingRecipe namingRecipe) {
         namingRecipe.getIngredient().toNetwork(packetBuffer);
         packetBuffer.writeUtf(namingRecipe.getPattern().pattern());
+        packetBuffer.writeUtf(namingRecipe.getPatternExample());
         packetBuffer.writeItemStack(namingRecipe.getResultItem(), false);
         packetBuffer.writeUtf(namingRecipe.getAbility());
     }

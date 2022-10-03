@@ -19,6 +19,7 @@ public class NamingRecipeBuilder {
     private final ItemStack result;
     private Ingredient ingredient;
     private Pattern pattern;
+    private String patternExample;
     private String ability;
 
     public NamingRecipeBuilder(ItemStack result) {
@@ -37,6 +38,11 @@ public class NamingRecipeBuilder {
 
     public NamingRecipeBuilder withPattern(String pattern) {
         return this.withPattern(Pattern.compile(pattern));
+    }
+
+    public NamingRecipeBuilder withPatternExample(String patternExample) {
+        this.patternExample = patternExample;
+        return this;
     }
 
     public NamingRecipeBuilder withPattern(Pattern pattern) {
@@ -58,6 +64,7 @@ public class NamingRecipeBuilder {
                 result,
                 ingredient,
                 pattern,
+                patternExample,
                 ability
         ));
     }
@@ -71,14 +78,16 @@ public class NamingRecipeBuilder {
         private final ItemStack result;
         private final Ingredient ingredient;
         private final Pattern pattern;
+        private final String patternExample;
         private final String ability;
 
         public NamingFinishedRecipe(ResourceLocation id, ItemStack result, Ingredient ingredient, Pattern pattern,
-                                    String ability) {
+                                    String patternExample, String ability) {
             this.id = id;
             this.result = result;
             this.ingredient = ingredient;
             this.pattern = pattern;
+            this.patternExample = patternExample;
             this.ability = ability;
         }
 
@@ -86,6 +95,9 @@ public class NamingRecipeBuilder {
         public void serializeRecipeData(@Nonnull JsonObject pJson) {
             pJson.add("ingredient", ingredient.toJson());
             pJson.addProperty("pattern", pattern.pattern());
+            if (this.patternExample != null) {
+                pJson.addProperty("example", this.patternExample);
+            }
             JsonObject resultObject = new JsonObject();
             resultObject.addProperty("item", Objects.requireNonNull(result.getItem().getRegistryName()).toString());
             if (result.getCount() > 1) {

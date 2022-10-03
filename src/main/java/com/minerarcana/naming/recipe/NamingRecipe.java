@@ -17,13 +17,19 @@ public class NamingRecipe implements Recipe<NamingInventory> {
     private final ResourceLocation id;
     private final Ingredient ingredient;
     private final Pattern pattern;
+    private final String patternExample;
     private final ItemStack result;
     private final String ability;
 
-    public NamingRecipe(ResourceLocation id, Ingredient ingredient, Pattern pattern, ItemStack result, String ability) {
+    public NamingRecipe(ResourceLocation id, Ingredient ingredient, Pattern pattern, String patternExample, ItemStack result, String ability) {
         this.id = id;
         this.ingredient = ingredient;
         this.pattern = pattern;
+        if (patternExample == null) {
+            this.patternExample = pattern.pattern();
+        } else {
+            this.patternExample = patternExample;
+        }
         this.result = result;
         this.ability = ability;
     }
@@ -82,5 +88,9 @@ public class NamingRecipe implements Recipe<NamingInventory> {
 
     public String getAbility() {
         return ability;
+    }
+
+    public String getPatternExample() {
+        return this.patternExample;
     }
 }

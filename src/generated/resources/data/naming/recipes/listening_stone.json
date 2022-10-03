@@ -4,6 +4,7 @@
     "item": "naming:poster_board"
   },
   "pattern": "[lL]isten.*",
+  "example": "Listen",
   "result": {
     "item": "naming:listening_stone"
   },

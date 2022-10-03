@@ -52,6 +52,10 @@ repositories {
             includeGroup "com.tterrag.registrate"
         }
     }
+    maven {
+        name = "JEI"
+        url = "https://dvs1.progwml6.com/files/maven"
+    }
 }
 
 test {
@@ -144,6 +148,10 @@ dependencies {
     shade registrate
 
     annotationProcessor 'org.spongepowered:mixin:0.8.4:processor'
+
+    runtimeOnly fg.deobf("mezz.jei:jei-1.18.2-forge:10.1.4.263")
+    compileOnly fg.deobf("mezz.jei:jei-1.18.2-common-api:10.1.4.263")
+    compileOnly fg.deobf("mezz.jei:jei-1.18.2-forge-api:10.1.4.263")
 }
 
 mixin {

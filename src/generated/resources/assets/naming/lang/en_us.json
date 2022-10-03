@@ -1,4 +1,5 @@
 {
+  "ability.naming.missing": "You lack the ability to do this",
   "advancements.naming.magic_of_names.description": "The Magic of Names: The Namer's Art",
   "advancements.naming.magic_of_names.title": "Magic of Names",
   "advancements.naming.the_fifth_degree.description": "Speak forth the Words of Power to Call and Halt those who are not you",
@@ -22,6 +23,7 @@
   "button.naming.speaking_target.owner": "Owner",
   "command.naming.current_abilities": "Current Abilities:",
   "command.naming.number_synced": "Synced %s Player(s)",
+  "jei.naming.speak": "Speak '%s' to Transmute",
   "key.category.naming": "Naming",
   "key.naming.name": "Name",
   "screen.naming.title": "Naming",
