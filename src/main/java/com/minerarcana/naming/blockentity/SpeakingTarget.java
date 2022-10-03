@@ -9,6 +9,10 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.entity.EntityTypeTest;
+import net.minecraft.world.phys.AABB;
+
+import java.util.List;
 
 public enum SpeakingTarget implements IButtoned<SpeakingTarget> {
     NONE(NamingText.NONE, false) {
@@ -34,6 +38,14 @@ public enum SpeakingTarget implements IButtoned<SpeakingTarget> {
     NEARBY(NamingText.NEARBY, false) {
         @Override
         public boolean speak(Component spoken, SpeakingStoneBlockEntity blockEntity) {
+            AABB nearby = new AABB(blockEntity.getBlockPos()).inflate(32);
+            if (blockEntity.getLevel() instanceof ServerLevel serverLevel) {
+                List<Player> nearbyPlayers = serverLevel.getEntities(EntityTypeTest.forClass(Player.class), nearby, entity -> true);
+                for (Player player: nearbyPlayers) {
+                    player.sendMessage(spoken, player.getUUID());
+                }
+                return !nearbyPlayers.isEmpty();
+            }
             return false;
         }
     },
