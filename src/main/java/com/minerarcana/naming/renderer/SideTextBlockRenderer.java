@@ -27,13 +27,13 @@ public class SideTextBlockRenderer<T extends BlockEntity & ISideText> implements
     public void render(T pBlockEntity, float pPartialTicks, PoseStack pMatrixStack,
                        MultiBufferSource pBuffer, int pCombinedLight, int pCombinedOverlay) {
         pMatrixStack.pushPose();
-        pMatrixStack.scale(0.017816667F, -0.017816667F, 0.017816667F);
+        pMatrixStack.scale(0.010816667F, -0.010816667F, 0.010816667F);
         int i = pBlockEntity.getTextColor().getTextColor();
         int j = (int) ((double) NativeImage.getR(i) * 0.4D);
         int k = (int) ((double) NativeImage.getG(i) * 0.4D);
         int l = (int) ((double) NativeImage.getB(i) * 0.4D);
         int i1 = NativeImage.combine(0, l, k, j);
-        pMatrixStack.translate(28, 10, 28);
+        pMatrixStack.translate(46, -10, 46);
         for (Direction direction : Direction.values()) {
             if (pBlockEntity.renderSide(direction)) {
                 pMatrixStack.pushPose();
@@ -42,7 +42,7 @@ public class SideTextBlockRenderer<T extends BlockEntity & ISideText> implements
                 if (direction.getAxis() == Direction.Axis.X) {
                     pMatrixStack.mulPose(Vector3f.YP.rotationDegrees(180));
                 }
-                pMatrixStack.translate(0, -36.5, 28.25);
+                pMatrixStack.translate(0, -36.5, 48.25);
                 for (int k1 = 0; k1 < 4; ++k1) {
                     FormattedCharSequence reorderingProcessor = pBlockEntity.getRenderedMessage(k1, (textComponent) -> {
                         List<FormattedCharSequence> list = font.split(textComponent, 90);
