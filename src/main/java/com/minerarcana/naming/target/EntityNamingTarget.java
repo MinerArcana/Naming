@@ -1,6 +1,7 @@
 package com.minerarcana.naming.target;
 
 import com.minerarcana.naming.capability.Nameable;
+import net.minecraft.locale.Language;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.server.level.ServerLevel;
@@ -73,6 +74,12 @@ public class EntityNamingTarget implements INamingTarget {
     @Override
     public Object getTarget() {
         return weakEntity.get();
+    }
+
+    @Override
+    public boolean matchesOriginal(String value) {
+        Entity entity = this.weakEntity.get();
+        return entity != null && entity.getType().getDescription().getString().equals(value);
     }
 
     public void toPacketBuffer(FriendlyByteBuf buffer) {

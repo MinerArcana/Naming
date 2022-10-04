@@ -45,4 +45,9 @@ public class EmptyTarget implements INamingTarget {
     public Object getTarget() {
         return null;
     }
+
+    @Override
+    public boolean matchesOriginal(String value) {
+        return false;
+    }
 }

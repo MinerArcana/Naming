@@ -23,4 +23,6 @@ public interface INamingTarget {
     NamingTargetType getType();
 
     Object getTarget();
+
+    boolean matchesOriginal(String value);
 }

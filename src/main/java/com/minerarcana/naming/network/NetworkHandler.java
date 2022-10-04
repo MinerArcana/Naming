@@ -8,6 +8,7 @@ import net.minecraftforge.network.NetworkRegistry;
 import net.minecraftforge.network.NetworkRegistry.ChannelBuilder;
 import net.minecraftforge.network.PacketDistributor;
 import net.minecraftforge.network.simple.SimpleChannel;
+import org.jetbrains.annotations.Nullable;
 
 public class NetworkHandler {
     private final SimpleChannel channel;
@@ -47,7 +48,7 @@ public class NetworkHandler {
                 .add();
     }
 
-    public void name(String name, INamingTarget target) {
+    public void name(@Nullable String name, INamingTarget target) {
         this.channel.send(PacketDistributor.SERVER.noArg(), new NameTargetMessage(target, name));
     }
 

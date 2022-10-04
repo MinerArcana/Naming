@@ -127,7 +127,12 @@ public class NamerScreen extends Screen {
                                 .toArray()
                 ));
             } else {
-                Naming.network.name(this.name.getValue(), namingTarget);
+                if (namingTarget.matchesOriginal(this.name.getValue())) {
+                    Naming.network.name(null, namingTarget);
+                } else {
+                    Naming.network.name(this.name.getValue(), namingTarget);
+                }
+
             }
         }
         super.onClose();

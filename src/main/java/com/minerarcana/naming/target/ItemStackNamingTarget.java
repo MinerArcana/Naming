@@ -106,6 +106,11 @@ public class ItemStackNamingTarget implements INamingTarget {
         return itemStack;
     }
 
+    @Override
+    public boolean matchesOriginal(String value) {
+        return value.equals(this.itemStack.getItem().getName(this.itemStack).getString());
+    }
+
     public static ItemStackNamingTarget fromPacketBuffer(FriendlyByteBuf packetBuffer) {
         return new ItemStackNamingTarget(
                 packetBuffer.readItem(),
