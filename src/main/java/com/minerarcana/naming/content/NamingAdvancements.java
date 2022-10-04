@@ -91,37 +91,6 @@ public class NamingAdvancements {
                 .rewards(rewardAbility("spells"))
                 .build(Naming.rl("fourth_initiation"));
         provider.accept(fourthInitiation);
-
-        Advancement fifthInitiation = Advancement.Builder.advancement()
-                .display(displayInfo.apply(
-                        Items.PAPER,
-                        "The Fifth Degree",
-                        "Speak forth the Words of Power to Call and Halt those who are not you"
-                ))
-                .addCriterion("halt", NamingCriteriaTriggers.TARGETED_SPELL.forChecker(NamingSpells.HALTING.get(), EntityChecker.HOSTILE))
-                .addCriterion("call_wolf", NamingCriteriaTriggers.TARGETED_SPELL.forEntity(
-                        NamingSpells.CALLING.get(),
-                        EntityPredicate.Builder.entity()
-                                .of(EntityType.WOLF)
-                                .build()
-                ))
-                .addCriterion("call_horse", NamingCriteriaTriggers.TARGETED_SPELL.forEntity(
-                        NamingSpells.CALLING.get(),
-                        EntityPredicate.Builder.entity()
-                                .of(EntityType.HORSE)
-                                .build()
-                ))
-                .addCriterion("call_cat", NamingCriteriaTriggers.TARGETED_SPELL.forEntity(
-                        NamingSpells.CALLING.get(),
-                        EntityPredicate.Builder.entity()
-                                .of(EntityType.CAT)
-                                .build()
-                ))
-                .parent(fourthInitiation)
-                .rewards(rewardAbility("more_spells"))
-                .build(Naming.rl("fifth_initiation"));
-        provider.accept(fifthInitiation);
-
     }
 
     private static AdvancementRewards rewardAbility(String name) {

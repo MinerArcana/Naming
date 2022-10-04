@@ -32,16 +32,13 @@ public class Naming {
 
         IEventBus modBus = FMLJavaModLoadingContext.get()
                 .getModEventBus();
-
-        NamingRegistries.setup();
+        
         NamingCriteriaTriggers.setup();
         NamingText.setup();
         NamingBlocks.setup();
         NamingRecipes.setup(modBus);
         NamingContainers.setup();
         NamingEffects.setup();
-        NamingSpells.setup();
-
 
         modBus.addListener(this::registerCapabilities);
         properties = new PropertyInstance(ID, LOGGER);

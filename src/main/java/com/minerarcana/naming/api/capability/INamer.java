@@ -1,13 +1,10 @@
 package com.minerarcana.naming.api.capability;
 
-import com.minerarcana.naming.spell.Spell;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.world.entity.Entity;
 import net.minecraftforge.common.util.INBTSerializable;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Collection;
-import java.util.function.Supplier;
 
 public interface INamer extends INBTSerializable<CompoundTag> {
     @NotNull
@@ -42,10 +39,4 @@ public interface INamer extends INBTSerializable<CompoundTag> {
      * @return The list of things that were spoken and heard by Listening Stones (Default Implementation is Uniques Only)
      */
     Collection<String> getSpokenHistory();
-
-    void castSpell(Entity caster, Spell spell, String input, Supplier<Collection<Entity>> targeted);
-
-    int getTimesCast(Spell spell);
-
-    int getTotalCastings();
 }

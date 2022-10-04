@@ -12,7 +12,6 @@ import com.minerarcana.naming.capability.NamingCapabilityProvider;
 import com.minerarcana.naming.command.NamingCommand;
 import com.minerarcana.naming.content.NamingCriteriaTriggers;
 import com.minerarcana.naming.network.SyncNamingMessage;
-import com.minerarcana.naming.worlddata.EchoingWorldData;
 import com.minerarcana.naming.worlddata.ListeningWorldData;
 import net.minecraft.Util;
 import net.minecraft.nbt.CompoundTag;
@@ -114,8 +113,6 @@ public class ForgeCommonEventHandler {
         Level world = worldTickEvent.world;
         if (worldTickEvent.phase == TickEvent.Phase.END && world instanceof ServerLevel) {
             DimensionDataStorage manager = ((ServerLevel) world).getDataStorage();
-            manager.computeIfAbsent(EchoingWorldData::new, EchoingWorldData::new, EchoingWorldData.NAME)
-                    .tick(world);
             if (world.random.nextInt(100) == 0) {
                 manager.computeIfAbsent(ListeningWorldData::new, ListeningWorldData::new, ListeningWorldData.NAME)
                         .clean();

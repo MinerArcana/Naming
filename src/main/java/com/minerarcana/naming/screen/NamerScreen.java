@@ -1,9 +1,7 @@
 package com.minerarcana.naming.screen;
 
 import com.minerarcana.naming.Naming;
-import com.minerarcana.naming.content.NamingRegistries;
 import com.minerarcana.naming.content.NamingText;
-import com.minerarcana.naming.spell.Spell;
 import com.minerarcana.naming.target.INamingTarget;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -11,12 +9,9 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.entity.Entity;
-import org.apache.commons.lang3.tuple.Pair;
 
 import javax.annotation.Nonnull;
 import java.util.Objects;
-import java.util.Optional;
 
 public class NamerScreen extends Screen {
     private static final ResourceLocation LOCATION = Naming.rl("textures/screen/namer.png");
@@ -104,35 +99,10 @@ public class NamerScreen extends Screen {
     @Override
     public void onClose() {
         if (this.name != null) {
-            Optional<Pair<Spell, String>> spell = NamingRegistries.findSpell(this.name.getValue());
-            if (spell.isPresent()) {
-                spell.ifPresent(foundSpell -> Naming.network.spellToServer(
-                        foundSpell.getLeft(),
-                        foundSpell.getRight(),
-                        foundSpell.getLeft()
-                                .getTargeting()
-                                .getTargeted(
-                                        Minecraft.getInstance().player,
-                                        entity -> {
-                                            if (entity.getCustomName() != null) {
-                                                return entity.getCustomName()
-                                                        .getContents()
-                                                        .equalsIgnoreCase(foundSpell.getRight());
-                                            }
-                                            return false;
-                                        }
-                                )
-                                .stream()
-                                .mapToInt(Entity::getId)
-                                .toArray()
-                ));
+            if (namingTarget.matchesOriginal(this.name.getValue())) {
+                Naming.network.name(null, namingTarget);
             } else {
-                if (namingTarget.matchesOriginal(this.name.getValue())) {
-                    Naming.network.name(null, namingTarget);
-                } else {
-                    Naming.network.name(this.name.getValue(), namingTarget);
-                }
-
+                Naming.network.name(this.name.getValue(), namingTarget);
             }
         }
         super.onClose();

@@ -1,7 +1,6 @@
 package com.minerarcana.naming.network;
 
 import com.minerarcana.naming.Naming;
-import com.minerarcana.naming.spell.Spell;
 import com.minerarcana.naming.target.INamingTarget;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraftforge.network.NetworkRegistry;
@@ -29,17 +28,6 @@ public class NetworkHandler {
                 .encoder(NameTargetMessage::encode)
                 .consumer(NameTargetMessage::consume)
                 .add();
-        this.channel.messageBuilder(SpellServerMessage.class, 1)
-                .decoder(SpellServerMessage::decode)
-                .encoder(SpellServerMessage::encode)
-                .consumer(SpellServerMessage::consume)
-                .add();
-
-        this.channel.messageBuilder(SpellClientMessage.class, 2)
-                .decoder(SpellClientMessage::decode)
-                .encoder(SpellClientMessage::encode)
-                .consumer(SpellClientMessage::consume)
-                .add();
 
         this.channel.messageBuilder(SyncNamingMessage.class, 3)
                 .decoder(SyncNamingMessage::decode)
@@ -50,14 +38,6 @@ public class NetworkHandler {
 
     public void name(@Nullable String name, INamingTarget target) {
         this.channel.send(PacketDistributor.SERVER.noArg(), new NameTargetMessage(target, name));
-    }
-
-    public void spellToServer(Spell spell, String spoken, int[] targeted) {
-        this.channel.send(PacketDistributor.SERVER.noArg(), new SpellServerMessage(spell, spoken, targeted));
-    }
-
-    public void spellToClient(ServerPlayer player, Spell spell, String spoken) {
-        this.channel.send(PacketDistributor.PLAYER.with(() -> player), new SpellClientMessage(spell, spoken));
     }
 
     public void syncCap(ServerPlayer player, SyncNamingMessage message) {
