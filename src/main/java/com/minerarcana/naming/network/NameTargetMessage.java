@@ -8,6 +8,7 @@ import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraftforge.network.NetworkEvent;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.function.Supplier;
 
@@ -15,14 +16,17 @@ public class NameTargetMessage {
     private final INamingTarget namingTarget;
     private final String name;
 
-    public NameTargetMessage(INamingTarget namingTarget, String name) {
+    public NameTargetMessage(INamingTarget namingTarget, @Nullable String name) {
         this.namingTarget = namingTarget;
         this.name = name;
     }
 
     public void encode(FriendlyByteBuf packetBuffer) {
         NamingTargets.INSTANCE.toPacketBuffer(namingTarget, packetBuffer);
-        packetBuffer.writeUtf(name);
+        packetBuffer.writeBoolean(name != null);
+        if (name != null) {
+            packetBuffer.writeUtf(name);
+        }
     }
 
     public boolean consume(Supplier<NetworkEvent.Context> contextSupplier) {
@@ -52,7 +56,7 @@ public class NameTargetMessage {
     public static NameTargetMessage decode(FriendlyByteBuf packetBuffer) {
         return new NameTargetMessage(
                 NamingTargets.INSTANCE.fromPacketBuffer(packetBuffer),
-                packetBuffer.readUtf(3276)
+                packetBuffer.readBoolean() ? packetBuffer.readUtf() : null
         );
     }
 }

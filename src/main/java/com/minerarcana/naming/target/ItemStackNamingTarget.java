@@ -14,9 +14,9 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
+import org.jetbrains.annotations.Nullable;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.util.Optional;
 
 public class ItemStackNamingTarget implements INamingTarget {
@@ -37,7 +37,7 @@ public class ItemStackNamingTarget implements INamingTarget {
     }
 
     @Override
-    public void name(@Nonnull String name, Entity namer) {
+    public void name(@Nullable String name, Entity namer) {
         if (namer instanceof LivingEntity livingNamer) {
             NamingInventory namingInventory = new NamingInventory(
                     name,
@@ -66,7 +66,13 @@ public class ItemStackNamingTarget implements INamingTarget {
                 }
             } else {
                 if (!inputStack.isEmpty()) {
-                    inputStack.setHoverName(new TextComponent(name));
+                    if (name == null) {
+                        if (inputStack.hasCustomHoverName()) {
+                            inputStack.setHoverName(null);
+                        }
+                    } else {
+                        inputStack.setHoverName(new TextComponent(name));
+                    }
                 }
             }
         }

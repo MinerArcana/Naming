@@ -6,9 +6,9 @@ import net.minecraft.network.chat.TextComponent;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.Mob;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.lang.ref.WeakReference;
 
 public class EntityNamingTarget implements INamingTarget {
@@ -32,15 +32,19 @@ public class EntityNamingTarget implements INamingTarget {
     }
 
     @Override
-    public void name(@Nonnull String name, Entity namer) {
+    public void name(@Nullable String name, Entity namer) {
         Entity entity = weakEntity.get();
         if (entity != null) {
-            entity.setCustomName(new TextComponent(name));
-            if (entity instanceof Mob) {
-                ((Mob) entity).setPersistenceRequired();
+            if (name != null) {
+                entity.setCustomName(new TextComponent(name));
+                if (entity instanceof Mob) {
+                    ((Mob) entity).setPersistenceRequired();
+                }
+                entity.getCapability(Nameable.CAP)
+                        .ifPresent(nameable -> nameable.setMagicallyNamedBy(namer));
+            } else {
+                entity.setCustomName(null);
             }
-            entity.getCapability(Nameable.CAP)
-                    .ifPresent(nameable -> nameable.setMagicallyNamedBy(namer));
         }
     }
 
@@ -61,7 +65,7 @@ public class EntityNamingTarget implements INamingTarget {
     }
 
     @Override
-    @Nonnull
+    @NotNull
     public NamingTargetType getType() {
         return NamingTargets.ENTITY;
     }

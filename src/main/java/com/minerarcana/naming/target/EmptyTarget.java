@@ -3,9 +3,10 @@ package com.minerarcana.naming.target;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
+import org.jetbrains.annotations.NotNull;
 
-import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+
 
 public class EmptyTarget implements INamingTarget {
     @Override
@@ -14,7 +15,7 @@ public class EmptyTarget implements INamingTarget {
     }
 
     @Override
-    public void name(@Nonnull String name, @Nullable Entity namer) {
+    public void name(@Nullable String name, @Nullable Entity namer) {
 
     }
 
@@ -34,7 +35,7 @@ public class EmptyTarget implements INamingTarget {
 
     }
 
-    @Nonnull
+    @NotNull
     @Override
     public NamingTargetType getType() {
         return NamingTargets.EMPTY;
