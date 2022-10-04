@@ -36,8 +36,6 @@ apply plugin: "java"
 apply plugin: "idea"
 apply plugin: 'org.spongepowered.mixin'
 
-apply from: 'https://raw.githubusercontent.com/SizableShrimp/Forge-Class-Remapper/main/classremapper.gradle'
-
 version = "${minecraft_version}-" + getVersion()
 archivesBaseName = "${mod_id}"
 
@@ -156,33 +154,6 @@ dependencies {
 
 mixin {
     add sourceSets.main, "${mod_id}.refmap.json"
-}
-
-def resourceTargets = ['META-INF/mods.toml', 'pack.mcmeta']
-def intoTargets = ["$rootDir/out/production/resources/", "$rootDir/out/production/${project.name}.main/", "$rootDir/bin/main/"]
-def replaceProperties = [mod_id                 : mod_id, mod_name: mod_name, mod_version: mod_version,
-                         mod_authors            : mod_authors, mod_description: mod_description,
-                         minecraft_version_range: minecraft_version_range, forge_version_range: forge_version_range,
-                         loader_version_range   : loader_version_range]
-processResources {
-    inputs.properties replaceProperties
-    replaceProperties.put 'project', project
-
-    filesMatching(resourceTargets) {
-        expand replaceProperties
-    }
-
-    intoTargets.each { target ->
-        if (file(target).exists()) {
-            copy {
-                from(sourceSets.main.resources) {
-                    include resourceTargets
-                    expand replaceProperties
-                }
-                into target
-            }
-        }
-    }
 }
 
 jar {
