@@ -53,12 +53,12 @@ public class ForgeCommonEventHandler {
 
     @SubscribeEvent
     public static void playerJoinWorld(EntityJoinWorldEvent event) {
-        if (event.getEntity() instanceof ServerPlayer) {
-            event.getEntity().getCapability(Namer.CAP)
+        if (event.getEntity() instanceof ServerPlayer serverPlayer) {
+            serverPlayer.getCapability(Namer.CAP)
                     .ifPresent(cap -> {
                         if (cap instanceof Namer) {
                             Naming.network.syncCap(
-                                    (ServerPlayer) event.getEntity(),
+                                    serverPlayer,
                                     new SyncNamingMessage(cap.getAbilities())
                             );
                         }
@@ -140,7 +140,5 @@ public class ForgeCommonEventHandler {
                         }
                     });
         }
-
-
     }
 }

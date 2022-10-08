@@ -2,7 +2,6 @@ package com.minerarcana.naming.advancement.criteria;
 
 import com.mojang.datafixers.util.Either;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.TamableAnimal;
 import net.minecraft.world.entity.monster.Enemy;
 

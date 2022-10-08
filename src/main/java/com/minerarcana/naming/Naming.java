@@ -29,7 +29,6 @@ public class Naming {
     public static NetworkHandler network;
 
     public Naming() {
-
         IEventBus modBus = FMLJavaModLoadingContext.get()
                 .getModEventBus();
         
