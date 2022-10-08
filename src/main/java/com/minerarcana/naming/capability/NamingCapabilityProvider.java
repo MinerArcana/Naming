@@ -34,8 +34,4 @@ public class NamingCapabilityProvider implements ICapabilitySerializable<Compoun
     public void deserializeNBT(CompoundTag nbt) {
         namer.deserializeNBT(nbt);
     }
-
-    public void invalidate() {
-        lazy.invalidate();
-    }
 }

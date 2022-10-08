@@ -43,11 +43,9 @@ public class ForgeCommonEventHandler {
         if (entityAttachCapabilitiesEvent.getObject() instanceof Player) {
             NamingCapabilityProvider provider = new NamingCapabilityProvider();
             entityAttachCapabilitiesEvent.addCapability(Naming.rl("namer"), provider);
-            entityAttachCapabilitiesEvent.addListener(provider::invalidate);
         } else if (entityAttachCapabilitiesEvent.getObject() instanceof LivingEntity) {
             NameableCapabilityProvider provider = new NameableCapabilityProvider();
             entityAttachCapabilitiesEvent.addCapability(Naming.rl("nameable"), provider);
-            entityAttachCapabilitiesEvent.addListener(provider::invalidate);
         }
     }
 
