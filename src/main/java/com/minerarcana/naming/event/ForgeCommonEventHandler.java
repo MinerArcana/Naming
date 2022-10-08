@@ -4,6 +4,7 @@ package com.minerarcana.naming.event;
 import com.minerarcana.naming.Naming;
 import com.minerarcana.naming.advancement.criteria.messaged.MessageTarget;
 import com.minerarcana.naming.api.capability.INameable;
+import com.minerarcana.naming.api.capability.INamer;
 import com.minerarcana.naming.blockentity.ListeningType;
 import com.minerarcana.naming.capability.Nameable;
 import com.minerarcana.naming.capability.NameableCapabilityProvider;
@@ -25,6 +26,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.storage.DimensionDataStorage;
+import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.event.RegisterCommandsEvent;
 import net.minecraftforge.event.ServerChatEvent;
@@ -43,11 +45,9 @@ public class ForgeCommonEventHandler {
         if (entityAttachCapabilitiesEvent.getObject() instanceof Player) {
             NamingCapabilityProvider provider = new NamingCapabilityProvider();
             entityAttachCapabilitiesEvent.addCapability(Naming.rl("namer"), provider);
-            entityAttachCapabilitiesEvent.addListener(provider::invalidate);
         } else if (entityAttachCapabilitiesEvent.getObject() instanceof LivingEntity) {
             NameableCapabilityProvider provider = new NameableCapabilityProvider();
             entityAttachCapabilitiesEvent.addCapability(Naming.rl("nameable"), provider);
-            entityAttachCapabilitiesEvent.addListener(provider::invalidate);
         }
     }
 
@@ -68,20 +68,16 @@ public class ForgeCommonEventHandler {
 
     @SubscribeEvent
     public static void playerClone(PlayerEvent.Clone cloneEvent) {
-        cloneEvent.getOriginal()
-                .reviveCaps();
+        LazyOptional<INamer> originalNamer = cloneEvent.getOriginal()
+                .getCapability(Namer.CAP);
 
-        cloneEvent.getOriginal()
-                .getCapability(Namer.CAP)
-                .ifPresent(cap -> {
-                    CompoundTag compoundNBT = cap.serializeNBT();
-                    cloneEvent.getPlayer()
-                            .getCapability(Namer.CAP)
-                            .ifPresent(newCap -> newCap.deserializeNBT(compoundNBT));
-                });
-
-        cloneEvent.getOriginal()
-                .invalidateCaps();
+        originalNamer.ifPresent(cap -> {
+            CompoundTag compoundNBT = cap.serializeNBT();
+            cloneEvent.getPlayer()
+                    .getCapability(Namer.CAP)
+                    .ifPresent(newCap -> newCap.deserializeNBT(compoundNBT));
+        });
+        originalNamer.invalidate();
     }
 
     @SubscribeEvent

@@ -34,8 +34,4 @@ public class NameableCapabilityProvider implements ICapabilitySerializable<Compo
     public void deserializeNBT(CompoundTag nbt) {
         nameable.deserializeNBT(nbt);
     }
-
-    public void invalidate() {
-        lazy.invalidate();
-    }
 }
