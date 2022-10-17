@@ -16,7 +16,6 @@ import java.util.Objects;
 public class NamerScreen extends Screen {
     private static final ResourceLocation LOCATION = Naming.rl("textures/screen/namer.png");
 
-
     private final int imageWidth = 122;
     private final int imageHeight = 28;
 
@@ -110,5 +109,10 @@ public class NamerScreen extends Screen {
 
     public void renderFg(PoseStack pPoseStack, int pMouseX, int pMouseY, float pPartialTicks) {
         this.name.render(pPoseStack, pMouseX, pMouseY, pPartialTicks);
+    }
+
+    @Override
+    public boolean isPauseScreen() {
+        return false;
     }
 }

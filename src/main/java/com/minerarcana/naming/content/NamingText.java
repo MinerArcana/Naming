@@ -6,11 +6,14 @@ import net.minecraft.network.chat.TranslatableComponent;
 
 @SuppressWarnings("unused")
 public class NamingText {
-    public static Component KEY_CATEGORY = Naming.getRegistrate()
+    public static TranslatableComponent KEY_CATEGORY = Naming.getRegistrate()
             .addRawLang("key.category.naming", "Naming");
 
-    public static Component KEY = Naming.getRegistrate()
+    public static TranslatableComponent KEY_NAMING = Naming.getRegistrate()
             .addRawLang("key.naming.name", "Name");
+
+    public static TranslatableComponent KEY_RADIAL = Naming.getRegistrate()
+            .addRawLang("key.naming.radial", "Open Name Radial");
 
     public static Component SCREEN_TITLE = Naming.getRegistrate()
             .addRawLang("screen.naming.title", "Naming");
