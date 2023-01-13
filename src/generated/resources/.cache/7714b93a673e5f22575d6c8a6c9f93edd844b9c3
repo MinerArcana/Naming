@@ -1,4 +1,4 @@
-// 1.19.2	2023-01-12T20:14:32.7522153	Registrate Provider for naming [Recipes, Advancements, Loot tables, Tags (blocks), Tags (items), Tags (fluids), Tags (entity_types), Blockstates, Item models, Lang (en_us/en_ud)]
+// 1.19.2	2023-01-12T20:17:33.4653107	Registrate Provider for naming [Recipes, Advancements, Loot tables, Tags (blocks), Tags (items), Tags (fluids), Tags (entity_types), Blockstates, Item models, Lang (en_us/en_ud)]
 bb884c3fc5cf339c952b9b443dcf42ab2f08019d assets/naming/blockstates/listening_stone.json
 457d59687dbbcce405a9eff29a49516afb187209 assets/naming/blockstates/poster_board.json
 075e88308ad631da138061168e7317469035f42c assets/naming/blockstates/speaking_stone.json
@@ -13,7 +13,7 @@ d40afd8282200745219a24e18ed1dc984591d7ea assets/naming/models/item/poster_board.
 aa251a800e33dcd671176345b4b91d727f2e9dc5 assets/naming/models/item/speaking_stone.json
 972c1a7805575f56e7ee8e0317036580d7a82220 data/naming/advancements/first_initiation.json
 e0cdc4cdf3c9b8423d133f215603225bc1e5552e data/naming/advancements/fourth_initiation.json
-62a4b4f7b7fe61da8178881201c7ceec8b00ce0b data/naming/advancements/magic_of_names.json
+69eead9c2ebbb7d8effad9a0bbc7623b4325a20f data/naming/advancements/magic_of_names.json
 dcfd84b3036f7dccf0a9aa0e94b7067ecb54ca27 data/naming/advancements/recipes/misc/poster_board.json
 2b6ee4ab0cae6dfc4e2847656aa8b585735ce5d6 data/naming/advancements/second_initiation.json
 65c67653fd34cd9f8e2af7703d4dc6f4851d82e4 data/naming/advancements/third_initiation.json

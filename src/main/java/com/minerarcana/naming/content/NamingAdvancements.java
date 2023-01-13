@@ -25,15 +25,15 @@ public class NamingAdvancements {
         Function3<ItemLike, String, String, DisplayInfo> displayInfo = displayInfoFunction(provider);
 
         Advancement magicOfNames = Advancement.Builder.advancement()
-                .addCriterion("root", InventoryChangeTrigger.TriggerInstance.hasItems(Items.BOOK))
+                .addCriterion("root", InventoryChangeTrigger.TriggerInstance.hasItems(Items.BOOK, Items.WRITABLE_BOOK))
                 .display(
                         new ItemStack(Items.BOOK),
                         provider.title("naming", "magic_of_names", "Magic of Names"),
                         provider.desc("naming", "magic_of_names", "The Magic of Names: The Namer's Art"),
                         new ResourceLocation("textures/gui/advancements/backgrounds/adventure.png"),
                         FrameType.TASK,
-                        true,
-                        true,
+                        false,
+                        false,
                         false
                 )
                 .build(Naming.rl("magic_of_names"));

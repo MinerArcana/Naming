@@ -7,6 +7,11 @@
             "items": [
               "minecraft:book"
             ]
+          },
+          {
+            "items": [
+              "minecraft:writable_book"
+            ]
           }
         ]
       },
@@ -14,7 +19,7 @@
     }
   },
   "display": {
-    "announce_to_chat": true,
+    "announce_to_chat": false,
     "background": "minecraft:textures/gui/advancements/backgrounds/adventure.png",
     "description": {
       "translate": "advancements.naming.magic_of_names.description"
@@ -24,7 +29,7 @@
     "icon": {
       "item": "minecraft:book"
     },
-    "show_toast": true,
+    "show_toast": false,
     "title": {
       "translate": "advancements.naming.magic_of_names.title"
     }
