@@ -1,23 +1,6 @@
 {
-  "display": {
-    "icon": {
-      "item": "minecraft:book"
-    },
-    "title": {
-      "translate": "advancements.naming.magic_of_names.title"
-    },
-    "description": {
-      "translate": "advancements.naming.magic_of_names.description"
-    },
-    "frame": "task",
-    "show_toast": true,
-    "announce_to_chat": true,
-    "hidden": false,
-    "background": "minecraft:textures/gui/advancements/backgrounds/adventure.png"
-  },
   "criteria": {
     "root": {
-      "trigger": "minecraft:inventory_changed",
       "conditions": {
         "items": [
           {
@@ -26,7 +9,24 @@
             ]
           }
         ]
-      }
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "display": {
+    "announce_to_chat": true,
+    "background": "minecraft:textures/gui/advancements/backgrounds/adventure.png",
+    "description": {
+      "translate": "advancements.naming.magic_of_names.description"
+    },
+    "frame": "task",
+    "hidden": false,
+    "icon": {
+      "item": "minecraft:book"
+    },
+    "show_toast": true,
+    "title": {
+      "translate": "advancements.naming.magic_of_names.title"
     }
   },
   "requirements": [

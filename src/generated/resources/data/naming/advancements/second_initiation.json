@@ -1,46 +1,43 @@
 {
   "parent": "naming:first_initiation",
-  "display": {
-    "icon": {
-      "item": "minecraft:enchanted_book"
-    },
-    "title": {
-      "translate": "advancements.naming.the_second_degree.title"
-    },
-    "description": {
-      "translate": "advancements.naming.the_second_degree.description"
-    },
-    "frame": "task",
-    "show_toast": true,
-    "announce_to_chat": true,
-    "hidden": false
-  },
-  "rewards": {
-    "function": "naming:listening_stone"
-  },
   "criteria": {
+    "hostile": {
+      "conditions": {
+        "type": "entity",
+        "checker": "hostile"
+      },
+      "trigger": "naming:naming"
+    },
+    "tamed": {
+      "conditions": {
+        "type": "entity",
+        "checker": "tamed"
+      },
+      "trigger": "naming:naming"
+    },
     "villager": {
-      "trigger": "naming:naming",
       "conditions": {
         "type": "entity",
         "predicate": {
           "type": "minecraft:villager"
         }
-      }
+      },
+      "trigger": "naming:naming"
+    }
+  },
+  "display": {
+    "announce_to_chat": true,
+    "description": {
+      "translate": "advancements.naming.the_second_degree.description"
     },
-    "hostile": {
-      "trigger": "naming:naming",
-      "conditions": {
-        "type": "entity",
-        "checker": "hostile"
-      }
+    "frame": "task",
+    "hidden": false,
+    "icon": {
+      "item": "minecraft:enchanted_book"
     },
-    "tamed": {
-      "trigger": "naming:naming",
-      "conditions": {
-        "type": "entity",
-        "checker": "tamed"
-      }
+    "show_toast": true,
+    "title": {
+      "translate": "advancements.naming.the_second_degree.title"
     }
   },
   "requirements": [
@@ -53,5 +50,8 @@
     [
       "tamed"
     ]
-  ]
+  ],
+  "rewards": {
+    "function": "naming:listening_stone"
+  }
 }

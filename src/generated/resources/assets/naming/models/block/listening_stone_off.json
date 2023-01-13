@@ -1,9 +1,9 @@
 {
   "parent": "minecraft:block/orientable",
   "textures": {
-    "side": "naming:block/poster_board",
     "front": "naming:block/listening_stone_off",
-    "top": "naming:block/poster_board",
-    "particle": "naming:block/poster_board"
+    "particle": "naming:block/poster_board",
+    "side": "naming:block/poster_board",
+    "top": "naming:block/poster_board"
   }
 }

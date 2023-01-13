@@ -1,35 +1,35 @@
 {
   "parent": "naming:third_initiation",
+  "criteria": {
+    "speak_to": {
+      "conditions": {
+        "phrases": 7,
+        "target": "speak_to"
+      },
+      "trigger": "naming:messaged"
+    }
+  },
   "display": {
-    "icon": {
-      "item": "naming:speaking_stone"
-    },
-    "title": {
-      "translate": "advancements.naming.the_fourth_degree.title"
-    },
+    "announce_to_chat": true,
     "description": {
       "translate": "advancements.naming.the_fourth_degree.description"
     },
     "frame": "task",
+    "hidden": false,
+    "icon": {
+      "item": "naming:speaking_stone"
+    },
     "show_toast": true,
-    "announce_to_chat": true,
-    "hidden": false
-  },
-  "rewards": {
-    "function": "naming:spells"
-  },
-  "criteria": {
-    "speak_to": {
-      "trigger": "naming:messaged",
-      "conditions": {
-        "target": "speak_to",
-        "phrases": 7
-      }
+    "title": {
+      "translate": "advancements.naming.the_fourth_degree.title"
     }
   },
   "requirements": [
     [
       "speak_to"
     ]
-  ]
+  ],
+  "rewards": {
+    "function": "naming:spells"
+  }
 }

@@ -1,0 +1,25 @@
+// 1.19.2	2023-01-12T20:14:32.7522153	Registrate Provider for naming [Recipes, Advancements, Loot tables, Tags (blocks), Tags (items), Tags (fluids), Tags (entity_types), Blockstates, Item models, Lang (en_us/en_ud)]
+bb884c3fc5cf339c952b9b443dcf42ab2f08019d assets/naming/blockstates/listening_stone.json
+457d59687dbbcce405a9eff29a49516afb187209 assets/naming/blockstates/poster_board.json
+075e88308ad631da138061168e7317469035f42c assets/naming/blockstates/speaking_stone.json
+1ba8fc89381542641ee53c2d6cea3cf1fb4819a3 assets/naming/lang/en_ud.json
+e1de400f743a4940e1a3a46eca7e68199957e35c assets/naming/lang/en_us.json
+b57c2144a22eece0729c5442446233ab2545b36a assets/naming/models/block/listening_stone_off.json
+d22e9438b0b57c6307ba89f65bf2dcf1248cd8c3 assets/naming/models/block/listening_stone_on.json
+fe45ebff4b768420f2c1398beb44934194f7b879 assets/naming/models/block/poster_board.json
+48979fcaa5e0d1bbd1b0dea83781b8c68f492d7b assets/naming/models/block/speaking_stone.json
+c53953a580f78f14409b88d895391b2d987d12dd assets/naming/models/item/listening_stone.json
+d40afd8282200745219a24e18ed1dc984591d7ea assets/naming/models/item/poster_board.json
+aa251a800e33dcd671176345b4b91d727f2e9dc5 assets/naming/models/item/speaking_stone.json
+972c1a7805575f56e7ee8e0317036580d7a82220 data/naming/advancements/first_initiation.json
+e0cdc4cdf3c9b8423d133f215603225bc1e5552e data/naming/advancements/fourth_initiation.json
+62a4b4f7b7fe61da8178881201c7ceec8b00ce0b data/naming/advancements/magic_of_names.json
+dcfd84b3036f7dccf0a9aa0e94b7067ecb54ca27 data/naming/advancements/recipes/misc/poster_board.json
+2b6ee4ab0cae6dfc4e2847656aa8b585735ce5d6 data/naming/advancements/second_initiation.json
+65c67653fd34cd9f8e2af7703d4dc6f4851d82e4 data/naming/advancements/third_initiation.json
+32edfc13d83ddb2edfc5adc8c7df43c441fcd268 data/naming/loot_tables/blocks/listening_stone.json
+fc3e1832be38449bd95c6b088650f252786d4661 data/naming/loot_tables/blocks/poster_board.json
+62b93a3b34c49faeab9e19d4ae8cee1da030b786 data/naming/loot_tables/blocks/speaking_stone.json
+690a75b24ec6de40d22dbd08afbc6d567312bf00 data/naming/recipes/listening_stone.json
+03104f612afca106a3cdb5cf52caa60f9e6fd135 data/naming/recipes/poster_board.json
+1d52320759b472dd0393083946bd6eb91b75df98 data/naming/recipes/speaking_stone.json

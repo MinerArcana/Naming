@@ -1,12 +1,12 @@
 {
   "type": "naming:naming",
+  "ability": "speaking_stone",
+  "example": "Speak",
   "ingredient": {
     "item": "naming:poster_board"
   },
   "pattern": "([rR]epeat.*|[sS]peak.*)",
-  "example": "Speak",
   "result": {
     "item": "naming:speaking_stone"
-  },
-  "ability": "speaking_stone"
+  }
 }

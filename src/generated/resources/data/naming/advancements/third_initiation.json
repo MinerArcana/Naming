@@ -1,35 +1,35 @@
 {
   "parent": "naming:second_initiation",
+  "criteria": {
+    "heard_by": {
+      "conditions": {
+        "phrases": 7,
+        "target": "heard_by"
+      },
+      "trigger": "naming:messaged"
+    }
+  },
   "display": {
-    "icon": {
-      "item": "naming:listening_stone"
-    },
-    "title": {
-      "translate": "advancements.naming.the_third_degree.title"
-    },
+    "announce_to_chat": true,
     "description": {
       "translate": "advancements.naming.the_third_degree.description"
     },
     "frame": "task",
+    "hidden": false,
+    "icon": {
+      "item": "naming:listening_stone"
+    },
     "show_toast": true,
-    "announce_to_chat": true,
-    "hidden": false
-  },
-  "rewards": {
-    "function": "naming:speaking_stone"
-  },
-  "criteria": {
-    "heard_by": {
-      "trigger": "naming:messaged",
-      "conditions": {
-        "target": "heard_by",
-        "phrases": 7
-      }
+    "title": {
+      "translate": "advancements.naming.the_third_degree.title"
     }
   },
   "requirements": [
     [
       "heard_by"
     ]
-  ]
+  ],
+  "rewards": {
+    "function": "naming:speaking_stone"
+  }
 }

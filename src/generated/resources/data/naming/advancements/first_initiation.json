@@ -1,36 +1,36 @@
 {
   "parent": "naming:magic_of_names",
-  "display": {
-    "icon": {
-      "item": "minecraft:written_book"
-    },
-    "title": {
-      "translate": "advancements.naming.the_first_degree.title"
-    },
-    "description": {
-      "translate": "advancements.naming.the_first_degree.description"
-    },
-    "frame": "task",
-    "show_toast": true,
-    "announce_to_chat": true,
-    "hidden": false
-  },
-  "rewards": {
-    "function": "naming:naming"
-  },
   "criteria": {
     "first": {
-      "trigger": "naming:signing",
       "conditions": {
         "item": {
           "item": "minecraft:written_book"
         }
-      }
+      },
+      "trigger": "naming:signing"
+    }
+  },
+  "display": {
+    "announce_to_chat": true,
+    "description": {
+      "translate": "advancements.naming.the_first_degree.description"
+    },
+    "frame": "task",
+    "hidden": false,
+    "icon": {
+      "item": "minecraft:written_book"
+    },
+    "show_toast": true,
+    "title": {
+      "translate": "advancements.naming.the_first_degree.title"
     }
   },
   "requirements": [
     [
       "first"
     ]
-  ]
+  ],
+  "rewards": {
+    "function": "naming:naming"
+  }
 }

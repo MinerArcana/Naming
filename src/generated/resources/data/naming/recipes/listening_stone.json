@@ -1,12 +1,12 @@
 {
   "type": "naming:naming",
+  "ability": "listening_stone",
+  "example": "Listen",
   "ingredient": {
     "item": "naming:poster_board"
   },
   "pattern": "[lL]isten.*",
-  "example": "Listen",
   "result": {
     "item": "naming:listening_stone"
-  },
-  "ability": "listening_stone"
+  }
 }
