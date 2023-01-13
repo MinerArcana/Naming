@@ -130,11 +130,16 @@ dependencies {
     minecraft 'net.minecraftforge:forge:1.19.2-43.1.65'
 
     implementation fg.deobf("com.tterrag.registrate:Registrate:MC1.19-1.1.5")
-    jarJar(group: 'com.tterrag.registrate', name: 'Registrate', version: "[MC1.19.2,MC1.19.3)")
+    jarJar(group: 'com.tterrag.registrate', name: 'Registrate', version: "MC1.19-1.1.5") {
+        jarJar.pin(it, "MC1.19-1.1.5")
+        jarJar.ranged(it, "[MC1.19,MC1.19.3)")
+    }
 
     implementation fg.deobf("xyz.brassgoggledcoders.shadyskies:ContainerSyncing:1.2.2")
-    jarJar(group: 'xyz.brassgoggledcoders.shadyskies', name: 'ContainerSyncing', version: "[1.2.0, 1.3.0)")
-
+    jarJar(group: 'xyz.brassgoggledcoders.shadyskies', name: 'ContainerSyncing', version: "1.2.2") {
+        jarJar.pin(it, "1.2.2")
+        jarJar.ranged(it, "[1.2.2,1.3.0)")
+    }
 
     compileOnly fg.deobf("mezz.jei:jei-1.19.2-forge-api:11.4.0.282")
     compileOnly fg.deobf("mezz.jei:jei-1.19.2-common-api:11.4.0.282")
@@ -175,6 +180,10 @@ task javadocJar(type: Jar, dependsOn: javadoc) {
 
 reobf {
     jarJar { }
+}
+
+tasks.jarJar.configure {
+    classifier ''
 }
 
 jar.finalizedBy('reobfJar')
