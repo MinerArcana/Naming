@@ -2,7 +2,6 @@ package com.minerarcana.naming.content;
 
 import com.minerarcana.naming.Naming;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 
 @SuppressWarnings("unused")
 public class NamingText {
@@ -36,13 +35,13 @@ public class NamingText {
     public static Component CURRENT_ABILITIES = Naming.getRegistrate()
             .addRawLang("command.naming.current_abilities", "Current Abilities:");
 
-    public static TranslatableComponent SYNCED = Naming.getRegistrate()
+    public static Component SYNCED = Naming.getRegistrate()
             .addRawLang("command.naming.number_synced", "Synced %s Player(s)");
 
-    public static TranslatableComponent JEI_SPEAK = Naming.getRegistrate()
+    public static Component JEI_SPEAK = Naming.getRegistrate()
             .addRawLang("jei.naming.speak", "Speak '%s' to Transmute");
 
-    public static TranslatableComponent MISSING_ABILITY = Naming.getRegistrate()
+    public static Component MISSING_ABILITY = Naming.getRegistrate()
             .addRawLang("ability.naming.missing", "You lack the ability to do this");
 
     public static Component CALLING_SPELL = Naming.getRegistrate()

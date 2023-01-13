@@ -1,9 +1,8 @@
 package com.minerarcana.naming.target;
 
 import com.minerarcana.naming.capability.Nameable;
-import net.minecraft.locale.Language;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.Mob;
@@ -37,7 +36,7 @@ public class EntityNamingTarget implements INamingTarget {
         Entity entity = weakEntity.get();
         if (entity != null) {
             if (name != null) {
-                entity.setCustomName(new TextComponent(name));
+                entity.setCustomName(Component.literal(name));
                 if (entity instanceof Mob) {
                     ((Mob) entity).setPersistenceRequired();
                 }
@@ -54,7 +53,7 @@ public class EntityNamingTarget implements INamingTarget {
     public String getName() {
         Entity entity = this.weakEntity.get();
         if (entity != null) {
-            return entity.getName().getContents();
+            return entity.getName().getContents().toString();
         } else {
             return null;
         }

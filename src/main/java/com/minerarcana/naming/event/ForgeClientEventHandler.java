@@ -24,12 +24,12 @@ import java.util.Iterator;
 @EventBusSubscriber(modid = Naming.ID, value = Dist.CLIENT)
 public class ForgeClientEventHandler {
     @SubscribeEvent
-    public static void keyInputEvent(InputEvent.KeyInputEvent event) {
+    public static void keyInputEvent(InputEvent.Key event) {
         handleInputEvent(event.getKey(), event.getAction());
     }
 
     @SubscribeEvent
-    public static void mouseInputEvent(InputEvent.MouseInputEvent event) {
+    public static void mouseInputEvent(InputEvent.MouseButton event) {
         handleInputEvent(event.getButton(), event.getAction());
     }
 

@@ -4,18 +4,22 @@ import com.google.common.collect.Lists;
 import com.minerarcana.naming.Naming;
 import com.minerarcana.naming.blockentity.IButtoned;
 import com.minerarcana.naming.blockentity.MessageBlockEntity;
-import com.minerarcana.naming.network.property.IPropertyManaged;
-import com.minerarcana.naming.network.property.Property;
-import com.minerarcana.naming.network.property.PropertyManager;
-import com.minerarcana.naming.network.property.PropertyTypes;
-import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.ContainerLevelAccess;
 import net.minecraft.world.inventory.MenuType;
+import net.minecraft.world.item.ItemStack;
 import org.apache.commons.lang3.tuple.Pair;
+import org.jetbrains.annotations.NotNull;
+import xyz.brassgoggledcoders.shadyskies.containersyncing.property.IPropertyManaged;
+import xyz.brassgoggledcoders.shadyskies.containersyncing.property.Property;
+import xyz.brassgoggledcoders.shadyskies.containersyncing.property.PropertyManager;
+import xyz.brassgoggledcoders.shadyskies.containersyncing.property.PropertyTypes;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.List;
 import java.util.Objects;
@@ -39,7 +43,7 @@ public abstract class MessageContainer<T extends Enum<T> & IButtoned<T>> extends
                 Objects.requireNonNull(blockEntity.getLevel()),
                 blockEntity.getBlockPos()
         );
-        this.propertyManager = Naming.properties.createManager(containerId);
+        this.propertyManager = Naming.containerSyncing.createManager(containerId);
         this.name = this.propertyManager.addTrackedProperty(PropertyTypes.STRING.create(
                 blockEntity::getName,
                 blockEntity::setName
@@ -53,8 +57,8 @@ public abstract class MessageContainer<T extends Enum<T> & IButtoned<T>> extends
                             ordinal -> setting.accept(finalI, this.getEnum().getEnumConstants()[ordinal]))
                     ),
                     this.propertyManager.addTrackedProperty(PropertyTypes.STRING.create(
-                            () -> blockEntity.getMessage(finalI).getContents(),
-                            message -> blockEntity.setMessage(finalI, new TextComponent(message)))
+                            () -> blockEntity.getMessage(finalI).getString(),
+                            message -> blockEntity.setMessage(finalI, Component.literal(message)))
                     )
             ));
         }
@@ -65,7 +69,7 @@ public abstract class MessageContainer<T extends Enum<T> & IButtoned<T>> extends
         super(type, containerId);
         this.inventory = playerInventory;
         this.callable = ContainerLevelAccess.NULL;
-        this.propertyManager = Naming.properties.createManager(containerId);
+        this.propertyManager = Naming.containerSyncing.createManager(containerId);
         this.name = this.propertyManager.addTrackedProperty(PropertyTypes.STRING);
         this.listeners = Lists.newArrayList();
         for (int i = 0; i < 4; i++) {
@@ -89,7 +93,7 @@ public abstract class MessageContainer<T extends Enum<T> & IButtoned<T>> extends
     public void broadcastChanges() {
         super.broadcastChanges();
         if (inventory.player instanceof ServerPlayer serverPlayer) {
-            this.propertyManager.updateClient(serverPlayer, false);
+            this.propertyManager.sendChanges(serverPlayer, false);
         }
     }
 
@@ -97,8 +101,14 @@ public abstract class MessageContainer<T extends Enum<T> & IButtoned<T>> extends
     public void sendAllDataToRemote() {
         super.sendAllDataToRemote();
         if (inventory.player instanceof ServerPlayer serverPlayer) {
-            this.propertyManager.updateClient(serverPlayer, true);
+            this.propertyManager.sendChanges(serverPlayer, true);
         }
+    }
+
+    @Override
+    @Nonnull
+    public ItemStack quickMoveStack(@NotNull Player pPlayer, int pIndex) {
+        return ItemStack.EMPTY;
     }
 
     public List<Pair<Property<Integer>, Property<String>>> getListeners() {

@@ -5,12 +5,12 @@ import com.minerarcana.naming.blockentity.SpeakingStoneBlockEntity;
 import com.minerarcana.naming.blockentity.SpeakingTarget;
 import com.minerarcana.naming.content.NamingBlocks;
 import com.minerarcana.naming.content.NamingContainers;
-import com.minerarcana.naming.network.property.Property;
-import com.minerarcana.naming.network.property.PropertyTypes;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.MenuType;
+import xyz.brassgoggledcoders.shadyskies.containersyncing.property.Property;
+import xyz.brassgoggledcoders.shadyskies.containersyncing.property.PropertyTypes;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -45,7 +45,7 @@ public class SpeakingContainer extends MessageContainer<SpeakingTarget> {
         this.targetNameProperties = Lists.newArrayList();
         for (int i = 0; i < 4; i++) {
             targetNameProperties.add(
-                    this.getPropertyManager().addTrackedProperty(PropertyTypes.STRING)
+                    this.getPropertyManager().addTrackedProperty(PropertyTypes.STRING.create())
             );
         }
     }

@@ -8,6 +8,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.level.ItemLike;
+import net.minecraftforge.registries.ForgeRegistries;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -51,7 +52,7 @@ public class NamingRecipeBuilder {
     }
 
     public void build(Consumer<FinishedRecipe> recipeConsumer) {
-        this.build(recipeConsumer, result.getItem().getRegistryName());
+        this.build(recipeConsumer, ForgeRegistries.ITEMS.getKey(result.getItem()));
     }
 
     public void build(Consumer<FinishedRecipe> recipeConsumer, ResourceLocation id) {
@@ -99,7 +100,7 @@ public class NamingRecipeBuilder {
                 pJson.addProperty("example", this.patternExample);
             }
             JsonObject resultObject = new JsonObject();
-            resultObject.addProperty("item", Objects.requireNonNull(result.getItem().getRegistryName()).toString());
+            resultObject.addProperty("item", Objects.requireNonNull(ForgeRegistries.ITEMS.getKey(result.getItem())).toString());
             if (result.getCount() > 1) {
                 resultObject.addProperty("count", result.getCount());
             }

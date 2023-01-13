@@ -5,6 +5,7 @@ import com.minerarcana.naming.content.NamingBlocks;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -19,7 +20,6 @@ import net.minecraftforge.registries.ForgeRegistries;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
-import java.util.Random;
 
 public class SpeakingStoneBlock extends FacingMessageBlock {
     private static final BooleanProperty TRIGGERED = BlockStateProperties.TRIGGERED;
@@ -55,7 +55,7 @@ public class SpeakingStoneBlock extends FacingMessageBlock {
 
     @Override
     @ParametersAreNonnullByDefault
-    public void tick(BlockState pState, ServerLevel pLevel, BlockPos pPos, Random pRand) {
+    public void tick(BlockState pState, ServerLevel pLevel, BlockPos pPos, RandomSource pRand) {
         BlockEntity blockEntity = pLevel.getBlockEntity(pPos);
         if (blockEntity instanceof SpeakingStoneBlockEntity messageBlockEntity) {
             Component[] messages = messageBlockEntity.getMessages();
@@ -63,7 +63,7 @@ public class SpeakingStoneBlock extends FacingMessageBlock {
             int j = 1;
 
             for (int k = 0; k < messages.length; ++k) {
-                if (messages[k] != Component.EMPTY && RANDOM.nextInt(j++) == 0) {
+                if (messages[k] != Component.EMPTY && pRand.nextInt(j++) == 0) {
                     i = k;
                 }
             }
@@ -102,7 +102,7 @@ public class SpeakingStoneBlock extends FacingMessageBlock {
     @Override
     @ParametersAreNonnullByDefault
     public BlockEntity newBlockEntity(BlockPos pPos, BlockState pState) {
-        return NamingBlocks.SPEAKING_STONE.getSibling(ForgeRegistries.BLOCK_ENTITIES)
+        return NamingBlocks.SPEAKING_STONE.getSibling(ForgeRegistries.BLOCK_ENTITY_TYPES)
                 .map(type -> new SpeakingStoneBlockEntity(type, pPos, pState))
                 .orElseThrow(() -> new IllegalStateException("Failed to Find Block Entity Type"));
     }

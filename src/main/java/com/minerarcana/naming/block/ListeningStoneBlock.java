@@ -53,7 +53,7 @@ public class ListeningStoneBlock extends FacingMessageBlock {
     @Override
     @ParametersAreNonnullByDefault
     public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
-        return NamingBlocks.LISTENING_STONE.getSibling(ForgeRegistries.BLOCK_ENTITIES)
+        return NamingBlocks.LISTENING_STONE.getSibling(ForgeRegistries.BLOCK_ENTITY_TYPES)
                 .map(type -> new ListeningStoneBlockEntity(type, pos, state))
                 .orElseThrow(() -> new IllegalStateException("Failed to Find Block Entity Type"));
     }

@@ -31,7 +31,6 @@ import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.event.RegisterCommandsEvent;
 import net.minecraftforge.event.ServerChatEvent;
 import net.minecraftforge.event.TickEvent;
-import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -52,7 +51,7 @@ public class ForgeCommonEventHandler {
     }
 
     @SubscribeEvent
-    public static void playerJoinWorld(EntityJoinWorldEvent event) {
+    public static void playerJoinWorld(PlayerEvent.PlayerLoggedInEvent event) {
         if (event.getEntity() instanceof ServerPlayer serverPlayer) {
             serverPlayer.getCapability(Namer.CAP)
                     .ifPresent(cap -> {
@@ -73,7 +72,7 @@ public class ForgeCommonEventHandler {
 
         originalNamer.ifPresent(cap -> {
             CompoundTag compoundNBT = cap.serializeNBT();
-            cloneEvent.getPlayer()
+            cloneEvent.getEntity()
                     .getCapability(Namer.CAP)
                     .ifPresent(newCap -> newCap.deserializeNBT(compoundNBT));
         });
@@ -92,12 +91,12 @@ public class ForgeCommonEventHandler {
         ListeningType listeningType = player.getLevel()
                 .getDataStorage()
                 .computeIfAbsent(ListeningWorldData::new, ListeningWorldData::new, ListeningWorldData.NAME)
-                .speakTo(serverChatEvent.getMessage());
+                .speakTo(serverChatEvent.getMessage().toString());
 
         if (listeningType.isListening()) {
             player.getCapability(Namer.CAP)
-                    .ifPresent(namer -> namer.heardBy(serverChatEvent.getMessage()));
-            NamingCriteriaTriggers.MESSAGED.trigger(player, serverChatEvent.getMessage(), MessageTarget.HEARD_BY);
+                    .ifPresent(namer -> namer.heardBy(serverChatEvent.getMessage().toString()));
+            NamingCriteriaTriggers.MESSAGED.trigger(player, serverChatEvent.getMessage().toString(), MessageTarget.HEARD_BY);
         }
         if (listeningType.isConsuming()) {
             serverChatEvent.setCanceled(true);
@@ -105,9 +104,9 @@ public class ForgeCommonEventHandler {
     }
 
     @SubscribeEvent
-    public static void worldTick(TickEvent.WorldTickEvent worldTickEvent) {
-        Level world = worldTickEvent.world;
-        if (worldTickEvent.phase == TickEvent.Phase.END && world instanceof ServerLevel) {
+    public static void worldTick(TickEvent.LevelTickEvent levelTickEvent) {
+        Level world = levelTickEvent.level;
+        if (levelTickEvent.phase == TickEvent.Phase.END && world instanceof ServerLevel) {
             DimensionDataStorage manager = ((ServerLevel) world).getDataStorage();
             if (world.random.nextInt(100) == 0) {
                 manager.computeIfAbsent(ListeningWorldData::new, ListeningWorldData::new, ListeningWorldData.NAME)
@@ -118,9 +117,9 @@ public class ForgeCommonEventHandler {
 
     @SubscribeEvent
     public static void livingEntityDeath(LivingDeathEvent livingDeathEvent) {
-        if (livingDeathEvent.getEntityLiving().getLevel() instanceof ServerLevel serverLevel &&
+        if (livingDeathEvent.getEntity().getLevel() instanceof ServerLevel serverLevel &&
                 serverLevel.getGameRules().getBoolean(GameRules.RULE_SHOWDEATHMESSAGES)) {
-            LivingEntity livingEntity = livingDeathEvent.getEntityLiving();
+            LivingEntity livingEntity = livingDeathEvent.getEntity();
             livingEntity.getCapability(Nameable.CAP)
                     .filter(INameable::isMagicallyNamed)
                     .ifPresent(nameable -> {
@@ -131,7 +130,7 @@ public class ForgeCommonEventHandler {
                                 Component deathMessage = livingEntity.getCombatTracker()
                                         .getDeathMessage();
 
-                                player.sendMessage(deathMessage, Util.NIL_UUID);
+                                player.sendSystemMessage(deathMessage);
                             }
                         }
                     });

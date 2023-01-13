@@ -1,17 +1,16 @@
 package com.minerarcana.naming.screen;
 
 import com.minerarcana.naming.blockentity.IButtoned;
-import com.minerarcana.naming.network.property.Property;
-import com.minerarcana.naming.network.property.PropertyManager;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
+import xyz.brassgoggledcoders.shadyskies.containersyncing.property.Property;
+import xyz.brassgoggledcoders.shadyskies.containersyncing.property.PropertyManager;
 
 import javax.annotation.Nonnull;
 
@@ -23,7 +22,7 @@ public class MessageTypeButton<T extends Enum<T> & IButtoned<T>> extends Button 
 
     public MessageTypeButton(int pX, int pY, Class<T> aClass, Property<Integer> property, PropertyManager propertyManager,
                              ResourceLocation location) {
-        super(pX, pY, 59, 16, TextComponent.EMPTY, button -> {
+        super(pX, pY, 59, 16, Component.empty(), button -> {
         });
         this.property = property;
         this.propertyManager = propertyManager;

@@ -4,14 +4,13 @@ import com.google.common.collect.Lists;
 import com.minerarcana.naming.Naming;
 import com.minerarcana.naming.blockentity.SpeakingTarget;
 import com.minerarcana.naming.container.SpeakingContainer;
-import com.minerarcana.naming.network.property.Property;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
 import net.minecraft.world.entity.player.Inventory;
 import org.apache.commons.lang3.tuple.Pair;
+import xyz.brassgoggledcoders.shadyskies.containersyncing.property.Property;
 
 import javax.annotation.Nonnull;
 import java.util.List;
@@ -76,7 +75,7 @@ public class SpeakingStoneScreen extends MessageScreen<SpeakingContainer, Speaki
         this.targetNameFields = Lists.newArrayList();
         for (int x = 0; x < this.menu.getTargetNameProperties().size(); x++) {
             Property<String> stringProperty = this.menu.getTargetNameProperties().get(x);
-            EditBox targetNameWidget = new EditBox(this.font, i + 64, x * 18 + j + 26, 78, 12, TextComponent.EMPTY);
+            EditBox targetNameWidget = new EditBox(this.font, i + 64, x * 18 + j + 26, 78, 12, Component.empty());
             this.renderables.add(targetNameWidget);
             targetNameWidget.setEditable(this.menu.getEnumFor(x).isNeedsTargetName());
             if (stringProperty.get() != null && this.menu.getEnumFor(x).isNeedsTargetName()) {

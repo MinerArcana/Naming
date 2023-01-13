@@ -23,7 +23,7 @@ public class PosterBoardBlockEntity extends SignBlockEntity implements ISideText
 
     @Nonnull
     public BlockEntityType<?> getType() {
-        return NamingBlocks.POSTER_BOARD.getSibling(ForgeRegistries.BLOCK_ENTITIES)
+        return NamingBlocks.POSTER_BOARD.getSibling(ForgeRegistries.BLOCK_ENTITY_TYPES)
                 .orElseThrow(() -> new IllegalStateException("No Poster Board Block Entity Type Found"));
     }
 

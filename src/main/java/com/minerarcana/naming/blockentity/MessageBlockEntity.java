@@ -9,7 +9,6 @@ import net.minecraft.nbt.StringTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.network.Connection;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
@@ -28,10 +27,10 @@ import java.util.function.Function;
 
 public abstract class MessageBlockEntity extends BlockEntity implements ISideText, MenuProvider {
     private final Component[] messages = new Component[]{
-            TextComponent.EMPTY,
-            TextComponent.EMPTY,
-            TextComponent.EMPTY,
-            TextComponent.EMPTY
+            Component.empty(),
+            Component.empty(),
+            Component.empty(),
+            Component.empty()
     };
     private final FormattedCharSequence[] renderedMessages = new FormattedCharSequence[4];
 
@@ -117,7 +116,7 @@ public abstract class MessageBlockEntity extends BlockEntity implements ISideTex
 
     @Nullable
     @Override
-    public Packet<ClientGamePacketListener> getUpdatePacket(){
+    public Packet<ClientGamePacketListener> getUpdatePacket() {
         return ClientboundBlockEntityDataPacket.create(this);
     }
 
@@ -145,7 +144,7 @@ public abstract class MessageBlockEntity extends BlockEntity implements ISideTex
     @Override
     @Nonnull
     public Component getDisplayName() {
-        return new TextComponent(this.getName());
+        return Component.literal(this.getName());
     }
 
     public Component[] getMessages() {

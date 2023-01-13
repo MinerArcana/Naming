@@ -26,13 +26,13 @@ public class NetworkHandler {
         this.channel.messageBuilder(NameTargetMessage.class, 0)
                 .decoder(NameTargetMessage::decode)
                 .encoder(NameTargetMessage::encode)
-                .consumer(NameTargetMessage::consume)
+                .consumerMainThread(NameTargetMessage::consume)
                 .add();
 
         this.channel.messageBuilder(SyncNamingMessage.class, 3)
                 .decoder(SyncNamingMessage::decode)
                 .encoder(SyncNamingMessage::encode)
-                .consumer(SyncNamingMessage::consume)
+                .consumerMainThread(SyncNamingMessage::consume)
                 .add();
     }
 

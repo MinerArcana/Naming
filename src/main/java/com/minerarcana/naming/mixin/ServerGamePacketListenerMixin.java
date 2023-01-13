@@ -2,11 +2,9 @@ package com.minerarcana.naming.mixin;
 
 import com.minerarcana.naming.content.NamingCriteriaTriggers;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.server.network.FilteredText;
 import net.minecraft.server.network.ServerGamePacketListenerImpl;
-import net.minecraft.server.network.TextFilter;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.fml.loading.FMLEnvironment;
-import net.minecraftforge.fml.loading.FMLLoader;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
@@ -16,7 +14,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import java.util.List;
 
 @Mixin(value = ServerGamePacketListenerImpl.class)
-public class ServerPlayNetHandlerMixin {
+public class ServerGamePacketListenerMixin {
     @Shadow
     public ServerPlayer player;
 
@@ -26,8 +24,8 @@ public class ServerPlayNetHandlerMixin {
                     value = "TAIL"
             )
     )
-    private void namingSignBook(TextFilter.FilteredText title, List<TextFilter.FilteredText> contents, int slot, CallbackInfo callbackInfo) {
+    private void namingSignBook(FilteredText title, List<FilteredText> contents, int slot, CallbackInfo callbackInfo) {
         ItemStack signedItemStack = player.getInventory().getItem(slot);
-        NamingCriteriaTriggers.SIGNING.trigger(player, signedItemStack, title.getRaw());
+        NamingCriteriaTriggers.SIGNING.trigger(player, signedItemStack, title.raw());
     }
 }

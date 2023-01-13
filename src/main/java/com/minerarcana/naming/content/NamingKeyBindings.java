@@ -4,7 +4,7 @@ import com.minerarcana.naming.Naming;
 import com.mojang.blaze3d.platform.InputConstants;
 import net.minecraft.client.KeyMapping;
 import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.client.ClientRegistry;
+import net.minecraftforge.client.event.RegisterKeyMappingsEvent;
 import net.minecraftforge.client.settings.KeyConflictContext;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
@@ -24,7 +24,7 @@ public class NamingKeyBindings {
     );
 
     @SubscribeEvent
-    public static void registerKeyBinding(FMLClientSetupEvent event) {
-        ClientRegistry.registerKeyBinding(NAME);
+    public static void registerKeyBinding(RegisterKeyMappingsEvent event) {
+        event.register(NAME);
     }
 }

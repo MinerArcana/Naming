@@ -5,14 +5,14 @@ import com.minerarcana.naming.content.NamingRecipes;
 import com.minerarcana.naming.recipe.NamingInventory;
 import com.minerarcana.naming.recipe.NamingRecipe;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.items.CapabilityItemHandler;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.items.ItemHandlerHelper;
 import org.jetbrains.annotations.Nullable;
 
@@ -59,7 +59,7 @@ public class ItemStackNamingTarget implements INamingTarget {
                 } else if (livingNamer instanceof Player) {
                     ItemHandlerHelper.giveItemToPlayer((Player) livingNamer, result);
                 } else {
-                    livingNamer.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY)
+                    livingNamer.getCapability(ForgeCapabilities.ITEM_HANDLER)
                             .map(itemHandler -> ItemHandlerHelper.insertItem(itemHandler, result, false))
                             .filter(insertResult -> !insertResult.isEmpty())
                             .ifPresent(ignore -> inputStack.grow(1));
@@ -71,7 +71,7 @@ public class ItemStackNamingTarget implements INamingTarget {
                             inputStack.setHoverName(null);
                         }
                     } else {
-                        inputStack.setHoverName(new TextComponent(name));
+                        inputStack.setHoverName(Component.literal(name));
                     }
                 }
             }

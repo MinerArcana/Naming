@@ -5,6 +5,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
@@ -46,7 +47,7 @@ public abstract class FacingMessageBlock extends Block implements EntityBlock {
         BlockEntity blockEntity = pLevel.getBlockEntity(pPos);
         if (blockEntity instanceof MessageBlockEntity messageBlockEntity) {
             if (pPlayer instanceof ServerPlayer serverPlayer) {
-                NetworkHooks.openGui(serverPlayer, messageBlockEntity);
+                NetworkHooks.openScreen(serverPlayer, messageBlockEntity);
             }
             return InteractionResult.sidedSuccess(pLevel.isClientSide());
         }
@@ -73,7 +74,7 @@ public abstract class FacingMessageBlock extends Block implements EntityBlock {
     @Override
     @SuppressWarnings("deprecation")
     @ParametersAreNonnullByDefault
-    public void tick(BlockState pState, ServerLevel pLevel, BlockPos pPos, Random pRand) {
+    public void tick(BlockState pState, ServerLevel pLevel, BlockPos pPos, RandomSource pRand) {
         pLevel.setBlockAndUpdate(pPos, pState.setValue(this.getStateProperty(), false));
     }
 

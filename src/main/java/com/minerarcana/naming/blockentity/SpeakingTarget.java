@@ -26,10 +26,10 @@ public enum SpeakingTarget implements IButtoned<SpeakingTarget> {
         public boolean speak(Component spoken, SpeakingStoneBlockEntity blockEntity) {
             Player owner = blockEntity.getOwner();
             if (owner instanceof ServerPlayer serverPlayer) {
-                owner.sendMessage(spoken, owner.getUUID());
+                owner.sendSystemMessage(spoken);
                 owner.getCapability(Namer.CAP)
-                        .ifPresent(namer -> namer.speakTo(spoken.getContents()));
-                NamingCriteriaTriggers.MESSAGED.trigger(serverPlayer, spoken.getContents(), MessageTarget.SPEAK_TO);
+                        .ifPresent(namer -> namer.speakTo(spoken.getContents().toString()));
+                NamingCriteriaTriggers.MESSAGED.trigger(serverPlayer, spoken.getContents().toString(), MessageTarget.SPEAK_TO);
                 return true;
             }
             return false;
@@ -42,7 +42,7 @@ public enum SpeakingTarget implements IButtoned<SpeakingTarget> {
             if (blockEntity.getLevel() instanceof ServerLevel serverLevel) {
                 List<Player> nearbyPlayers = serverLevel.getEntities(EntityTypeTest.forClass(Player.class), nearby, entity -> true);
                 for (Player player: nearbyPlayers) {
-                    player.sendMessage(spoken, player.getUUID());
+                    player.sendSystemMessage(spoken);
                 }
                 return !nearbyPlayers.isEmpty();
             }
@@ -56,7 +56,7 @@ public enum SpeakingTarget implements IButtoned<SpeakingTarget> {
                 return ((ServerLevel) blockEntity.getLevel())
                         .getDataStorage()
                         .computeIfAbsent(ListeningWorldData::new, ListeningWorldData::new, ListeningWorldData.NAME)
-                        .speakTo(spoken.getContents())
+                        .speakTo(spoken.getContents().toString())
                         .isListening();
             }
             return false;

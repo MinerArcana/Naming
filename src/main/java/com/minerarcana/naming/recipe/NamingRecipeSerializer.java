@@ -7,14 +7,13 @@ import net.minecraft.util.GsonHelper;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraftforge.common.crafting.CraftingHelper;
-import net.minecraftforge.registries.ForgeRegistryEntry;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.regex.Pattern;
 
-public class NamingRecipeSerializer extends ForgeRegistryEntry<RecipeSerializer<?>> implements RecipeSerializer<NamingRecipe> {
+public class NamingRecipeSerializer implements RecipeSerializer<NamingRecipe> {
     @Override
     @Nonnull
     @ParametersAreNonnullByDefault

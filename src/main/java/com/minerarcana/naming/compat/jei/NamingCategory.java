@@ -16,7 +16,6 @@ import mezz.jei.api.recipe.RecipeType;
 import mezz.jei.api.recipe.category.IRecipeCategory;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -57,7 +56,7 @@ public class NamingCategory implements IRecipeCategory<NamingRecipe> {
     @ParametersAreNonnullByDefault
     public void draw(NamingRecipe recipe, IRecipeSlotsView recipeSlotsView, PoseStack poseStack, double mouseX, double mouseY) {
         Minecraft minecraft = Minecraft.getInstance();
-        Component speak = new TranslatableComponent(NamingText.JEI_SPEAK.getKey(), recipe.getPatternExample());
+        Component speak = Component.translatable(NamingText.JEI_SPEAK.getString(), recipe.getPatternExample());
         drawText(minecraft, poseStack, speak, 0xFF80FF20, 4);
 
         boolean lacksAbility = Optional.ofNullable(minecraft.player)
@@ -99,20 +98,6 @@ public class NamingCategory implements IRecipeCategory<NamingRecipe> {
     @NotNull
     public IDrawable getIcon() {
         return icon;
-    }
-
-    @Override
-    @NotNull
-    @SuppressWarnings("removal")
-    public ResourceLocation getUid() {
-        return JEI_RECIPE_TYPE.getUid();
-    }
-
-    @Override
-    @NotNull
-    @SuppressWarnings("removal")
-    public Class<? extends NamingRecipe> getRecipeClass() {
-        return JEI_RECIPE_TYPE.getRecipeClass();
     }
 
     @Override

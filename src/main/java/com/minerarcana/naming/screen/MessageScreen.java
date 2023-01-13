@@ -4,17 +4,16 @@ import com.google.common.collect.Lists;
 import com.minerarcana.naming.Naming;
 import com.minerarcana.naming.blockentity.IButtoned;
 import com.minerarcana.naming.container.MessageContainer;
-import com.minerarcana.naming.network.property.Property;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 import org.apache.commons.lang3.tuple.Pair;
+import xyz.brassgoggledcoders.shadyskies.containersyncing.property.Property;
 
 import javax.annotation.Nonnull;
 import java.util.List;
@@ -122,7 +121,7 @@ public class MessageScreen<T extends MessageContainer<U>, U extends Enum<U> & IB
     }
 
     protected EditBox createTextField(int x, int y, Property<String> property) {
-        EditBox textFieldWidget = new EditBox(this.font, x, y, 103, 12, TextComponent.EMPTY);
+        EditBox textFieldWidget = new EditBox(this.font, x, y, 103, 12, Component.empty());
         textFieldWidget.setCanLoseFocus(true);
         textFieldWidget.setEditable(true);
         textFieldWidget.setTextColor(-1);
