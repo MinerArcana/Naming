@@ -20,6 +20,11 @@ public class NamingTargets {
             ItemStackNamingTarget::fromPacketBuffer
     );
 
+    public static final NamingTargetType BLOCK_ENTITY = INSTANCE.register(
+            "block_entity",
+            BlockEntityNamingTarget::fromPacketBuffer
+    );
+
     public static final NamingTargetType EMPTY = INSTANCE.register(
             "empty",
             packetBuffer -> new EmptyTarget()
