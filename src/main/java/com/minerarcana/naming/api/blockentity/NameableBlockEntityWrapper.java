@@ -3,6 +3,7 @@ package com.minerarcana.naming.api.blockentity;
 import com.minerarcana.naming.mixin.BaseContainerBlockEntityAccessor;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.Nameable;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.block.entity.BaseContainerBlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import org.jetbrains.annotations.NotNull;
@@ -49,6 +50,10 @@ public abstract class NameableBlockEntityWrapper<T extends BlockEntity & Nameabl
     @Nullable
     public Component getCustomName() {
         return this.getBlockEntity().getCustomName();
+    }
+
+    public boolean canName(Entity ignoredNamer) {
+        return true;
     }
 
     public abstract void setCustomName(Component component);

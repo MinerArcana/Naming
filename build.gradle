@@ -173,11 +173,6 @@ task srcJar(type: Jar) {
     classifier = "sources"
 }
 
-task javadocJar(type: Jar, dependsOn: javadoc) {
-    classifier = "javadoc"
-    from javadoc.destinationDir
-}
-
 reobf {
     jarJar { }
 }
@@ -192,8 +187,8 @@ tasks.jarJar.finalizedBy('reobfJarJar')
 publishing {
     publications {
         mavenJava(MavenPublication) {
-            artifact javadocJar
             artifact srcJar
+            artifact jar
         }
     }
     repositories {

@@ -38,8 +38,7 @@ public class BlockEntityNamingTarget implements INamingTarget {
     @Override
     public void name(@Nullable String name, @NotNull Entity namer) {
         NameableBlockEntityWrapper<?> entity = this.getWrapper();
-        if (entity != null) {
-
+        if (entity != null && entity.canName(namer)) {
             if (name != null) {
                 entity.setCustomName(Component.literal(name));
                 entity.getBlockEntity()
