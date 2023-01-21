@@ -3,6 +3,7 @@ package com.minerarcana.naming.target;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
+import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -10,7 +11,7 @@ import javax.annotation.Nullable;
 public interface INamingTarget {
     boolean isValid(@Nullable Entity namer);
 
-    void name(@Nullable String name, @Nullable Entity namer);
+    void name(@Nullable String name, @NotNull Entity namer);
 
     @Nullable
     String getName();

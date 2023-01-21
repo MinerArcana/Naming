@@ -32,7 +32,7 @@ public class EntityNamingTarget implements INamingTarget {
     }
 
     @Override
-    public void name(@Nullable String name, Entity namer) {
+    public void name(@Nullable String name, @NotNull Entity namer) {
         Entity entity = weakEntity.get();
         if (entity != null) {
             if (name != null) {
@@ -53,7 +53,7 @@ public class EntityNamingTarget implements INamingTarget {
     public String getName() {
         Entity entity = this.weakEntity.get();
         if (entity != null) {
-            return entity.getName().getContents().toString();
+            return entity.getName().getString();
         } else {
             return null;
         }

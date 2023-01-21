@@ -48,7 +48,7 @@ public class ListeningStoneBlockEntity extends MessageBlockEntity implements Fun
     public ListeningType apply(String spoken) {
         ListeningType listeningType = ListeningType.NONE;
         for (int i = 0; i < 4; i++) {
-            if (spoken.equalsIgnoreCase(this.getMessage(i).getContents().toString())) {
+            if (spoken.equalsIgnoreCase(this.getMessage(i).getString())) {
                 listeningType = listeningType.ordinal() > listeningTypes[i].ordinal() ? listeningType : listeningTypes[i];
             }
         }

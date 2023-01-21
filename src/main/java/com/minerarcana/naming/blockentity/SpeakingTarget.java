@@ -28,8 +28,8 @@ public enum SpeakingTarget implements IButtoned<SpeakingTarget> {
             if (owner instanceof ServerPlayer serverPlayer) {
                 owner.sendSystemMessage(spoken);
                 owner.getCapability(Namer.CAP)
-                        .ifPresent(namer -> namer.speakTo(spoken.getContents().toString()));
-                NamingCriteriaTriggers.MESSAGED.trigger(serverPlayer, spoken.getContents().toString(), MessageTarget.SPEAK_TO);
+                        .ifPresent(namer -> namer.speakTo(spoken.getString()));
+                NamingCriteriaTriggers.MESSAGED.trigger(serverPlayer, spoken.getString(), MessageTarget.SPEAK_TO);
                 return true;
             }
             return false;
@@ -56,7 +56,7 @@ public enum SpeakingTarget implements IButtoned<SpeakingTarget> {
                 return ((ServerLevel) blockEntity.getLevel())
                         .getDataStorage()
                         .computeIfAbsent(ListeningWorldData::new, ListeningWorldData::new, ListeningWorldData.NAME)
-                        .speakTo(spoken.getContents().toString())
+                        .speakTo(spoken.getString())
                         .isListening();
             }
             return false;

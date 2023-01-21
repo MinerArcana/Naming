@@ -29,7 +29,7 @@ public class NameTargetMessage {
         }
     }
 
-    public boolean consume(Supplier<NetworkEvent.Context> contextSupplier) {
+    public void consume(Supplier<NetworkEvent.Context> contextSupplier) {
         if (namingTarget != null) {
             contextSupplier.get().enqueueWork(() -> {
                 ServerPlayer player = contextSupplier.get().getSender();
@@ -49,8 +49,6 @@ public class NameTargetMessage {
                 }
             });
         }
-
-        return true;
     }
 
     public static NameTargetMessage decode(FriendlyByteBuf packetBuffer) {

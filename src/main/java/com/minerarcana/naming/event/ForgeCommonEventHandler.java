@@ -14,7 +14,6 @@ import com.minerarcana.naming.command.NamingCommand;
 import com.minerarcana.naming.content.NamingCriteriaTriggers;
 import com.minerarcana.naming.network.SyncNamingMessage;
 import com.minerarcana.naming.worlddata.ListeningWorldData;
-import net.minecraft.Util;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
@@ -34,9 +33,9 @@ import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 
-@Mod.EventBusSubscriber(modid = Naming.ID)
+@EventBusSubscriber(modid = Naming.ID)
 public class ForgeCommonEventHandler {
 
     @SubscribeEvent

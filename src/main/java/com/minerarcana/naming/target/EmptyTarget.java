@@ -15,7 +15,7 @@ public class EmptyTarget implements INamingTarget {
     }
 
     @Override
-    public void name(@Nullable String name, @Nullable Entity namer) {
+    public void name(@Nullable String name, @NotNull Entity namer) {
 
     }
 
