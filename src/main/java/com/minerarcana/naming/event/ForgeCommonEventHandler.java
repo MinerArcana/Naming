@@ -66,6 +66,9 @@ public class ForgeCommonEventHandler {
 
     @SubscribeEvent
     public static void playerClone(PlayerEvent.Clone cloneEvent) {
+        cloneEvent.getOriginal()
+                .reviveCaps();
+
         LazyOptional<INamer> originalNamer = cloneEvent.getOriginal()
                 .getCapability(Namer.CAP);
 
@@ -75,7 +78,10 @@ public class ForgeCommonEventHandler {
                     .getCapability(Namer.CAP)
                     .ifPresent(newCap -> newCap.deserializeNBT(compoundNBT));
         });
+
         originalNamer.invalidate();
+        cloneEvent.getOriginal()
+                .invalidateCaps();
     }
 
     @SubscribeEvent
